@@ -168,7 +168,7 @@
 			plus.device.getInfo({
 				success: function(info) {
 					console.log('getDeviceInfo success: '+JSON.stringify(info));
-					let id = ''
+					var id = ''
 					if (info.uuid) {
 						id = info.uuid.split(",")[0]
 					}
@@ -183,7 +183,7 @@
 				},
 				fail:function(info){
 					console.log('getDeviceInfo failed: '+JSON.stringify(info));
-					let id = ''
+					var id = ''
 					if (info.uuid) {
 						id = info.uuid.split(",")[0]
 					}
@@ -481,7 +481,7 @@
 				if (tempData.user_code == '0') { //无权限
 					utils.hrefSessionStorage('../../html/login/index2.html', {});
 				} else {
-					utils.hrefSessionStorage('../../html/login/index.html', {});
+					utils.hrefSessionStorage('../../html/test/test.html', {});
 				}
 			}
 		}

@@ -1,13 +1,13 @@
 {
     "@platforms" : [ "android", "iPhone", "iPad" ],
-    "id" : "H50C56911",
+    "id" : "H57F0BB9D",
     /*应用的标识，创建应用时自动生成，勿手动修改*/
-    "name" : "教宝校园",
+    "name" : "访客系统",
     /*应用名称，程序桌面图标名称*/
     "version" : {
-        "name" : "2.1.4",
+        "name" : "1.0.0",
         /*应用版本名称*/
-        "code" : 84
+        "code" : 1
     },
     "description" : "",
     /*应用描述信息*/
@@ -32,10 +32,7 @@
         },
         "Events" : {
             "description" : "应用扩展事件"
-        },
-        "Maps" : {},
-        "UIWebview" : {},
-        "Push" : {}
+        }
     },
     "fullscreen" : false,
     "plus" : {
@@ -87,22 +84,15 @@
                     "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
-                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
-                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
                     "<uses-permission android:name=\"android.permission.CAMERA\"/>",
-                    "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
-                    "<uses-permission android:name=\"android.permission.INTERNET\"/>",
                     "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
                     "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
-                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
-                    "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ],
                 "targetSdkVersion" : 28,
@@ -752,5 +742,5 @@
             ]
         }
     },
-    "screenOrientation" : [ "portrait-primary" ]
+    "screenOrientation" : [ "landscape-primary", "landscape-secondary" ]
 }

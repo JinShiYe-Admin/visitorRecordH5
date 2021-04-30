@@ -533,7 +533,7 @@
 						if (local_first_item.url == web_first_item.url) {
 							local_first_item.name = web_first_item.name;
 							local_first_item.access=web_first_item.access;
-							let childList=[]
+							var childList=[]
 							for (var b = 0; b < web_first_item.childList.length; b++) {//二级菜单循环
 								var web_second_item = web_first_item.childList[b];
 								for (var c = 0; c < local_first_item.childList.length; c++) {
@@ -577,29 +577,29 @@
 				if(mui.os.android) {// android  部分代码逻辑------通知
 					//检查是否有通知权限
 					function checkNoticePermission(){ //return true : allowed notice  false: not allowed notice 
-						let main = plus.android.runtimeMainActivity();
-						let NotificationManagerCompat = plus.android.importClass("android.support.v4.app.NotificationManagerCompat");  
-						let packageNames = NotificationManagerCompat.from(main);  
+						var main = plus.android.runtimeMainActivity();
+						var NotificationManagerCompat = plus.android.importClass("android.support.v4.app.NotificationManagerCompat");  
+						var packageNames = NotificationManagerCompat.from(main);  
 						console.log(JSON.stringify(packageNames)); 
 						return packageNames.areNotificationsEnabled();
 					}
 					
 					//弹出框，打开设置界面
 					function show_NOTIFICATION_SETTINGS(){
-						let btnArray = ['立即开启', '以后再说'];
+						var btnArray = ['立即开启', '以后再说'];
 						mui.confirm('开启后可第一时间收到消息通知', '提示', btnArray, function(e) {
 							if (e.index == 0) {
-								let main = plus.android.runtimeMainActivity();
-								let pkName = main.getPackageName();  
-								let uid = main.getApplicationInfo().plusGetAttribute("uid");
-								let Intent = plus.android.importClass('android.content.Intent');
-								let Build = plus.android.importClass("android.os.Build");
+								var main = plus.android.runtimeMainActivity();
+								var pkName = main.getPackageName();  
+								var uid = main.getApplicationInfo().plusGetAttribute("uid");
+								var Intent = plus.android.importClass('android.content.Intent');
+								var Build = plus.android.importClass("android.os.Build");
 								if (Build.VERSION.SDK_INT >= 26) {
-									let  intent = new Intent('android.settings.APP_NOTIFICATION_SETTINGS');
+									var  intent = new Intent('android.settings.APP_NOTIFICATION_SETTINGS');
 								　　intent.putExtra('android.provider.extra.APP_PACKAGE', pkName);
 									main.startActivity(intent);  
 								} else if (Build.VERSION.SDK_INT >= 21) { //android 5.0-7.0  
-								　　let  intent = new Intent('android.settings.APP_NOTIFICATION_SETTINGS');
+								　　var  intent = new Intent('android.settings.APP_NOTIFICATION_SETTINGS');
 								　　intent.putExtra("app_package", pkName);
 								　　intent.putExtra("app_uid", uid);
 									main.startActivity(intent);  
@@ -637,7 +637,7 @@
 					// plus.push.setAutoNotification( true );
 					plus.push.addEventListener("receive", function(msg) {
 						console.log("接收到了通知推送"+ JSON.stringify(msg))
-						let obj =plus.webview.getWebviewById("../../html/oa/index.html");
+						var obj =plus.webview.getWebviewById("../../html/oa/index.html");
 						obj&&obj.evalJS('getNoReadCnt()')   
 						plus.device.vibrate(500);
 						// console.log('msg.title========' + JSON.stringify(msg))
@@ -659,7 +659,7 @@
 					}, true);
 					plus.push.addEventListener("click", function(msg) {
 						console.log("点击了通知栏消息")
-						let obj =plus.webview.getWebviewById("../../html/oa/index.html");
+						var obj =plus.webview.getWebviewById("../../html/oa/index.html");
 						obj&&obj.evalJS('getNoReadCnt()')   
 						plus.push.clear();
 					}, false);
@@ -680,7 +680,7 @@
 						plus.push.addEventListener("click", function(msg) {
 							console.log("点击了通知栏消息")
 							//获取未读数
-							let obj =plus.webview.getWebviewById("../../html/oa/index.html");
+							var obj =plus.webview.getWebviewById("../../html/oa/index.html");
 							obj&&obj.evalJS('getNoReadCnt()')   
 							plus.device.vibrate(500);
 						}, false);
@@ -688,7 +688,7 @@
 						plus.push.addEventListener("receive", function(msg) {
 							console.log("接收到了通知推送")
 							//获取未读数
-							let obj =plus.webview.getWebviewById("../../html/oa/index.html");
+							var obj =plus.webview.getWebviewById("../../html/oa/index.html");
 							obj&&obj.evalJS('getNoReadCnt()')   
 							plus.device.vibrate(500);
 						}, false);
