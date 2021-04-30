@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/data-tree/css/mtree.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+			
+			.mtree-demo .mtree {
+			  background: #EEE;
+			  margin: 20px auto;
+			  max-width: 320px;
+			  border-radius: 3px;
+			}
+			
+			.mtree-skin-selector {
+			  text-align: center;
+			  background: #EEE;
+			  padding: 10px 0 15px;
+			}
+			
+			.mtree-skin-selector li {
+			  display: inline-block;
+			  float: none;
+			}
+			
+			.mtree-skin-selector button {
+			  padding: 5px 10px;
+			  margin-bottom: 1px;
+			  background: #BBB;
+			}
+			
+			.mtree-skin-selector button:hover { background: #999; }
+			
+			.mtree-skin-selector button.active {
+			  background: #999;
+			  font-weight: bold;
+			}
+			
+			ul, menu, dir {
+			    -webkit-padding-start: 30px;
+			}
+			
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background: white;" id="contentData">
+			   <ul class="mtree transit">
+			     <li><a href="#">Africa</a>
+			       <ul>
+			         <li><a href="#">Algeria</a></li>
+			         <li><a href="#">Marocco</a></li>
+			         <li><a href="#">Libya</a></li>
+			         <li><a href="#">Somalia</a></li>
+			         <li><a href="#">Kenya</a></li>
+			         <li><a href="#">Mauritania</a></li>
+			         <li><a href="#">South Africa</a></li>
+			       </ul>
+			     </li>
+			     <li><a href="#">一级列表</a>
+			       <ul>
+			         <li><a href="#">二级列表</a>
+			           <ul>
+			             <li><a href="#">Canada</a></li>
+			             <li><a href="#">三级列表</a>
+			               <ul>
+			                 <li><a href="#">New York</a></li>
+			                 <li><a href="#">四级列表</a>
+			                   <ul>
+			                     <li><a href="#">五级列表</a>
+									<ul>
+									  <li><a href="#">六级列表</a>
+										<ul>
+										  <li><a href="#">哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</a>
+											<ul>
+											  <li><a href="#">八级列表</a>
+											  <ul>
+											    <li><a href="#">哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</a>
+											    </li>
+											    <li><a href="#">San Diego</a></li>
+											    <li><a href="#">Sacramento</a></li>
+											    <li><a href="#">San Francisco</a></li>
+											    <li><a href="#">Bakersville</a></li>
+											  </ul>
+											  </li>
+											  <li><a href="#">San Diego</a></li>
+											  <li><a href="#">Sacramento</a></li>
+											  <li><a href="#">San Francisco</a></li>
+											  <li><a href="#">Bakersville</a></li>
+											</ul>
+										  </li>
+										  <li><a href="#">San Diego</a></li>
+										  <li><a href="#">Sacramento</a></li>
+										  <li><a href="#">San Francisco</a></li>
+										  <li><a href="#">Bakersville</a></li>
+										</ul>
+									  </li>
+									  <li><a href="#">San Diego</a></li>
+									  <li><a href="#">Sacramento</a></li>
+									  <li><a href="#">San Francisco</a></li>
+									  <li><a href="#">Bakersville</a></li>
+									</ul>
+								 </li>
+			                     <li><a href="#">San Diego</a></li>
+			                     <li><a href="#">Sacramento</a></li>
+			                     <li><a href="#">San Francisco</a></li>
+			                     <li><a href="#">Bakersville</a></li>
+			                   </ul>
+			                 </li>
+			                 <li><a href="#">Lousiana</a></li>
+			                 <li><a href="#">Texas</a></li>
+			                 <li><a href="#">Nevada</a></li>
+			                 <li><a href="#">Montana</a></li>
+			                 <li><a href="#">Virginia</a></li>
+			               </ul>
+			             </li>
+			           </ul>
+			         </li>
+			         <li><a href="#">Middle-America</a>
+			           <ul>
+			             <li><a href="#">Mexico</a></li>
+			             <li><a href="#">Honduras</a></li>
+			             <li><a href="#">Guatemala</a></li>
+			           </ul>
+			         </li>
+			         <li><a href="#">South-America</a>
+			           <ul>
+			             <li><a href="#">Brazil</a></li>
+			             <li><a href="#">Argentina</a></li>
+			             <li><a href="#">Uruguay</a></li>
+			             <li><a href="#">Chile</a></li>
+			           </ul>
+			         </li>
+			       </ul>
+			     </li>
+			     <li><a href="#">Asia</a>
+			       <ul>
+			         <li><a href="#">China</a></li>
+			         <li><a href="#">India</a></li>
+			         <li><a href="#">Malaysia</a></li>
+			         <li><a href="#">Thailand</a></li>
+			         <li><a href="#">Vietnam</a></li>
+			         <li><a href="#">Singapore</a></li>
+			         <li><a href="#">Indonesia</a></li>
+			         <li><a href="#">Mongolia</a></li>
+			       </ul>
+			     </li>
+			     <li><a href="#">Europe</a>
+			       <ul>
+			         <li><a href="#">North</a>
+			           <ul>
+			             <li><a href="#">Norway</a></li>
+			             <li><a href="#">Sweden</a></li>
+			             <li><a href="#">Finland</a></li>
+			           </ul>
+			         </li>
+			         <li><a href="#">East</a>
+			           <ul>
+			             <li><a href="#">Romania</a></li>
+			             <li><a href="#">Bulgaria</a></li>
+			             <li><a href="#">Poland</a></li>
+			           </ul>
+			         </li>
+			         <li><a href="#">South</a>
+			           <ul>
+			             <li><a href="#">Italy</a></li>
+			             <li><a href="#">Greece</a></li>
+			             <li><a href="#">Spain</a></li>
+			           </ul>
+			         </li>
+			         <li><a href="#">West</a>
+			           <ul>
+			             <li><a href="#">France</a></li>
+			             <li><a href="#">England</a></li>
+			             <li><a href="#">Portugal</a></li>
+			           </ul>
+			         </li>
+			       </ul>
+			     </li>
+			     <li><a href="#">Oceania</a>
+			       <ul>
+			         <li><a href="#">Australia</a></li>
+			         <li><a href="#">New Zealand</a></li>
+			       </ul>
+			     </li>
+			     <li><a href="#">Arctica</a></li>
+			     <li><a href="#">Antarctica</a></li>
+			 </ul> 
+		</div>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src='http://cdnjs.cloudflare.com/ajax/libs/velocity/0.2.1/jquery.velocity.min.js'></script> 
+		<script src="../../js/data-tree/js/mtree.js" defer></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+
+		<script type="text/javascript">
+			mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					headTitle: '标题栏',
+				},
+				methods: {
+				}
+			});
+
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					datas:[{index:1,name:"一级列表"},]
+				},
+				methods: {
+					 
+				},
+			});
+			
+			mui.plusReady(function() {
+			});
+		</script>
+	</body>
+
+</html>

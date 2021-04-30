@@ -1,0 +1,397 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<style type="text/css">
+			[v-cloak] {
+				display:none !important;
+			}
+
+			.circular-square {
+				border-radius: 50%;
+				width: 56px;
+				height: 56px;
+			}
+
+
+			.aCss {
+				font-size: 15px;
+				color: #333;
+				width: 5rem;
+			}
+
+			.icon-right {
+				position: fixed;
+				float: right;
+				font-size: 14px;
+				margin-top: 11px;
+				right: 5%;
+			}
+
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea,
+			input::-webkit-input-placeholder,
+			textarea::-webkit-input-placeholder {
+				color: #999;
+				/* placeholder字体大小  */
+				font-size: 14px;
+			}
+
+			.line {
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #e4e4e4;
+			}
+
+			.mui-input-row:after {
+				height: 0px;
+			}
+
+			.mui-input-row {
+				margin: 0.3125rem 0;
+			}
+
+			.mui-input-row label {
+				font-family: 'Helvetica Neue', Helvetica, sans-serif;
+				line-height: 1.1;
+				float: left;
+				width: 30%;
+				padding: 11px 15px;
+			}
+
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				float: right;
+				width: 68%;
+				margin-right: 2%;
+				margin-bottom: 0;
+				padding-left: 0.625rem;
+				border: 0;
+			}
+
+			.mui-dtpicker-header button:last-child {
+				background-color: #00CFBD;
+				border: #00CFBD;
+			}
+
+			.add-item {
+				width: 96% !important;
+				margin: 0 2%;
+				font-size: 16px;
+				color: #FFF;
+				background-color: #00CFBD;
+				border: 1px solid #00CFBD;
+			}
+
+			.btnBorder {
+				border: none;
+			}
+			.submitBtn{
+				margin-top: 10px;
+				height: 40px;
+				background: #00CFBD;
+				color: white;
+				width: 90%;
+				border-color: #00CFBD;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+			<a @click="location()" class="mui-pull-right mui-icon mui-icon-location" style="font-size: 16px;margin-top: 7px;">定位</a>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background-color: #FFFFFF;" id="contentData">
+			<div v-cloak class="mui-input-row">
+				<label class="aCss">日程时间</label>
+				<input type="text" readonly="readonly" maxlength="20" v-model="formData.todayDate" placeholder="请选择日程时间">
+			</div>
+			<div class="line"></div>
+			<div v-cloak class="mui-input-row">
+				<label class="aCss" style="float: left;">工作地点</label>
+				<textarea maxlength="200" readonly="readonly" v-model="formData.workAddress" rows="2" placeholder="请点击右上角按钮定位"></textarea>
+			</div>
+			<div class="line"></div>
+			<div v-cloak class="mui-input-row">
+				<label class="aCss">开始时间</label>
+				<input type="text" @tap="showBeginDate()" placeholder="请选择开始时间" v-model="formData.begintime" readonly>
+			</div>
+			<div class="line"></div>
+			<div v-cloak class="mui-input-row">
+				<label class="aCss">结束时间</label>
+				<input type="text" @tap="showEndDate()" placeholder="请选择结束时间" v-model="formData.endtime" readonly>
+			</div>
+			<div class="line"></div>
+			<div v-cloak class="mui-input-row">
+				<label class="aCss">日程内容</label>
+				<textarea maxlength="200" v-model="formData.workContent" rows="5" placeholder="请输入日程内容"></textarea>
+			</div>
+			<div class="line"></div>
+			<div @click="submitData()" style="text-align: center;"><button type="button" class="mui-btn submitBtn">确定</button></div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/mui.picker.min.js"></script>
+		<script src="../../js/utils/mui.poppicker.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+
+		<script type="text/javascript">
+			var $M = mui.init();
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					showBack: 0,
+					headTitle: '',
+				},
+				methods: {
+					location: function() {
+						events.showWaiting();
+						getGeocode();
+					}
+				}
+			});
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					formData: {
+						todayDate: '',
+						begintime: '09:00',
+						endtime: '17:00',
+						workAddress: '',
+						workContent: '',
+					},
+					canClick: true, //防止提交按钮多次点击
+				},
+				methods: {
+					submitData :function(){
+						if (this.canClick) {
+							let formData = contentData.formData;
+							if (formData.workAddress == '') {
+								mui.toast('请输入工作地点')
+							} else if (formData.workContent == '') {
+								mui.toast('请输入日程内容')
+							} else {
+								this.canClick = false;
+								submitDataLast();
+							}
+						}
+					},
+					showBeginDate: function() {
+						var datePicker = new $M.DtPicker({
+							type: "time"
+						});
+						setTimeout(function() {
+							datePicker.setSelectedValue(contentData.formData.todayDate + ' ' + contentData.formData.begintime);
+						}, 100);
+						datePicker.show(function(rs) {
+							if (compareTime(rs.text, contentData.formData.endtime) == 1) {
+								mui.toast("开始时间不能晚于结束时间", "cancel");
+								return false;
+							} else {
+								contentData.formData.begintime = rs.text
+								datePicker.dispose();
+								datePicker = null;
+							}
+						});
+					},
+					showEndDate: function() {
+						var datePicker = new $M.DtPicker({
+							type: "time"
+						});
+						setTimeout(function() {
+							datePicker.setSelectedValue(contentData.formData.todayDate + ' ' + contentData.formData.endtime);
+						}, 100);
+						datePicker.show(function(rs) {
+							if (compareTime(contentData.formData.begintime, rs.text) == 1) {
+								mui.toast("结束时间不能早于开始时间", "cancel");
+								return false;
+							} else {
+								contentData.formData.endtime = rs.text;
+								datePicker.dispose();
+								datePicker = null;
+							}
+						});
+					},
+				}
+			});
+			var curPage = {};
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('curPage:' + JSON.stringify(curPage));
+				contentData.formData.todayDate = getNowFormatDate();
+				tempHead.headTitle = curPage.title_name;
+				tempHead.showBack = 1;
+				
+				events.showWaiting();
+				// 刚进入界面，自动定位
+				getGeocode();
+			});
+			// 提交表单数据
+			function submitDataLast() {
+				events.showWaiting();
+				comData = {
+					user_code: personal.user_code,//用户Code
+					user_name: personal.user_name,//用户名称
+					note_note: contentData.formData.workContent,//日程内容
+					note_addr: contentData.formData.workAddress,//日程地点
+					note_date: contentData.formData.todayDate,//日程日期
+					begin_time: contentData.formData.begintime,//开始时间
+					end_time: contentData.formData.endtime,//结束时间
+					op_code: 'add',//
+					index_code: curPage.index_code,//
+				}
+				console.log("comData: " + JSON.stringify(comData));
+				postDataEncry(window.storageKeyName.INTERFACE_PROGRAMME + 'note/addNote', {}, comData, 2, function(data) {
+					console.log(JSON.stringify(data))
+						contentData.canClick = true
+					if (data.code == 0) {
+						mui.toast('保存成功');
+						setTimeout(function() {
+							mui.fire(plus.webview.currentWebview().opener(), 'refreshMyProgrammeList', {});
+							mui.back()
+						}, 1500)
+					} else {
+						contentData.canClick = true
+						mui.toast(data.msg);
+					}
+					events.closeWaiting();
+				});
+			}
+
+			function getGeocode() {
+				console.log("获取定位位置信息:");
+				plus.geolocation.getCurrentPosition(geoInf, function(e) {
+					if(plus.os.name=="Android"){
+						android(e);
+					}else if(plus.os.name=="iOS"){
+						ios(e);
+					}
+					events.closeWaiting();
+				}, {
+					geocode: true
+				});
+			}
+			
+			//判断android 是否打开gps按钮
+			function android(e){
+				console.log("获取定位位置信息失败：" + e.message);
+				var context = plus.android.importClass("android.content.Context");
+				var locationManager=plus.android.importClass("android.location.LocationManager"); 
+				var main=plus.android.runtimeMainActivity(); 
+				var mainSvr=main.getSystemService(context.LOCATION_SERVICE); 
+				androidIsOpen=mainSvr.isProviderEnabled(locationManager.GPS_PROVIDER); 
+				if(!androidIsOpen){ 
+					plus.nativeUI.alert("请开启GPS以获取正确的位置信息"); 
+				} 
+			}
+			
+			//判断ios 是否授权使用我的位置  ，android部分可用，暂不考虑
+			function ios(e){
+				var pp = plus.navigator.checkPermission('LOCATION');
+					switch(pp){
+						case 'denied':
+							plus.nativeUI.alert('未授权使用我的位置');
+						break;
+						// case 'undetermined':
+						// 	plus.nativeUI.alert('未授权使用我的位置');
+						// break;
+						default:
+							console.log("获取定位位置信息失败：" + e.message);
+						break;
+					}
+			}
+
+			function geoInf(position) {
+				events.closeWaiting();
+				var str = "";
+				str += "地址：" + position.addresses + "\n"; //获取地址信息
+				str += "坐标类型：" + position.coordsType + "\n";
+				var timeflag = position.timestamp; //获取到地理位置信息的时间戳；一个毫秒数；
+				str += "时间戳：" + timeflag + "\n";
+				var codns = position.coords; //获取地理坐标信息；
+				var lat = codns.latitude; //获取到当前位置的纬度；
+				str += "纬度：" + lat + "\n";
+				var longt = codns.longitude; //获取到当前位置的经度
+				str += "经度：" + longt + "\n";
+				var alt = codns.altitude; //获取到当前位置的海拔信息；
+				str += "海拔：" + alt + "\n";
+				var accu = codns.accuracy; //地理坐标信息精确度信息；
+				str += "精确度：" + accu + "\n";
+				var altAcc = codns.altitudeAccuracy; //获取海拔信息的精确度；
+				str += "海拔精确度：" + altAcc + "\n";
+				var head = codns.heading; //获取设备的移动方向；
+				str += "移动方向：" + head + "\n";
+				var sped = codns.speed; //获取设备的移动速度；
+				str += "移动速度：" + sped;
+				console.log(JSON.stringify(position));
+				console.log('position.addresses:' + position.addresses);
+				contentData.formData.workAddress = position.addresses;
+			}
+
+			function getNowFormatDate() {
+				var date = new Date();
+				var seperator1 = "-";
+				var year = date.getFullYear();
+				var month = date.getMonth() + 1;
+				var strDate = date.getDate();
+				if (month >= 1 && month <= 9) {
+					month = "0" + month;
+				}
+				if (strDate >= 0 && strDate <= 9) {
+					strDate = "0" + strDate;
+				}
+				var currentdate = year + seperator1 + month + seperator1 + strDate;
+				return currentdate;
+			}
+			//判断当前选择时间是否小于是指定时间
+			function compareTime(beginTime, endTime) {
+				beginTime = beginTime.replace(/-/g, '');
+				beginTime = beginTime.replace(/ /g, '');
+				beginTime = beginTime.replace(/:/g, '');
+				endTime = endTime.replace(/-/g, '');
+				endTime = endTime.replace(/ /g, '');
+				endTime = endTime.replace(/:/g, '');
+				if (parseFloat(beginTime) < parseFloat(endTime)) {
+					return 0;
+				}
+				return 1;
+			}
+		</script>
+	</body>
+
+</html>

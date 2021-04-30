@@ -1,0 +1,789 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<!-- <link rel="stylesheet" type="text/css" href="../../css/student_performance/stuScore.css" /> -->
+		<link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css" />
+		<link rel="stylesheet" href="../../js/timeline/timeline.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+
+			.mui-media-body {
+				margin: 4px 0;
+			}
+
+			.mui-slider .mui-segmented-control.mui-segmented-control-inverted~.mui-slider-group .mui-slider-item {
+				border-top: 0px;
+				border-bottom: 0px;
+			}
+
+			.timelineDate {
+				width: 30%;
+				font-size: 0.75em;
+				padding-top: 0.40rem;
+				padding-right: 2rem;
+				text-align: left;
+			}
+
+			.timelineDesc {
+				margin: 0;
+				font-size: 14px;
+				font-weight: 400;
+				color: #808080;
+			}
+
+			.divTime {
+				color: gray;
+				float: left;
+				width: 70px;
+				height: 50px;
+				font-size: 13px;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				overflow: hidden;
+				margin-left: -15px;
+			}
+
+			.divContent {
+				margin-left: 65px;
+				width: calc(100% - 65px);
+			}
+
+			.divFlag {
+				height: 30px !important;
+				width: 70px;
+				text-align: center;
+				padding-top: 5px;
+				background: #3aca3a;
+				border-radius: 5px;
+				color: white;
+			}
+
+			.divNote {
+				width: calc(100%);
+			}
+
+			.divStuName {
+				font-size: 15px;
+				font-weight: 900;
+			}
+
+			.pieChart {
+				height: 250px;
+				margin: -30px 0px 0 20px;
+				padding: 0px;
+			}
+
+			/* 间隔 */
+			.spaceLine {
+				padding-left: 15px;
+				text-align: left;
+				padding-top: 15px;
+				padding-bottom: 15px;
+				background: #f8efef;
+				font-size: 14px;
+				color: #505050;
+			}
+			
+			.mui-table-view-cell:after {
+				height: 0px;
+			}
+			.mui-navigate-right:after, .mui-push-right:after {
+			    color: #00baad;
+			}
+			
+			.mui-dtpicker-header button:last-child{
+				background-color:#00CFBD;
+				border-color:#00CFBD ;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak v-if="showBack==2" @click="clickLeftImg" class="mui-icon mui-pull-left">
+				<img v-cloak :src=headImg style="width: 26px;height: 26px;border-radius: 50%;" />
+			</a>
+			<a v-cloak v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content mui-fullscreen" style="margin-top: 0px;background: white;z-index:0;" id="contentData">
+			<div id="slider" class="mui-slider mui-fullscreen">
+				<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<a @tap="clickSeg(0)" class="mui-control-item mui-active" href="#item1mobile">考勤记录</a>
+					<a @tap="clickSeg(1)" class="mui-control-item" href="#item2mobile">请假统计</a>
+					<a @tap="clickSeg(2)" class="mui-control-item" href="#item3mobile">考勤统计</a>
+				</div>
+				<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-4"></div>
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll1" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<section id="cd-timeline" class="cd-container" v-cloak style="min-height: calc(100vh - 100px);">
+									<div v-for="(item,index) in semFlag0Data.attenceList" class="cd-timeline-block">
+										<div class="cd-timeline-img" :class="[index==0?'cd-picture':'cd-movie']"></div>
+										<div class="cd-timeline-content">
+											<div class="divTime">{{item.create_time}}</div>
+											<template v-if="item.attendance_type=='inOutCls'">
+												<div class="divContent" style="height: auto;">
+													<div class="divFlag" style="background: #ff9900;">{{item.item_txt}}</div>
+														<div style="height: 20px;margin: 5px 0 5px 0;padding: 0px;">{{item.attendance_time}}	{{item.day}}	{{item.class_node}} 	{{item.sub_name}}</div>
+													<div style="margin: 5px 0 5px 0;padding: 0px;word-break: break-all;" class="divNote">{{item.comment}}</div>
+												</div>
+											</template>
+											<template v-if="item.attendance_type=='leave'">
+												<div class="divContent" style="height: auto;">
+													<div class="divFlag" style="background: #ff9900;">{{item.item_txt}}</div>
+													<div style="height: 20px;margin: 5px 0 5px 0;padding: 0px;">{{item.time_range}}</div>
+													<div style="margin: 5px 0 5px 0;padding: 0px;word-break: break-all;" class="divNote">{{item.comment}}</div>
+												</div>
+											</template>
+											<template v-if="item.attendance_type=='inOutSchoolAttendance' || item.attendance_type=='inOutDormAttendance'">
+												<div class="divContent" style="height: auto;">
+													<div>
+														<span style="color: #505050;">{{item.item_txt}}</span>
+														<span class="divFlag" style="padding: 5px 10px;">{{item.card_dir_txt}}</span>
+													</div>
+													<img v-if="item.card_url" style="width: 100px;height: 100px;margin-top: 20px;" :src=item.card_url />
+												</div>
+											</template>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+					<div id="item2mobile" class="mui-slider-item mui-control-content">
+						<div id="scroll2" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div style="margin: 10px 0 0 20px;color: #00CFBD;">
+									<span id='months' style="color: #00CFBD;" data-options='{"type":"month"}'  @tap="months($event,'months')"></span><span class="mui-icon mui-icon-arrowdown" style="font-size: 15px;margin-left: 3px;"></span>
+								</div>
+								<div style="text-align: center;margin-top: 10px;">请假总次数：<span style="color: red;font-size: 20px;">{{semFlag1Data.total_count}}</span></div>
+								<p style="margin: 10px 0 0 20px;font-weight: 900;font-size: 14px;color: #505050;">各月对比</p>
+								<div class="pieChart" id="leaveCount"></div>
+								<p style="margin: -10px 0 0 20px;font-weight: 900;font-size: 14px;color: #505050;" v-if="semFlag1Data.leaveList.length>0">请假记录</p>
+								<ul class="mui-table-view" style="margin-top: 10px;">
+									<li @tap="clickLeaveDetail(item)" v-for="(item,index) in semFlag1Data.leaveList" class="mui-table-view-cell">
+										<a class="mui-navigate-right">
+											<span>{{index+1}}</span>
+											<span style="margin-left: 15px;">{{item.item_txt}}</span>
+											<span style="margin-left: 15px;">{{item.begintime.split(':')[0]}}:{{item.begintime.split(':')[1]}}~{{item.endtime.split(':')[0]}}:{{item.endtime.split(':')[1]}}</span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div id="item3mobile" class="mui-slider-item mui-control-content">
+						<div id="scroll3" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div style="margin: 10px 0 0 20px;color: #00CFBD;">
+									<span id='months-a' style="color: #00CFBD;" data-options='{"type":"month","title":"开始时间"}'  @tap="months($event,'months-a')" style="float: left;"></span><span class="mui-icon mui-icon-arrowdown" style="font-size: 15px;margin-left: 3px;"></span>
+								</div>
+								<h4 class="spaceLine">一、出入校</h4>
+								<ul class="mui-table-view">
+									<li @tap="churuxiao()" class="mui-table-view-cell">
+										<a class="mui-navigate-right">
+											<span style="margin-left: 40px;">出入校记录</span>
+											<span style="margin-left: 40px;">{{semFlag2Data.total_count}}条</span>
+										</a>
+									</li>
+								</ul>
+								<h4 class="spaceLine">二、考勤统计</h4>
+								<p style="margin: 10px 0 0 20px;font-weight: 900;font-size: 14px;color: #505050;">各月对比</p>
+								<div class="pieChart" id="attendceCount"></div>
+								<p style="margin: -10px 0 0 20px;font-weight: 900;font-size: 14px;color: #505050;" v-if="semFlag2Data.leaveList.length>0">考勤项目统计</p>
+									<ul class="mui-table-view" style="margin-top: 10px;">
+										<li @tap="clickAttenceDetail(item)" v-for="(item,index) in semFlag2Data.leaveList" class="mui-table-view-cell">
+											<a class="mui-navigate-right">
+												<span>{{index+1}}</span>
+												<span style="margin-left: 20px;">{{item.item_txt}}</span>
+												<span style="margin-left: 20px;">{{item.num}}次</span>
+											</a>
+										</li>
+									</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/muiPicker/mui.picker.all.js"></script>
+		<script src="../../js/utils/moment.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<script src="../../js/utils/echarts-all.js"></script>
+		<script src="../../js/echarts/echarts-en.min.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+
+		<script type="text/javascript">
+			mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					showBack: 0,
+					headTitle: '',
+					headImg: setImg(personal.img_url, 9)
+				},
+				methods: {
+					clickLeftImg: function() {
+						appPay.openMenu();
+					}
+				}
+			});
+			var loading=true,loading2=true,loading3=true;
+			var pageSize =10;
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: { 
+					semFlag: 0, //点击的seg索引
+					semFlag0Data: { //考勤记录
+						refrushFlag: 0, //0刷新1加载更多
+						pageNumber: 1,
+						total_page:0,//总页数
+						attenceList: [] //考勤记录列表
+					},
+					semFlag1Data: { //请假统计
+						refrushFlag: 0, //0刷新1加载更多
+						pageNumber: 1,
+						startTime:'',
+						endTime:'',
+						total_page:0,//总页数
+						total_count:'',//请假总次数
+						leaveList: []
+					},
+					semFlag2Data: {
+						refrushFlag: 0, //0刷新1加载更多
+						pageNumber: 1,
+						startTime:'',
+						endTime:'',
+						total_page:0,//总页数
+						total_count:'',//出入量总次数
+						knowData: {},
+						leaveList: []
+					}
+				},
+				methods: {
+					clickSeg: function(flag) {
+						if (contentData.semFlag != flag) {
+							contentData.semFlag = flag;
+							console.log(flag);
+							if(flag==0){
+								mui('#scroll1').scroll().scrollTo(0, 0)
+								contentData.semFlag0Data.refrushFlag = 0; //0刷新1加载更多
+								contentData.semFlag0Data.pageNumber = 1; 
+								getAttendancePage();
+							}else if(flag==1){
+								mui('#scroll2').scroll().scrollTo(0, 0)
+								contentData.semFlag1Data.refrushFlag = 0; //0刷新1加载更多
+								contentData.semFlag1Data.pageNumber = 1; 
+								getLeaveStatistics();
+								getLeavePage();
+							}else if(flag==2){
+								mui('#scroll3').scroll().scrollTo(0, 0)
+								contentData.semFlag2Data.refrushFlag = 0; //0刷新1加载更多
+								contentData.semFlag2Data.pageNumber = 1; 
+								getInOutCount();
+								getAttendanceCountByMonth();
+								getPageAttendanceStatistics();
+							}
+						}
+					},
+					clickLeaveDetail: function(model) {
+						utils.mOpenWithData("../../html/parents_attendance/leaveDetail.html", model);
+					},
+					clickAttenceDetail: function(model) {
+						model.access=curPage.access
+						utils.mOpenWithData("../../html/parents_attendance/attenceDetail.html", model);
+					},
+					churuxiao:function(){
+						curPage.count=contentData.semFlag2Data.total_count
+						if(curPage.count==0){
+							return;
+						}
+						utils.mOpenWithData("../../html/parents_attendance/churuxiao.html", curPage);
+					}, 
+					months:function(e,id){
+						let that=e.target
+						var _self = that;
+						var optionsJson = that.getAttribute('data-options') || '{}';
+						var options = JSON.parse(optionsJson);
+						if(id=='months'){
+							options.value=contentData.semFlag1Data.startTime
+						}else if(id=='months-a'){
+							options.value=contentData.semFlag2Data.startTime
+						}
+						options.endDate=new Date(currentYear(),currentMonth());
+						var id = that.getAttribute('id');
+						var picker = new mui.DtPicker(options);
+						picker.show(function(rs) {
+							let start_monthStr=moment(rs.text).format('YYYY年MM月')
+							let end_monthStr=moment(rs.text).add(5, 'M').format('YYYY年MM月');
+							let start_month=moment(rs.text).format('YYYY-MM')
+							let end_month=moment(rs.text).add(5, 'M').format('YYYY-MM');
+							$('#'+id).html(start_monthStr+' ~ '+end_monthStr)
+							if(id=='months'){
+								contentData.semFlag1Data.startTime=start_month;
+								contentData.semFlag1Data.endTime=end_month;
+								contentData.semFlag1Data.refrushFlag = 0; //0刷新1加载更多
+								contentData.semFlag1Data.pageNumber = 1; 
+								getLeaveStatistics();
+								getLeavePage();
+							}else if(id=='months-a'){
+								contentData.semFlag2Data.startTime=start_month;
+								contentData.semFlag2Data.endTime=end_month;
+								contentData.semFlag2Data.refrushFlag = 0; //0刷新1加载更多
+								contentData.semFlag2Data.pageNumber = 1; 
+								getInOutCount();
+								getAttendanceCountByMonth();
+								getPageAttendanceStatistics();
+							}
+							picker.dispose();
+							picker = null;
+						});
+					}
+				},
+			});
+			var self = 0;
+			mui.plusReady(function() {
+				(function($) {
+					$('.mui-scroll-wrapper').scroll({
+						indicators: true //是否显示滚动条
+					});
+					$.ready(function() {
+						$.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+							$(pullRefreshEl).pullToRefresh({
+								down: {
+									callback: function() {
+										self = this;
+										if (contentData.semFlag == 0) {
+											contentData.semFlag0Data.refrushFlag = 0; //0刷新1加载更多
+											contentData.semFlag0Data.pageNumber = 1; 
+											getAttendancePage();
+										} else if (contentData.semFlag == 1) {
+											contentData.semFlag1Data.refrushFlag = 0; //0刷新1加载更多
+											contentData.semFlag1Data.pageNumber = 1; //
+											getLeaveStatistics();
+											getLeavePage();
+										} else if (contentData.semFlag == 2) {
+											contentData.semFlag2Data.refrushFlag = 0; //0刷新1加载更多
+											contentData.semFlag2Data.pageNumber = 1; //
+											getInOutCount();
+											getAttendanceCountByMonth();
+											getPageAttendanceStatistics();
+										} 
+										setTimeout(function() {
+											//结束下拉刷新
+											self.endPullDownToRefresh();
+										}, 1000);
+									}
+								},
+								up: {
+									callback: function() {
+										self = this;
+										if (contentData.semFlag == 0) {
+											contentData.semFlag0Data.refrushFlag = 1; //0刷新1加载更多
+											if (contentData.semFlag0Data.pageNumber <= contentData.semFlag0Data.total_page) {
+												getAttendancePage();
+												setTimeout(function() {
+													//结束下拉刷新
+													self.endPullUpToRefresh();
+													if (mui(".mui-table-view-cell").length < 10) {
+														mui(".mui-pull-loading")[0].innerHTML=""
+													}
+												}, 1000);
+											} else {
+												//结束下拉刷新
+												self.endPullUpToRefresh();
+												mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+											}
+										} else if (contentData.semFlag == 1) {
+											contentData.semFlag1Data.refrushFlag = 1; //0刷新1加载更多
+											if (contentData.semFlag1Data.pageNumber <= contentData.semFlag1Data.total_page) {
+												getLeavePage();
+												setTimeout(function() {
+													//结束下拉刷新
+													self.endPullUpToRefresh();
+													if (mui(".mui-table-view-cell").length < 10) {
+														mui(".mui-pull-loading")[1].innerHTML=""
+													}
+												}, 1000);
+											} else {
+												//结束下拉刷新
+												self.endPullUpToRefresh();
+												mui(".mui-pull-loading")[1].innerHTML = "没有更多了";
+											}
+										} else if (contentData.semFlag == 2) {
+											contentData.semFlag2Data.refrushFlag = 1; //0刷新1加载更多
+											if (contentData.semFlag2Data.pageNumber <= contentData.semFlag2Data.total_page) {
+												getPageAttendanceStatistics();
+												setTimeout(function() {
+													//结束下拉刷新
+													self.endPullUpToRefresh();
+													if (mui(".mui-table-view-cell").length < 10) {
+														mui(".mui-pull-loading")[2].innerHTML=""
+													}
+												}, 1000);
+											} else {
+												//结束下拉刷新
+												self.endPullUpToRefresh();
+												mui(".mui-pull-loading")[2].innerHTML = "没有更多了";
+											}
+										}  
+									}
+								}
+							});
+						});
+					});
+				})(mui);
+				
+				let end_monthStr=moment().format('YYYY年MM月')
+				let start_monthStr=moment().subtract(5, 'M').format('YYYY年MM月');
+				let end_month=moment().format('YYYY-MM')
+				let start_month=moment().subtract(5, 'M').format('YYYY-MM');
+				$('#months').html(start_monthStr+' ~ '+end_monthStr)
+				$('#months-a').html(start_monthStr+' ~ '+end_monthStr)
+				
+				contentData.semFlag1Data.startTime=start_month;
+				contentData.semFlag1Data.endTime=end_month;
+				contentData.semFlag2Data.startTime=start_month;
+				contentData.semFlag2Data.endTime=end_month;
+				
+				curPage = utils.getDataFromUrl(window.location.href);
+				tempHead.headTitle = curPage.name;
+				if (curPage && JSON.stringify(curPage) == '{}') { //前四个页面时，不显示返回按钮
+					var ws = plus.webview.currentWebview();
+					if (ws.preload) {
+						curPage = ws.preload;
+						tempHead.headTitle = ws.preload.name;
+					}
+					if (ws.preload.index == 0) {
+						tempHead.showBack = 2;
+					}
+				} else {
+					tempHead.showBack = 1; //更多页面打开时，显示返回按钮
+				}
+				getAttendancePage();
+			}); 
+			 
+			//获取考勤记录
+			function getAttendancePage(){
+				if(loading){events.showWaiting();}
+				let user_code=personal.user_code;
+				if(personal.type_code=='YHLX0004'){
+					user_code=personal.stu_code;
+				}
+				comData = { 
+					stu_code:user_code,
+					page_size:pageSize,
+					page_number: contentData.semFlag0Data.pageNumber,
+					index_code: curPage.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.PARENTS_ATTENDANCE + 'attendance/page', {}, comData, 2, function(data) {
+					events.closeWaiting(); 
+					loading=false;
+					if (data.code == 0) {
+						 console.log("data.data.list: " + JSON.stringify(data.data.list));
+						 contentData.semFlag0Data.total_page=data.data.total_page
+						 if (contentData.semFlag0Data.refrushFlag == 0) {
+						 	contentData.semFlag0Data.attenceList = [].concat(data.data.list);
+							if(data.data.list.length<pageSize){
+								mui(".mui-pull-loading")[0].style.display="none"
+							}
+						 	setTimeout(() => {
+						 		self && self.endPullDownToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 } else {
+						 	contentData.semFlag0Data.attenceList = contentData.semFlag0Data.attenceList.concat(data.data.list);
+						 	// if(data.data.list.length==0){
+						 	// 	mui.toast('暂无更多数据');
+						 	// }    
+						 	setTimeout(() => {
+						 		self && self.endPullUpToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 }
+						 contentData.semFlag0Data.pageNumber++;
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			//获取请假统计
+			function getLeaveStatistics(){
+				if(loading2){events.showWaiting();}
+				let user_code=personal.user_code;
+				if(personal.type_code=='YHLX0004'){
+					user_code=personal.stu_code;
+				}
+				comData = { 
+					stu_code:user_code,
+					begintime:contentData.semFlag1Data.startTime,
+					endtime:contentData.semFlag1Data.endTime,
+					index_code: curPage.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.PARENTS_ATTENDANCE + 'leave/statistics', {}, comData, 2, function(data) {
+					if (data.code == 0) {
+						 contentData.semFlag1Data.total_count=data.data.total_count
+						 let month_data_array=data.data.month_data_array
+						 let months=[];let counts=[];
+						 month_data_array.map(item=>{
+							 months.push(item.month)
+							 counts.push(item.count)
+						 })
+						 //初始化 请假统计 图标数据
+						 var pieChartLeave = echarts.init(document.getElementById('leaveCount'));
+						 pieChartLeave.setOption({
+						 	xAxis: {
+						 		type: 'category',
+						 		data: months
+						 	},
+						 	yAxis: {
+						 		type: 'value'
+						 	},
+						 	series: [{
+						 		data: counts,
+						 		type: 'bar',
+						 		barWith: '30px',
+						 		itemStyle: {
+						 			//通常情况下：
+						 			normal: {
+						 				color: '#00CFBD'
+						 			},
+						 		},
+						 		label: {
+						 			show: true,
+						 			position: 'top',
+						 			valueAnimation: true,
+						 		}
+						 	}]
+						 });
+						 
+					} else {
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			//获取请假记录
+			function getLeavePage(){
+				let user_code=personal.user_code;
+				if(personal.type_code=='YHLX0004'){
+					user_code=personal.stu_code;
+				}
+				comData = { 
+					stu_code:user_code,
+					begintime:contentData.semFlag1Data.startTime,
+					endtime:contentData.semFlag1Data.endTime,
+					page_size:pageSize,
+					page_number: contentData.semFlag1Data.pageNumber,
+					index_code: curPage.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.PARENTS_ATTENDANCE + 'leave/page', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					loading2=false;
+					console.log("data: " + JSON.stringify(data));
+					if (data.code == 0) {
+						 contentData.semFlag1Data.total_page=data.data.total_page
+						 if (contentData.semFlag1Data.refrushFlag == 0) {
+						 	contentData.semFlag1Data.leaveList = [].concat(data.data.list);
+							if(data.data.list.length<pageSize){
+								mui(".mui-pull-loading")[1].style.display="none"
+							}
+						 	setTimeout(() => {
+						 		self && self.endPullDownToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[1].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 } else {
+						 	contentData.semFlag1Data.leaveList = contentData.semFlag1Data.leaveList.concat(data.data.list);
+						 	// if(data.data.list.length==0){
+						 	// 	mui.toast('暂无更多数据');
+						 	// }    
+						 	setTimeout(() => {
+						 		self && self.endPullUpToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[1].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 }
+						 contentData.semFlag1Data.pageNumber++;
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			//获取统计出入数量
+			function getInOutCount(){
+				if(loading3){events.showWaiting();}
+				let user_code=personal.user_code;
+				if(personal.type_code=='YHLX0004'){
+					user_code=personal.stu_code;
+				}
+				comData = { 
+					stu_code:user_code,
+					begintime:contentData.semFlag2Data.startTime,
+					endtime:contentData.semFlag2Data.endTime,
+					index_code: curPage.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.PARENTS_ATTENDANCE + 'attendance/inOutCount', {}, comData, 2, function(data) {
+					if (data.code == 0) {
+						 contentData.semFlag2Data.total_count=data.data.count
+					} else {
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			//按月统计考勤项目
+			function getAttendanceCountByMonth(){
+				let user_code=personal.user_code;
+				if(personal.type_code=='YHLX0004'){
+					user_code=personal.stu_code;
+				}
+				comData = {
+					stu_code:user_code,
+					begintime:contentData.semFlag2Data.startTime,
+					endtime:contentData.semFlag2Data.endTime,
+					index_code: curPage.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.PARENTS_ATTENDANCE + 'attendance/attendanceCountByMonth', {}, comData, 2, function(data) {
+					if (data.code == 0) {
+						let month_data_array=data.data.list
+						let months=[];let counts=[];
+						month_data_array.map(item=>{
+							 months.push(item.month)
+							 counts.push(item.count)
+						})
+						 var pieChartAttence = echarts.init(document.getElementById('attendceCount'));
+						 pieChartAttence.setOption({
+						 	xAxis: {
+						 		type: 'category',
+						 		data: months
+						 	},
+						 	yAxis: {
+						 		type: 'value'
+						 	},
+						 	series: [{
+						 		data: counts,
+						 		type: 'bar',
+						 		barWith: '30px',
+						 		itemStyle: {
+						 			//通常情况下：
+						 			normal: {
+						 				color: '#00CFBD'
+						 			},
+						 		},
+						 		label: {
+						 			show: true,
+						 			position: 'top',
+						 			valueAnimation: true,
+						 		}
+						 	}]
+						 });
+					} else {
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			//分页查询考勤项目统计
+			function getPageAttendanceStatistics(){
+				let user_code=personal.user_code;
+				if(personal.type_code=='YHLX0004'){
+					user_code=personal.stu_code;
+				}
+				comData = {
+					begintime:contentData.semFlag2Data.startTime,
+					endtime:contentData.semFlag2Data.endTime,
+					page_size:pageSize,
+					stu_code:user_code,
+					page_number: contentData.semFlag2Data.pageNumber,
+					index_code: curPage.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.PARENTS_ATTENDANCE + 'attendance/pageAttendanceStatistics', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					loading3=false;
+					if (data.code == 0) {
+						 contentData.semFlag2Data.total_page=data.data.total_page
+						 if (contentData.semFlag2Data.refrushFlag == 0) {
+						 	contentData.semFlag2Data.leaveList = [].concat(data.data.list);
+							if(data.data.list.length<pageSize){
+								mui(".mui-pull-loading")[2].style.display="none"
+							}
+						 	setTimeout(() => {
+						 		self && self.endPullDownToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[2].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 } else {
+						 	contentData.semFlag2Data.leaveList = contentData.semFlag2Data.leaveList.concat(data.data.list);
+						 	// if(data.data.list.length==0){
+						 	// 	mui.toast('暂无更多数据');
+						 	// }    
+						 	setTimeout(() => {
+						 		self && self.endPullUpToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[2].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 }
+						 contentData.semFlag2Data.pageNumber++;
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			function currentYear(){
+				return moment().format("YYYY")
+			}
+			
+			function currentMonth(){
+				return moment().months()
+			}
+		</script>
+	</body>
+
+</html>

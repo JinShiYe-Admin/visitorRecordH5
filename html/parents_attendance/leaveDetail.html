@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+			p{
+				font-size: 14px;
+				color: #505050;
+			}
+			.mui-dtpicker-header button:last-child{
+				background-color:#00CFBD;
+				border-color:#00CFBD ;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background: white;" id="contentData">
+			<div class="mui-row">
+				<div style="text-align: center;margin:25px auto;background-color: #FF9900;border-radius: 50%;width: 66px;height: 66px;">
+					<div style="color: #FFFFFF;font-size: 18px;font-weight: 600;display: inline-block;margin-top: 25px;">{{pageData.item_txt}}</div>
+				</div>
+			</div> 
+			<div class="mui-row">
+				<div class="mui-col-xs-12" style="padding: 0 25px;margin-top: 10px;"><p class="mui-col-xs-4" style="float: left;">请假开始时间：</p><p class="mui-col-xs-8" style="float: left;">{{pageData.begintime}}</p></div>
+				<div class="mui-col-xs-12" style="padding: 0 25px;margin-top: 10px;"><p class="mui-col-xs-4" style="float: left;">请假结束时间：</p><p class="mui-col-xs-8" style="float: left;">{{pageData.endtime}}</p></div>
+				<div class="mui-col-xs-12" style="padding: 0 25px;margin-top: 10px;"><p class="mui-col-xs-4" style="float: left;">出入权限：</p><p class="mui-col-xs-8" style="float: left;">{{pageData.in_out_permission_txt}}</p></div>
+				<div class="mui-col-xs-12" style="padding: 0 25px;margin-top: 10px;word-break: break-all;"><p class="mui-col-xs-4" style="float: left;">请假事由：</p><p class="mui-col-xs-8" style="float: left;">{{pageData.comment}}</p></div>
+				<div class="mui-col-xs-12" style="padding: 0 25px;margin-top: 10px;"><p class="mui-col-xs-4" style="float: left;">批准人：</p><p class="mui-col-xs-8" style="float: left;">{{pageData.create_user_name}}</p></div>
+			</div>
+		</div>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			mui.init();
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					showBack: 1,
+					headTitle: '请假详情',
+				}
+			});
+			//vue数据 
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					personal:store.get(window.storageKeyName.PERSONALINFO),
+					pageData: {},
+				}
+			});
+
+			mui.plusReady(function() {
+				let curPage = utils.getDataFromUrl(window.location.href);
+				console.log("curPage: " + JSON.stringify(curPage));
+				contentData.pageData=curPage
+			});
+		</script>
+	</body>
+
+</html>

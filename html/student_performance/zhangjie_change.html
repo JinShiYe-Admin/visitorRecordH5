@@ -1,0 +1,210 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/data-tree/css/mtree.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/student_performance/stuScore.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+
+			.mtree-demo .mtree {
+				background: #EEE;
+				margin: 20px auto;
+				max-width: 320px;
+				border-radius: 3px;
+			}
+
+			.mtree-skin-selector {
+				text-align: center;
+				background: #EEE;
+				padding: 10px 0 15px;
+			}
+
+			.mtree-skin-selector li {
+				display: inline-block;
+				float: none;
+			}
+
+			.mtree-skin-selector button {
+				padding: 5px 10px;
+				margin-bottom: 1px;
+				background: #BBB;
+			}
+
+			.mtree-skin-selector button:hover {
+				background: #999;
+			}
+
+			.mtree-skin-selector button.active {
+				background: #999;
+				font-weight: bold;
+			}
+
+			ul,
+			menu,
+			dir {
+				-webkit-padding-start: 30px;
+			}
+
+			.mui-icon {
+				font-size: 15px;
+			}
+
+			.last-item {
+				border: 1px solid #D6D4D4;
+				border-radius: 20px;
+				width: auto;
+				font-size: 13px;
+				padding: 10px 20px !important;
+				display: inline-block !important;
+				margin-left: 0em;
+			}
+
+			.checked {
+				background-color: #00BAAD !important;
+				border: 1px solid #00BAAD !important;
+			}
+			
+			.root-a{
+				color: #fff !important;
+				text-align: center;
+				padding-top: 15px !important;
+				background-color:#00BAAD;
+				height: 40px;
+				border-radius: 5px;
+			}
+			ul.mtree.transit li.mtree-node > a.root-a:before {
+			    color: #fff;
+			}
+			
+			ul.mtree.transit li.mtree-active.mtree-open > a.root-a,ul.mtree.transit li.mtree-open > a.root-a {
+			    background: #00BAAD;
+			}
+			
+			ul.mtree.transit > li.mtree-node.root-li {
+				margin-left: -8px;
+				margin-right: 2px; 
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background: white;" id="contentData">
+			<div class="mui-card">
+				<div class="mui-card-header">
+					<h4 class="examName" style="margin: 5px 0px 5px;">请选择章节：</h4>
+				</div>
+				<div class="mui-card-content">
+						<tree-list :list="datas" @item-clicked="onItemClicked" style="margin-top: 0px;margin-bottom: 0px;"></tree-list>
+				</div>
+				
+			</div>
+		</div>
+
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src='http://cdnjs.cloudflare.com/ajax/libs/velocity/0.2.1/jquery.velocity.min.js'></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script src="../../js/data-tree/js/mtree.js" defer></script>
+		<script type="text/javascript">
+			Vue.component('tree-list', {
+				props: {
+					list: { //列表内容
+						type: Array,
+						default: []
+					}
+				},
+				template: `
+										        <ul class="mtree transit">
+										        	<li v-for="(item,index) in list" :class="{'root-li':item.root}" :key="index">
+														<a href="javascript:void(0)" class="mui-icon" :class="{'last-item':!item.child,'root-a':item.root}"  @click="item.child?'':itemClicked(item)">{{item.name}}</a>
+														<template v-if="item.child">
+															<tree-list :list="item.child" @item-clicked="itemClicked" :key="index"></tree-list>
+														</template>
+													</li>
+												</ul>
+										    `,
+				methods: {
+					itemClicked: function(item) {
+						this.$emit('item-clicked', item);
+					}
+				},
+			})
+
+
+			mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					headTitle: '知识点选择',
+				},
+				methods: {}
+			});
+
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					datas: [
+						{key:"zz1",name:'人教版高中数学必修1',root:true,child:[{key:"a1",name:"基础知识1",child:[{key:"b1",name:"词汇1",},{key:"b2",name:"词汇2",},{key:"b3",name:"词汇3",},{key:"b4",name:"词汇4",},{key:"b4",name:"词汇5",},{key:"b6",name:"词汇6",},{key:"b7",name:"词汇7",}]},{key:"a2",name:"基础知识2",child:[{name:"句子1",child:[{key:"b8",name:"标点符号",child:[{key:"c1",name:"帅"},{key:"c2",name:"帅"},{key:"c3",name:"帅"}]},{key:"b16",name:"语句停顿",},{key:"b17",name:"修辞方法",}]},{key:"b9",name:"句子2",child:[{key:"c4",name:"标点符号2",},{key:"c5",name:"语句停顿2",},{key:"c6",name:"修辞方法2",}]},{key:"b20",name:"句子3",},{key:"b21",name:"句子4",}]},{key:"a3",name:"基础知识3",child:[{key:"b10",name:"句子1",child:[{key:"c7",name:"标点符号",child:[{key:"d1",name:"test1"},{key:"d2",name:"test2"},{key:"d3",name:"test3"}]},{key:"c8",name:"语句停顿"},{key:"c9",name:"修辞方法"}]},{key:"b11",name:"句子2",child:[{key:"c10",name:"标点符号2",},{key:"c11",name:"语句停顿2",},{key:"c12",name:"修辞方法2",}]},{key:"c250",name:"句子3",},{key:"c251",name:"句子4"}]},]},
+						{key:"zz2",name:'人教版高中数学必修1',root:true,child:[{key:"a1",name:"基础知识1",child:[{key:"b1",name:"词汇1",},{key:"b2",name:"词汇2",},{key:"b3",name:"词汇3",},{key:"b4",name:"词汇4",},{key:"b4",name:"词汇5",},{key:"b6",name:"词汇6",},{key:"b7",name:"词汇7",}]},{key:"a2",name:"基础知识2",child:[{name:"句子1",child:[{key:"b8",name:"标点符号",child:[{key:"c1",name:"帅"},{key:"c2",name:"帅"},{key:"c3",name:"帅"}]},{key:"b16",name:"语句停顿",},{key:"b17",name:"修辞方法",}]},{key:"b9",name:"句子2",child:[{key:"c4",name:"标点符号2",},{key:"c5",name:"语句停顿2",},{key:"c6",name:"修辞方法2",}]},{key:"b20",name:"句子3",},{key:"b21",name:"句子4",}]},{key:"a3",name:"基础知识3",child:[{key:"b10",name:"句子1",child:[{key:"c7",name:"标点符号",child:[{key:"d1",name:"test1"},{key:"d2",name:"test2"},{key:"d3",name:"test3"}]},{key:"c8",name:"语句停顿"},{key:"c9",name:"修辞方法"}]},{key:"b11",name:"句子2",child:[{key:"c10",name:"标点符号2",},{key:"c11",name:"语句停顿2",},{key:"c12",name:"修辞方法2",}]},{key:"c250",name:"句子3",},{key:"c251",name:"句子4"}]},]}
+					]
+				},
+				methods: {
+					onItemClicked: function(item) {
+						var btnArray = ['是', '否'];
+						mui.confirm('确定要切换到该知识点吗？', '提示', btnArray, function(e) {
+							if (e.index == 0) {
+								mui.fire(plus.webview.currentWebview().opener(), 'checkData', item);
+								mui.back()
+							}else{
+								var node = $('.mtree li');  
+								node.each(function(index, val) {
+								  console.log()
+								  if($(this).hasClass('mtree-active')){
+									  $(this).removeClass('mtree-active')
+								  }
+								});
+							}
+						})
+						
+					}
+				},
+			});
+
+			mui.plusReady(function() {
+
+			});
+		</script>
+	</body>
+
+</html>

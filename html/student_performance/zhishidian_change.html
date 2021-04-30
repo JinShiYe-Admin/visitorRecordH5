@@ -1,0 +1,309 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../js/data-tree/css/mtree.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/student_performance/stuScore.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+
+			.mtree-demo .mtree {
+				background: #EEE;
+				margin: 20px auto;
+				max-width: 320px;
+				border-radius: 3px;
+			}
+
+			.mtree-skin-selector {
+				text-align: center;
+				background: #EEE;
+				padding: 10px 0 15px;
+			}
+
+			.mtree-skin-selector li {
+				display: inline-block;
+				float: none;
+			}
+
+			.mtree-skin-selector button {
+				padding: 5px 10px;
+				margin-bottom: 1px;
+				background: #BBB;
+			}
+
+			.mtree-skin-selector button:hover {
+				background: #999;
+			}
+
+			.mtree-skin-selector button.active {
+				background: #999;
+				font-weight: bold;
+			}
+
+			ul,
+			menu,
+			dir {
+				-webkit-padding-start: 30px;
+			}
+
+			.mui-icon {
+				font-size: 15px;
+			}
+
+			.last-item {
+				border: 1px solid #D6D4D4;
+				border-radius: 20px;
+				width: auto;
+				font-size: 13px;
+				padding: 10px 20px !important;
+				display: inline-block !important;
+				margin-left: 0em;
+			}
+
+			.children-item {
+				/* padding-left: 20px !important; */
+				padding-top: 10px !important;
+				padding-bottom: 10px !important;
+				background-color: #E7FAEF !important;
+			}
+
+			.checked {
+				background-color: #00BAAD !important;
+				border: 1px solid #00BAAD !important;
+			}
+
+			.mui-card {
+				margin: 0px;
+				box-shadow: 0 0px 0px rgba(0, 0, 1, .3);
+			}
+
+			.mui-card-header:after {
+				height: 0px;
+			}
+
+			ul.mtree.transit li.mtree-node>ul:after {
+				height: 0px;
+			}
+
+			ul.mtree.transit li.mtree-node>ul>li:last-child {
+				margin-bottom: 0em !important;
+				padding-bottom: 0em !important;
+			}
+
+			.transit {
+				padding-left: 0px !important;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background: white;" id="contentData">
+			<div class="mui-card" v-if="pointList.length">
+				<div v-if="herfData.flag==0||(herfData.flag==1&&herfData.type==0)" class="mui-card-header">
+					<h4 class="examName" style="width: 100%;text-align: center;margin: 2px 20px 2px;">{{point_name}}</h4>
+				</div>
+				<div v-cloak class="mui-card-content">
+					<tree-list :list="pointList" @item-clicked="onItemClicked" style="margin-top: 0px;margin-bottom: 0px;"></tree-list>
+				</div>
+
+			</div>
+		</div>
+
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src='http://cdnjs.cloudflare.com/ajax/libs/velocity/0.2.1/jquery.velocity.min.js'></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<!-- <script src="../../js/data-tree/js/mtree.js" defer></script> -->
+		<script type="text/javascript">
+			<!-- <a href="javascript:void(0)" class="mui-icon" :class="{'last-item':!item.child,'checked':item.isChecked} "  @click="item.child?'':itemClicked(item)">{{item.name}}</a> -->
+			Vue.component('tree-list', {
+				props: {
+					list: { //列表内容
+						type: Array,
+						default: []
+					}
+				},
+				template: `<ul class="mtree transit">
+							<li v-for="(item,index) in list" :id="item.id">
+								<a href="javascript:void(0)" class="mui-icon" :class="[item.children?'children-item':'last-item']"  @click="item.children?'':itemClicked(item)">{{item.name}}</a>
+								<template v-if="item.children">
+									<tree-list :list="item.children" @item-clicked="itemClicked" :id="item.id"></tree-list>
+								</template>
+							</li>
+						</ul>`,
+				methods: {
+					itemClicked: function(item) {
+						this.$emit('item-clicked', item);
+					}
+				},
+			})
+
+
+			mui.init();
+			curPage = utils.getDataFromUrl(window.location.href);
+			console.log('2222:' + JSON.stringify(curPage));
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					headTitle: '',
+				},
+				methods: {}
+			});
+
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					herfData:curPage,
+					per_code: '',
+					point_name: '',
+					pointList: []
+				},
+				methods: {
+					onItemClicked: function(item) {
+						var btnArray = ['是', '否'];
+						mui.confirm('确定要切换到该知识点吗？', '提示', btnArray, function(e) {
+							if (e.index == 0) {
+								mui.fire(plus.webview.currentWebview().opener(), 'checkData', item);
+								mui.back()
+							} else {
+								var node = $('.mtree li');
+								node.each(function(index, val) {
+									console.log()
+									if ($(this).hasClass('mtree-active')) {
+										$(this).removeClass('mtree-active')
+									}
+								});
+							}
+						})
+
+					}
+				},
+			});
+
+			mui.plusReady(function() {
+				if (curPage.flag == 0) {
+					tempHead.headTitle = '知识点选择';
+					// 获取知识点目录
+					getPointList(function(tempList) {
+						contentData.pointList = [].concat(tempList);
+						//执行异步加载js
+						loadScript("../../js/data-tree/js/mtree.js", function() {
+							console.log("加载download.js成功！");
+						});
+					});
+				} else {
+					if(curPage.type == 0){
+						tempHead.headTitle = '知识点选择';
+					}else{
+						tempHead.headTitle = '章节选择';
+					}
+					getChapterList(function(tempList) {
+						contentData.pointList = [].concat(tempList);
+						//执行异步加载js
+						loadScript("../../js/data-tree/js/mtree.js", function() {
+							console.log("加载download.js成功！");
+						});
+					});
+				}
+			});
+			// 获取知识点目录
+			var getPointList = function(callback) {
+				comData = {
+					per_code: curPage.per_code, //学段代码
+					sub_code: curPage.nowSubject.sub_code, //科目代码
+					index_code: curPage.access,
+				}
+				events.showWaiting();
+				postDataEncry(window.storageKeyName.INTERFACE_STUSCORE + 'point/catalogs', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						contentData.point_name = data.data.list[0].name;
+						callback(data.data.list[0].catalog_list);
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+
+			// 获取章节目录
+			var getChapterList = function(callback) {
+				comData = {
+					type: curPage.type, //0为查知识点目录,1为查章节目录
+					sub_code: curPage.nowSubject.sub_code, //科目代码
+					index_code: curPage.access,
+				}
+				events.showWaiting();
+				postDataEncry(window.storageKeyName.INTERFACE_STUSCORE + 'errorBook/catalogs', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						if (curPage.type == 0) {
+							contentData.point_name = data.data.list[0].name;
+							callback(data.data.list[0].catalog_list);
+						} else {
+							var tempArr = data.data.list.map(function(item) {
+								return {
+									children: item.catalog_list,
+									name: item.name,
+									id: item.id,
+								}
+							})
+							callback(tempArr);
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+
+			function loadScript(url, callback) {
+				var script = document.createElement("script");
+				script.type = "text/javascript";
+				if (script.readyState) { //IE
+					script.onreadystatechange = function() {
+						if (script.readyState == "loaded" ||
+							script.readyState == "complete") {
+							script.onreadystatechange = null;
+							callback();
+						}
+					};
+				} else { //加载
+					script.onload = function() {
+						callback(); //加载成功的回调
+					};
+				}
+				script.src = url;
+				document.body.appendChild(script);
+			}
+		</script>
+	</body>
+
+</html>

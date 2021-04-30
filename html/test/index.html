@@ -1,0 +1,358 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/student_performance/stuScore.css" />
+		<link rel="stylesheet" href="../../js/swiper/swiper-bundle.min.css">
+		<link rel="stylesheet" href="../../js/timeline/timeline.css">
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+
+			.circular-square {
+				border-radius: 10%;
+				width: 30px;
+				height: 30px;
+			}
+
+			.swiper-container {
+				margin-top: 10px;
+				margin-bottom: 15px;
+				width: 100%;
+				height: 100%;
+			}
+
+			.swiper-slide {
+				text-align: center;
+				font-size: 18px;
+				/* background: #fff; */
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+			}
+
+			.swiper-button-next:after,
+			.swiper-button-prev:after {
+				font-size: 15px;
+				font-weight: bold;
+				color: #00CFBD;
+			}
+
+			.swiper-slide-span {
+				width: 200px;
+				background: #00CFBD;
+				padding-top: 5px;
+				padding-bottom: 5px;
+				border-radius: 50px;
+				color: white;
+			}
+
+			.timelineDate {
+				width: 30%;
+				font-size: 0.75em;
+				padding-top: 0.40rem;
+				padding-right: 2rem;
+				text-align: left;
+			}
+
+			.timelineDesc {
+				/* width: 50%; */
+				margin: 0;
+				font-size: 14px;
+				font-weight: 400;
+				color: #808080;
+			}
+
+			.diva {
+				color: gray;
+				float: left;
+				width: 45px;
+				height: 50px;
+				font-size: 14px;
+			}
+
+			.divb {
+				margin-left: 20px;
+				float: left;
+				width: 70%;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				overflow: hidden;
+			}
+
+			.divd {
+				padding-left: 10px;
+				width: 80%;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				overflow: hidden;
+				/* background: #7FFFD4; */
+			}
+
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 2;
+				/* 仅为适配swiper而改动，原值：1 */
+			}
+
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+
+			.mui-pull-top-tips .mui-pull-loading {
+				margin: 0;
+			}
+
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			}
+
+			.mui-scroll-wrapper {
+				position: fixed;
+				/* 仅为适配swiper而改动，原值：absolute */
+			}
+
+			.mui-grid-view.mui-grid-9 {
+				margin: 0;
+				padding: 0;
+				border-top: 0px solid #eee;
+				border-left: 0px solid #eee;
+				background-color: white;
+			}
+
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+				background: white;
+				margin: 0;
+				padding: 11px 15px;
+				vertical-align: top;
+				border-right: 0px solid #eee;
+				border-bottom: 0px solid #eee;
+			}
+
+			.mui-media-body {
+				margin: 4px 0;
+			}
+
+			.pieChart {
+				height: 150px;
+				margin: 10px;
+				padding: 0px;
+			}
+
+			.pieChartline {
+				height: 350px;
+				margin: -20px 10px;
+				padding: 0px;
+			}
+
+			.pieChart-worngbook {
+				height: 200px;
+				margin: 10px;
+				padding: 0px;
+			}
+
+			.line {
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #77DDA0;
+				margin-top: 30px;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak v-if="showBack==2" @click="clickLeftImg" class="mui-icon mui-pull-left">
+				<img v-cloak :src=headImg style="width: 26px;height: 26px;border-radius: 50%;" />
+			</a>
+			<a v-cloak v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background: white;" id="contentData">
+			
+		</div>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<script src="../../js/utils/echarts-all.js"></script>
+		<script src="../../js/echarts/echarts-en.min.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+
+		<script type="text/javascript">
+			mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					showBack: 0,
+					headTitle: '',
+					headImg: setImg(personal.img_url, 9)
+				},
+				methods: {
+					clickLeftImg: function() {
+						appPay.openMenu();
+					}
+				}
+			});
+
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					semFlag: 0, //点击的seg索引
+					singleSubScore: { //单科成绩
+						refrushFlag: 0, //0刷新1加载更多
+						subList: [], //科目列表
+						nowSubject: {}, //当前科目信息
+						pageNumber: 1,
+						pageSize: 10,
+						singleScoreList: [], //根据当前科目得到的列表
+					},
+					sumSubScore: { //全科成绩
+						refrushFlag: 0, //0刷新1加载更多
+						pageNumber: 1,
+						pageSize: 10,
+						sumScoreList: []
+					},
+					knowPoints: {
+						subList: [], //科目列表
+						nowSubject: {}, //当前科目信息
+						knowData: {
+							total_point: '',
+						}
+					},
+					wrongBook: {
+						subList: [], //科目列表
+						nowSubject: {}, //当前科目信息
+						wrongData: {
+							zs: '',
+							knowWrongList: [], //知识点错题榜
+							homeWorkWrongList: [], //考试/作业错题榜
+						}
+					}
+				},
+				methods: {},
+			});
+			var self = 0;
+			mui.plusReady(function() {
+
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				tempHead.headTitle = curPage.name;
+				if (curPage && JSON.stringify(curPage) == '{}') { //前四个页面时，不显示返回按钮
+					var ws = plus.webview.currentWebview();
+					console.log("当前Webview：" + JSON.stringify(ws.preload));
+					if (ws.preload) {
+						curPage = ws.preload;
+						tempHead.headTitle = ws.preload.name;
+					}
+					if (ws.preload.index == 0) {
+						tempHead.showBack = 2;
+					}
+				} else {
+					tempHead.showBack = 1; //更多页面打开时，显示返回按钮
+				}
+			});
+		</script>
+	</body>
+
+</html>

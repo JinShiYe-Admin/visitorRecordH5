@@ -1,0 +1,508 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport"
+			content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<style>
+			[v-cloak] {
+				visibility: hidden;
+				display: none !important;
+			}
+
+			html,
+			body {
+				background-color: #efeff4;
+			}
+
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			
+			.mui-scroll-wrapper{
+				background: #FFFFFF;
+			}
+			
+			.mui-scroll-wrapper{
+				padding: 0px;
+				border-right: 1px solid #EAEAEA;
+			}
+			
+			.mui-table-view:before,.mui-table-view:after,.mui-table-view-cell:before,.mui-table-view-cell:after,.mui-input-group .mui-input-row:after,.mui-input-group:before,.mui-input-group:after {
+			    height: 0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">{{titleName}}</h1>
+			<a @click.stop="sure()" class="mui-pull-right" style="font-size: 14px;margin-top: 0px;">确定</a>
+		</header>
+		<div id="datasource" class="mui-content mui-fullscreen" style="z-index:0" v-cloak>
+			<div class="mui-row">
+				<div class="mui-col-xs-5">
+					<div class="mui-scroll-wrapper" :style="{height:windowHeight}" v-cloak>
+						<div class="mui-scroll">
+							<div class="scroll-body" >
+								 <ul class="mui-table-view" v-cloak>
+								 	<li class="mui-table-view-cell mui-collapse" v-for="model in pageArray" @tap="clickGrdLi($event,model)">
+								 		<a class="mui-navigate-right" href="#">{{model.name}}</a>
+								 		<div class="mui-collapse-content">
+								 			<ul v-if="model.clsArray.length==0" class="mui-table-view" style="margin-top: -7px;margin-left: -30px;"
+								 			 v-cloak>
+								 				<li class="mui-table-view-cell">
+								 					<div class="mui-table">
+								 						<div class="mui-table-cell">
+								 							<label style="margin-left: 20px;color: firebrick;">暂无班级</label>
+								 						</div>
+								 					</div>
+								 				</li>
+								 			</ul>
+								 			<ul v-else class="mui-table-view" style="margin-top: -7px;margin-left: -30px;" v-cloak>
+								 				<li v-for="clsmodel in model.clsArray" class="mui-table-view-cell"  @tap.stop="clickClsLi($event,model,clsmodel)">
+								 					<span v-if="clsmodel.checked" style="color: #00CFBD !important;padding-left: 10px;">{{clsmodel.name}}</span>
+													<span v-else style="padding-left: 10px;">{{clsmodel.name}}</span> 
+								 				</li>
+								 			</ul>
+								 		</div>
+								 	</li>
+								 </ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="mui-col-xs-7">
+					<div class="mui-scroll-wrapper" :style="{height:windowHeight}" v-cloak>
+						<div class="mui-scroll">
+							<div class="scroll-body" >
+								<template v-if="cClicked">
+									<template v-if="stuArray.length>0">
+										<form class="mui-input-group">
+											<template v-for="item in stuArray">
+												<div class="mui-input-row mui-checkbox mui-left">
+													<label>{{item.stu_name}}</label>
+													<input name="checkbox" :value="item.stu_code" type="checkbox" :checked="item.checked" @click="stuClick(item)">
+												</div>
+											</template>
+										</form>
+									</template>
+									<template v-else>
+										<div style="margin:10px 10px 0;">暂无学生</div>
+									</template>
+								</template>
+								<template v-else>
+									<div style="margin:10px 10px 0;">请选择班级</div>
+								</template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			// console.log('personal:' + JSON.stringify(personal));
+			var curPage = {};
+			var pageIndex = 1; //请求数据页面
+			var totalPageCount; //总页码
+			var flagRef = 0; //是刷新0，还是加载更多1
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					titleName: ''
+				},
+				methods: {
+					sure: function() {
+						let checkedStu=[]
+						let checkedStuNames=[]
+						datasource.pageArray.map(grdItem=>{
+							let gname=grdItem.name
+							grdItem.clsArray.map(clsItem=>{
+								let cname=clsItem.name
+								let names=[]
+								clsItem.stuArray.map(stuItem=>{
+									if(stuItem.checked){
+										checkedStu.push(stuItem)
+										names.push(stuItem.stu_name)
+									}
+								})
+								if(names.length>0){
+									checkedStuNames.push(gname+" "+cname+":"+names.join(","))	
+								}
+							})
+						})
+						mui.fire(plus.webview.currentWebview().opener(), 'refreshStudent', [checkedStu,checkedStuNames]);
+						setTimeout(function() {
+							mui.back()
+						}, 100)
+					}
+				}
+			});
+			var datasource = new Vue({
+				el: "#datasource",
+				data: {
+					windowHeight: '0', //窗口高度
+					grdSelect:{},
+					clsSelect:{},
+					cClicked:false,
+					pageArray: [] ,//界面年级班级总数组
+					stuArray:[],//学生数组
+				},
+				methods: {
+					clickGrdLi: function(e,model) {
+						this.grdSelect=model
+					},
+					clickClsLi:function(e,gmodel,model){
+						if(this.clsSelect.value===model.value){
+							return
+						}
+						this.grdSelect=gmodel
+						datasource.pageArray.map(gm=>{
+							gm.clsArray.map(item=>{
+								item.checked=false
+							})
+						})
+						model.checked=true
+						this.clsSelect=model
+						this.cClicked=true
+						let pageArray=datasource.pageArray
+						let serviced=curPage.serviced
+						console.log(JSON.stringify(curPage));
+						pageArray.map(grdItem=>{							if(grdItem.value===gmodel.value){								grdItem.clsArray.map(clsItem=>{									if(clsItem.value===model.value){
+										if(clsItem.loaded){
+											datasource.stuArray=clsItem.stuArray
+										}else{
+											if(serviced=='99'){
+												getStuArray()
+											}else if(serviced=='0'){
+												getStuUnDGArray()
+											}else if(serviced=='1'){
+												getStuDGArray();
+											}else{
+												getStuDGArray();
+											}
+										}									}								})							}						})
+					},
+					stuClick:function(stu){
+						stu.checked=!stu.checked
+					}
+				}
+			});
+			mui.init();
+
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				// console.log('2222:' + JSON.stringify(curPage));
+				datasource.windowHeight = document.body.clientHeight-45  + 'px'
+				tempVue.titleName = curPage.name;
+				events.showWaiting();
+				getGrdDataArray();
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+			});
+
+			//获取数据范围授权：年级
+			function getGrdDataArray() {
+				var comData = {
+					get_grd: true,
+					all_grd: false,
+					index_code: curPage.access,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'acl/dataRange', {}, comData, 2, function(datas) {
+					if (datas.code == 0) {
+						for (var i = 0; i < datas.data.grd_list.length; i++) {
+							var tempM = datas.data.grd_list[i];
+							tempM.clsArray = [];
+							getClsDataArray(datas.data.grd_list, tempM);
+						}
+					} else {
+						events.closeWaiting()
+						mui.toast(datas.msg);
+					}
+				});
+			};
+
+			//获取数据范围授权：班级
+			function getClsDataArray(grd_list, grdModel) {
+				const params = {
+					grd_code: grdModel.value,
+					get_cls: true,
+					all_cls: false,
+					index_code: curPage.access,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'acl/dataRange', {}, params, 2, function(datas) {
+					events.closeWaiting()
+					if (datas.code == 0) {
+						for (var i = 0; i < datas.data.cls_list.length; i++) {
+							datas.data.cls_list[i].stuArray=[]
+							datas.data.cls_list[i].loaded = false;
+						}
+						for (var i = 0; i < grd_list.length; i++) {
+							if (grdModel.value === grd_list[i].value) {
+								grd_list[i].clsArray = datas.data.cls_list;
+							}
+						}
+						datasource.pageArray = grd_list
+						
+						let serviced=curPage.serviced
+						let grd_clss=[]
+						curPage.selectData.map(item=>{
+							let grd_cls={
+								grd_code:item.grd_code,
+								cls_code:item.cls_code,
+								cls_name:item.cls_name,
+								grd_name:item.grd_name,
+							}
+							let input=true
+							grd_clss.map(gcitem=>{
+								if(item.grd_code===gcitem.grd_code && item.cls_code===gcitem.cls_code){
+									input=false
+								}
+							})
+							if(input){
+								grd_clss.push(grd_cls)
+							}
+						})
+						grd_clss.map(item=>{
+							if(serviced=='99'){//全部学生
+								getStuArray(item)
+							}else if(serviced=='0'){//只发试用
+								getStuUnDGArray(item);
+							}else if(serviced=='1'){//只发订购
+								getStuDGArray(item);
+							}else{
+							 	getStuDGArray(item); 
+							 }
+						})
+					} else {
+						mui.toast(datas.msg);
+					}
+				});
+			};
+
+			 
+
+			//根据年级班级获取学生
+			function getStuArray(student) {
+				events.showWaiting()
+				let grdCode=datasource.grdSelect.value
+				let clsCode=datasource.clsSelect.value
+				let grdName=datasource.grdSelect.name
+				let clsName=datasource.clsSelect.name
+				if(student){
+					grdCode=student.grd_code
+					clsCode=student.cls_code
+					grdName=student.grd_name
+					clsName=student.cls_name
+				}
+				var params = {
+					grd_codes:grdCode,
+					cls_codes:clsCode,
+					page_size: 100000,
+					page_number: -1,
+					index_code: curPage.access,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'stu', {}, params, 2, function(datas) {
+					events.closeWaiting()
+					if (datas.code == 0) {
+						datas.data.list.map(item=>{
+							item.grd_name=grdName
+							item.grd_code=grdCode
+							item.cls_name=clsName
+							item.cls_code=clsCode
+							item.checked=false
+							curPage.selectData.map(citem=>{
+								if(citem.grd_code===grdCode && citem.cls_code===clsCode && citem.stu_code===item.stu_code){
+									item.checked=true
+								}
+							})
+						})
+						
+						datasource.pageArray.map(grdItem=>{
+							if(grdItem.value===grdCode){
+								grdItem.clsArray.map(clsItem=>{
+									if(clsItem.value===clsCode){
+										clsItem.stuArray=datas.data.list
+										clsItem.loaded=true
+									}
+								})
+							}
+						})
+						datasource.stuArray=datas.data.list
+					} else {
+						mui.toast(datas.msg);
+					}
+				});
+			};
+
+
+			//根据年级班级获取已订购的学生
+			function getStuDGArray(student) {
+				events.showWaiting()
+				let grdCode=datasource.grdSelect.value
+				let clsCode=datasource.clsSelect.value
+				let grdName=datasource.grdSelect.name
+				let clsName=datasource.clsSelect.name
+				if(student){
+					grdCode=student.grd_code
+					clsCode=student.cls_code
+					grdName=student.grd_name
+					clsName=student.cls_name
+				}
+				var params = {
+					grd_code: grdCode,//接口只能传单个
+					cls_code: clsCode,//接口只能传单个
+					op_code:"index",
+					index_code: curPage.access,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'stu/servStuList', {}, params, 2, function(datas) {
+					events.closeWaiting()
+					if (datas.code == 0) {
+						// console.log("订购学生: " +  JSON.stringify(datas.data.list));
+						datas.data.list.map(item=>{
+							item.grd_name=grdName
+							item.grd_code=grdCode
+							item.cls_name=clsName
+							item.cls_code=clsCode
+							item.checked=false
+							curPage.selectData.map(citem=>{
+								if(citem.grd_code===grdCode && citem.cls_code===clsCode && citem.stu_code===item.stu_code){
+									item.checked=true
+								}
+							}) 
+						})
+						datasource.pageArray.map(grdItem=>{
+							if(grdItem.value===grdCode){
+								grdItem.clsArray.map(clsItem=>{
+									if(clsItem.value===clsCode){
+										clsItem.stuArray=datas.data.list
+										clsItem.loaded=true
+									}
+								})
+							}
+						})
+						datasource.stuArray=datas.data.list
+					} else {
+						mui.toast(datas.msg);
+					}
+				});
+			};
+			
+			//根据年级学生和已订购学生的差额，得到未订购的学生
+			function getStuUnDGArray(student){
+				 events.showWaiting()
+				 let grdCode=datasource.grdSelect.value
+				 let clsCode=datasource.clsSelect.value
+				 let grdName=datasource.grdSelect.name
+				 let clsName=datasource.clsSelect.name
+				 if(student){
+				 	grdCode=student.grd_code
+				 	clsCode=student.cls_code
+				 	grdName=student.grd_name
+				 	clsName=student.cls_name
+				 }
+				 
+				 var params = {
+				 	grd_codes:grdCode,
+				 	cls_codes:clsCode,
+				 	page_size: 100000,
+				 	page_number: -1,
+				 	index_code: curPage.access,
+				 }
+				 postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'stu', {}, params, 2, function(datasAllStu) {
+				 	if (datasAllStu.code == 0) {
+				 		let allStu=datasAllStu.data.list
+						var params = {
+							grd_code: grdCode,//接口只能传单个
+							cls_code: clsCode,//接口只能传单个
+							op_code:"index",
+							index_code: curPage.access,
+						}
+						postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'stu/servStuList', {}, params, 2, function(datasDGStu) {
+							events.closeWaiting()
+							if (datasDGStu.code == 0) {
+								let dgStu=datasDGStu.data.list
+								datasDGStu.data.list.map(item=>{
+									item.grd_name=grdName
+									item.grd_code=grdCode
+									item.cls_name=clsName
+									item.cls_code=clsCode
+								})
+								let unDGStu=[];
+								allStu.map(aitem=>{
+									let push=true
+									dgStu.map(dgitem=>{
+										if(aitem.grd_code===dgitem.grd_code && aitem.cls_code===dgitem.cls_code && aitem.stu_code===dgitem.stu_code){
+											push=false
+										}
+									})
+									if(push){
+										unDGStu.push(aitem)
+									}
+								})
+								unDGStu.map(item=>{
+									item.checked=false
+									curPage.selectData.map(citem=>{
+										if(citem.grd_code===item.grd_code && citem.cls_code===item.cls_code && citem.stu_code===item.stu_code){
+											item.checked=true
+										}
+									}) 
+								})
+								console.log("所有学生: " +allStu.length+","+ JSON.stringify(allStu));
+								console.log("订购学生: " +dgStu.length+","+ JSON.stringify(dgStu));
+								console.log("未订购学生: " +unDGStu.length+","+ JSON.stringify(unDGStu));
+								console.log("curPage.selectData: " + JSON.stringify(curPage.selectData));
+								datasource.pageArray.map(grdItem=>{
+									if(grdItem.value===grdCode){
+										grdItem.clsArray.map(clsItem=>{
+											if(clsItem.value===clsCode){
+												clsItem.stuArray=unDGStu
+												clsItem.loaded=true
+											}
+										}) 
+									}
+								})
+								datasource.stuArray=unDGStu
+							} else {
+								mui.toast(datas.msg);
+							}
+						});
+				 	} else {
+						events.closeWaiting()
+				 		mui.toast(datas.msg);
+				 	}
+				 });
+			}
+		</script>
+	</body>
+
+</html>

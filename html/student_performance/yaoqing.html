@@ -1,0 +1,266 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+			.circular-square {
+				border-radius: 10%;
+				width: 30px;
+				height: 30px;
+			}
+
+			.divd {
+				padding-left: 10px;
+				width: 80%;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				overflow: hidden;
+				/* background: #7FFFD4; */
+			}
+
+			.mui-grid-view.mui-grid-9 {
+				margin: 0;
+				padding: 0;
+				border-top: 0px solid #eee;
+				border-left: 0px solid #eee;
+				background-color: white;
+			}
+
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+				background: white;
+				margin: 0;
+				padding: 11px 15px;
+				vertical-align: top;
+				border-right: 0px solid #eee;
+				border-bottom: 0px solid #eee;
+			}
+
+			.chart {
+				height: 200px;
+				margin: 10px;
+				padding: 0px;
+			}
+			
+			.mui-grid-view.mui-grid-9.table {
+			    border-top: 1px solid #eee !important;
+			    border-left: 1px solid #eee !important;
+			}
+			
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell.table {
+				text-align: left;
+				padding: 0 7px;
+			    border-right: 1px solid #eee !important;
+			    border-bottom: 1px solid #eee !important;
+			}
+			
+			.mui-table-view-cell.beauline:after {
+			    left: 0 !important;
+				height: 0 !important;
+			}
+			.bg-gray{
+				background: #eaeaea !important;
+			}
+			
+			.mui-table-view-cell:after {
+			    left: 0px;
+			}
+			.diva{
+				margin:15px 10px 0px;
+			}
+			.divb{
+				margin:15px 10px 0px;padding-bottom: 80px;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background: white;" id="contentData">
+				<div :class="index==stuList.length-1?'divb':'diva'" v-for="(item,index) in stuList">
+				 <div style="height: 22px;width: 4px;background: #55ffff;float: left;margin-right: 5px;"></div>
+				 <div>{{item.cls_name}}</div>
+				 <div style="height: 3px;width: 100%;background: #B5E9E5;margin-top: 8px;"></div>
+				 <div class="mui-row">
+					<div v-for="(stuItem,index) in item.stu_list" class="mui-col-xs-3" style="height: 50px;" :style="{'margin-top':index<4?'15px':'0','text-align':stuItem.stu_name&&stuItem.stu_name.length>4?'left':'center'}" @click="clickMe(item.cls_code,stuItem)">
+						<p 
+							style="padding:5px 10px;margin: 0 3px;"
+							:style="{
+							'background':stuItem.isCheck?'#43CF7C':'',
+							'border-radius':stuItem.isCheck?'15px':'0',
+							'color':stuItem.isCheck?'#FFFFFF':''
+							}" 
+					    >{{stuItem.stu_name}}</p>
+					</div>
+				 </div> 
+			</div>
+			<div class="mui-row" style="position: fixed;bottom: 0px;padding: 10px;text-align: center;width: 100%;background-color: #FFFFFF;border-top: 1px solid rgba(234, 234, 234, 0.5)">
+				<button type="button" style="background: #43CF7C;border: #43CF7C;color: #FFFFFF; border-radius: 13px;width: 120px;height: 50px;margin-right: 10px;" class="mui-btn" @click="pk()">邀请</button>
+				<button type="button" style="background: #999999;border: #999999;color: #FFFFFF; border-radius: 13px;width: 120px;height: 50px;margin-left: 10px;" class="mui-btn" @click="cancel()">取消</button>
+			</div>
+		</div> 
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			mui.init();
+			//获取个人信息
+			// var personal = store.get(window.storageKeyName.PERSONALINFO);
+			// console.log('personal:' + JSON.stringify(personal));
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					showBack: 1,
+					headTitle: 'PK邀请',
+				}
+			});
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					personal : store.get(window.storageKeyName.PERSONALINFO),
+					checkModel:1,//选择模式 1单选 2多选
+					stuList:[]
+				},
+				methods: {
+					pk:function(){
+						let student=[]
+						this.stuList.map(clsItem=>{
+							let cls={}
+							let checkedStu=[]
+							clsItem.stu_list.map(stuItem=>{
+								if(stuItem.isCheck){
+									checkedStu.push(stuItem)
+								}
+							})
+							cls.cls_code=clsItem.cls_code
+							cls.cls_name=clsItem.cls_name
+							cls.stu=[].concat(checkedStu)
+							if(checkedStu.length>0){
+								student.push(cls)
+							}
+						})
+						console.log("student: " + JSON.stringify(student));
+						if(student.length>0){
+							// 1.13.添加PK记录
+							getAddPK(student);
+						}else{ 
+							mui.toast("你没有选择任何学生")
+						}
+					},
+					cancel:function(){
+						mui.back();
+					},
+					clickMe:function(cls_code,item){
+						console.log('cls_code:'+cls_code);
+						console.log("item: " + JSON.stringify(item));
+						let isCheck=item.isCheck
+						this.stuList.map(clsItem=>{
+							clsItem.stu_list.map(stuItem=>{
+								if(this.checkModel==1){
+									stuItem.isCheck=false
+								}
+								if(clsItem.cls_code==cls_code && stuItem.stu_code == item.stu_code){
+									if(isCheck){
+										stuItem.isCheck=false
+									} else{
+										stuItem.isCheck=true
+									}
+								}
+							})
+						})
+					}
+				},
+			});
+
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				// 1.12.全科获取pk学生列表
+				getFullSubPK();
+			});
+			
+			// 1.12.全科获取pk学生列表
+			var getFullSubPK = function() {
+				comData = {
+					id: curPage.id,
+					index_code: curPage.access,
+				}
+				events.showWaiting();
+				postDataEncry(window.storageKeyName.INTERFACE_STUSCORE + 'fullSub/pkStuList', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						for(var a = 0;a<data.data.list.length;a++){
+							var tempM0 = data.data.list[a];
+							var tempArr = [];
+							for(var b = 0;b<tempM0.stu_list.length;b++){
+								var tempM1 = tempM0.stu_list[b];
+								if(tempM1.stu_code != contentData.personal.user_code){
+									tempM1.isCheck = false;
+									tempArr.push(tempM1);
+								}
+							}
+							tempM0.stu_list = [].concat(tempArr);
+						}
+						contentData.stuList = [].concat(data.data.list);
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			// 1.13.添加PK记录
+			var getAddPK = function(sutArray) {
+				comData = {
+					index_code: curPage.access,
+					paper_id:curPage.id,//试卷id
+					cls_code:sutArray[0].cls_code,//当前用户班级
+					cls_name:sutArray[0].cls_name,//当前用户班级
+					user_code:contentData.personal.user_code,//当前用户代码
+					user_name:contentData.personal.user_name,//当前用户名称
+					pk_user_code:sutArray[0].stu[0].stu_code,//对手用户代码
+					pk_user_name:sutArray[0].stu[0].stu_name,//对手用户名称
+				}
+				events.showWaiting();
+				postDataEncry(window.storageKeyName.INTERFACE_STUSCORE + 'fullSub/addPk', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						mui.toast(data.msg);
+						mui.fire(plus.webview.currentWebview().opener(), 'getFullSubPK', {});
+						setTimeout(function() {
+							mui.back()
+						}, 100)
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

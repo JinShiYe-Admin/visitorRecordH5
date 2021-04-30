@@ -1,0 +1,357 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>组卷测试</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
+		<style type="text/css">
+			.mui-bar-nav {
+				z-index: 999;
+			}
+			#header:after {
+				content: "";
+				position: absolute;
+				z-index: -1;
+				left: 0;
+			    right: 0;
+			    top: 0;
+			    bottom: 0;
+			}
+			.mui-bar-tab {
+				height: 1rem;
+				background-color: #F9F9F4;
+			}
+			.mui-bar-tab .mui-tab-item {
+				height: 1rem;
+			}
+			.mui-bar-tab .mui-tab-item .mui-icon {
+				font-size: 0.44rem;
+				top: 0;
+				margin-bottom: 0.04rem;
+				pointer-events: none;
+			}
+			.mui-bar-tab .mui-tab-item .mui-icon~.mui-tab-label {
+				font-size: 0.24rem;
+			}
+			.label-wrapper .done-box {
+				display: inline-block;
+				width: 0.32rem;
+				height: 0.32rem;
+				border: 1px solid #4AC058;
+				border-radius: 2px;
+				text-align: center;
+				line-height: 0.22rem;
+				position: absolute;
+				right: 0.6rem;
+				top: 50%;
+				margin-top: -0.16rem;
+			}
+			#subRadar {
+				min-height: 205px;
+				max-height: 440px;
+				margin-bottom: .6rem;
+			}
+			#analysis {
+				max-height: 100%;
+				overflow-y: auto;
+			}
+			.mui-android #bl-analysis .mui-table-view-cell:after, .mui-android #bl-analysis .same-line-list:after {
+				transform: none;
+				bottom: 1px;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header id="header" class="mui-bar mui-bar-nav theme">
+			<a v-show="!title" class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel(1)" v-cloak>{{gradeItem?(gradeItem.per_name||"学段"):"学段"}}<span class="mui-icon-arrowdown"></span></a>
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title" v-if="title" v-text="title"></h1>
+			<h1 class="mui-title" v-else>
+				<a class="subject mui-icon" @tap.stop="showTopPannel(2)" v-cloak>{{subjectItem?(subjectItem.sub_name||"科目"):"科目"}}<span class="mui-icon-arrowdown"></span></a>
+			</h1>
+			<transition name="slide-down">	
+				<div class="options-pannel mui-clearfix" v-show="showItem" v-cloak>
+					<div v-for="(v, i) in item.list" class="radio-wrap">
+						<label :class="{selected:v.per_code==item.selected||v.sub_code==item.selected}" @click="selectItem">
+							<input type="radio" v-model="item.selected" name="item"  :value="v.per_code||v.sub_code" />{{v.per_name||v.sub_name||"未命名"}}
+						</label>
+					</div>
+				</div>
+			</transition>
+		</header>
+		
+		<div class="mui-content">
+			<!--组卷测试-->
+			<div id="test-menu" class="mui-control-content mui-active" style="height: 100%;">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div id="testMenu" class="mui-content vue-tree">
+							<div class="kn-menu" v-cloak>
+								<tree-menu v-for="(model, i) in menu" :key="i" 
+								:model="model" :depth="0" :activeid="0" :hidefinish="false" @node-click="selectNode"></tree-menu>
+								<p v-if="emptyMsg"  style="padding: 0.3rem;">{{emptyMsg}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<!-- <script src="../../js/utils/echarts-all.js"></script> -->
+		<!-- <script src="../../js/echarts/echarts-en.min.js"></script> -->
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+
+		<script type="text/javascript" src="../../js/btlearn/common.js"></script>
+		<script type="text/javascript">
+			var self, test_start, index_code;
+			var prdLimit = []; //学段限权
+			
+			var userInfo = store.get(window.storageKeyName.PERSONALINFO) || {};
+			
+			var mask = mui.createMask(function(){
+				header.showItem = false;
+			});
+			
+			mui.init();
+			
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
+				
+				var curPage = utils.getDataFromUrl(window.location.href);
+				if (curPage && JSON.stringify(curPage) == '{}') { 
+					index_code = self.preload.access.split('#')[1];
+				} else {
+					index_code = curPage.access.split('#')[1];
+				}
+				
+				// 保存index_code
+				store.set("zxkt_current_index_code", index_code);
+				
+				//开始测试页
+				test_start = mui.preload({
+					url: 'zujuancs_start.html',
+					id: 'bl-test-start'
+				});
+				
+				// 刷新数据
+				window.addEventListener("refresh", function(e){
+					// 检测目录是否完成
+					// console.log(JSON.stringify(e.detail))
+					if(e.detail.hasOwnProperty("isFinish")){
+						e.detail.isFinish && readTree(testMenu.menu, function(node){
+							if(node.id==e.detail.nodeId){
+								node.is_finish=1;
+							}
+						});
+					}
+				});
+				
+				//最初数据，获取目录
+				header.getPer();
+				
+			});
+			
+			//头部
+			var header = new Vue({
+				el: "#header",
+				data: {
+					per: {selected: 0, list: []},
+					subject: {selected: 0, list: []},
+					topPannel: 0, //1-grade，2-subject
+					title: "",
+					showItem: false
+				},
+				computed: {
+					// 下拉列表选项
+					item: function() {
+						if(this.topPannel==1){
+							return this.per;
+						}else if(this.topPannel==2) {
+							return this.subject;
+						}else{
+							return {selected: 0, list: []};
+						}
+					},
+					// 已选年级
+					gradeItem: function() {
+						var selected = this.per.list?filterArray(this.per.list, "per_code", this.per.selected)[0]:null;
+						return selected;
+					},
+					// 已选科目
+					subjectItem: function() {
+						var selected = this.subject.list?filterArray(this.subject.list, "sub_code", this.subject.selected)[0]:null;
+						return selected;
+					}
+				},
+				methods: {
+					//显示头部选项
+					showTopPannel: function(type) {
+						if(this.topPannel==type&&this.showItem) {
+							this.showItem = false;
+							mask.close();
+						}else{
+							this.showItem = true;
+							this.topPannel = type;
+							mask.show();
+						}
+					},
+					// 获取学段
+					getPer: function() {
+						var _this = this;
+						plus.nativeUI.showWaiting();
+						postDataEncry(window.storageKeyName.INTERFACE_ZXKT + "/pub/resPer", {}, {
+							index_code,
+							user_code: userInfo.user_code,
+						}, 2, function(res) {
+							plus.nativeUI.closeWaiting();
+							if(res.state=="ok") {
+								var firstPer = res.data.list[0];
+								var per_code = firstPer ? firstPer.per_code : "";
+								_this.per = {
+									selected: per_code,
+									list: res.data.list,
+								}
+								_this.getSub(per_code);
+							}else{
+								if(res.code!=404) mui.toast(res.msg);
+							}
+						});
+					},
+					// 获取科目
+					getSub: function(per_code) {
+						if(!per_code) return;
+						var _this = this;
+						plus.nativeUI.showWaiting();
+						postDataEncry(window.storageKeyName.INTERFACE_ZXKT + "/pub/resSub", {}, {
+							per_code,
+							index_code,
+							user_code: userInfo.user_code,
+						}, 2, function(res) {
+							plus.nativeUI.closeWaiting();
+							if(res.state=="ok") {
+								var firstSub = res.data.list[0];
+								var sub_code = firstSub ? firstSub.sub_code : "";
+								_this.subject = {
+									selected: sub_code,
+									list: res.data.list,
+								}
+								_this.setMenu(per_code, sub_code);
+							}else{
+								if(res.code!=404) mui.toast(res.msg);
+							}
+						});
+					},
+					// 设置知识点目录
+					setMenu: function(per_code, sub_code) {
+						// testMenu.isLoaded = false;
+						testMenu.emptyMsg = "";
+						plus.nativeUI.showWaiting();
+						var _this = this;
+						postDataEncry(window.storageKeyName.INTERFACE_ZXKT + "/pub/catalogs", {}, {
+							per_code,
+							sub_code,
+							index_code,
+							user_code: userInfo.user_code,
+						}, 2, function(res) {
+							plus.nativeUI.closeWaiting();
+							if(res.state=="ok") {
+								//设置test-menu目录
+								testMenu.menu =  res.data.catalog&&res.data.catalog.children ? res.data.catalog.children : [];
+								// testMenu.isLoaded = true;
+								_this.$nextTick(function(){
+									mui('.mui-scroll-wrapper').scroll().scrollTo(0,0);//滚动到顶
+								});
+							} else {
+								if(res.code!=404) mui.toast(res.msg);
+							}
+						});
+					},
+					//选择选项
+					selectItem: function(){
+						this.showItem = false;
+						mask.close();
+						this.$nextTick(function () {
+							if(this.topPannel==1){
+								this.getSub(this.per.selected);
+								// this.setMenu({percode: this.per.selected});
+							}else if(this.topPannel==2){
+								this.setMenu(this.per.selected, this.subject.selected);
+								// this.setMenu({percode: this.per.selected, subcode: this.subject.selected});
+							}
+						});
+					}
+				}
+			});
+			
+			//知识点目录
+			var testMenu = new Vue({
+				el: "#testMenu",
+				data: {
+					menu: [],
+					// isLoaded: false,
+					emptyMsg: "" //空目录提示
+				},
+				watch: {
+					'menu': function(v){
+						if(!v.length) this.emptyMsg="暂无目录";
+					}
+				},
+				mounted: function() {
+					// 滚动区域
+					mui('.mui-scroll-wrapper').scroll({
+						indicators: false
+					});
+				},
+				methods: {
+					//选择节点
+					selectNode: function(model) {
+						plus.nativeUI.showWaiting();
+						// 向 开始页 传递数据
+						postDataEncry(window.storageKeyName.INTERFACE_ZXKT + "/test/schedule", {}, {
+							catalog_id: model.id,
+							index_code,
+							user_code: userInfo.user_code,
+						}, 2, function(res) {
+							plus.nativeUI.closeWaiting();
+							if(res.state=="ok") {
+								mui.fire(test_start, "getData", {
+									title: model.name, 
+									catalogId: model.id,
+									difficulty: res.data
+								});
+								test_start.show("slide-in-right");
+							} else {
+								if(res.code!=404) mui.toast(res.msg);
+							}
+						});
+						
+					}
+				}
+			});
+			
+			// header.subject = {"selected":"03","list":[{"subname":"英语","subcode":"03"},{"subname":"计算机应用基础","subcode":"25"}]};
+		</script>
+	</body>
+
+</html>

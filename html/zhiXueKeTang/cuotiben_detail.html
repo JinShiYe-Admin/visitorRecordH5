@@ -1,0 +1,296 @@
+<!doctype html>
+<html>
+	<!--测试、查看测试结果-->
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
+		<style type="text/css">
+			.question-header {
+				padding: .45rem .2rem .3rem;
+				display: flex;
+				justify-content: space-between;
+			}
+			.question-header .p-title {
+				max-width: 82%;
+				font-size: 0.3rem;
+				line-height: 1.2;
+			}
+			.question-header .progress {
+				color: #666666;
+				font-size: 0.26rem;
+			}
+			.question-box {
+				padding: 0.7rem 0.46rem 0.2rem;
+			}
+			.tested .question-box {
+				padding-top: 0.3rem;
+			}
+			.tested .question-box:after {
+				display: block;
+				content: "";
+				border-bottom: 1px solid #DDDDDD;
+			}
+			.question-box {
+				font-size: 0.28rem;
+				color: #222222;
+			}
+			.question {
+				line-height: 1.8;
+				margin-bottom: 0.8rem;
+				word-break: break-word;
+			}
+			.option-item {
+				margin-bottom: 0.55rem;
+			}
+			.option-item .option-label {
+				margin-right: 0.15rem;
+			}
+			.option-item .option-label + span {
+				display: inline-block;
+			    max-width: 85%;
+			    vertical-align: middle;
+			    line-height: 1.5;
+			}
+			.answer-box {
+				padding: 0 0.2rem;
+			}
+			.answer-box .answer-key {
+				color: #141414;
+				font-size: 0.26rem;
+			}
+			.answer-box .answer-detail {
+				padding: 0.35rem;
+			}
+			.question-box img {
+				max-width: 100%;
+				/* background: url(../../img/zhiXueKeTang/loading.svg) center/contain no-repeat; */
+				background: #F6F6F6;
+			}
+			.answer-detail {
+				color: #222222;
+				line-height: 1.6;
+				word-break: break-word;
+			}
+			#testing {
+				height: 100%;
+			}
+			.mui-scroll-wrapper {
+				/* top: 1.24rem; */
+				top: 44px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="testing" class="tested">
+			<header class="mui-bar mui-bar-nav theme">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<h1 class="mui-title" v-cloak>{{headerTitle}}</h1>
+			</header>
+			
+			<div class="mui-content" v-cloak>
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						
+						<div class="question-header" v-if="questions[index]">
+							<span class="p-title mui-ellipsis">知识点：{{questions[index].book_catalog_name}}</span>
+							<span class="progress">{{(index+1)}}/{{total}}</span>
+						</div>
+						
+						<div class="question-box" v-if="questions[index]">
+							<div class="question">{{ (index+1)+".(单选题) " }}<span v-html="questions[index].content"></span></div>
+							<div class="option-box">
+								<div class="option-item" v-for="(item, k) in transOption" :key="k">
+									<span class="option-label" :class="answerJudge(k)">{{k}}</span>
+									<span v-html="item"></span>
+								</div>
+							</div>
+						</div>
+						
+						<div class="answer-box" v-if="questions[index]">
+							<div class="answer-key">
+								正确答案：<span style="color: #2CA97F; margin-right: 0.35rem;"> {{getAnswerName(questions[index].answer)}}</span> 
+								你选的：<span style="color: #FF7C6F;"> {{getAnswerName(questions[index].stu_answer)}}</span>
+							</div>
+							<div class="answer-detail">
+								答案解析：<br /> 
+								<div v-html="questions[index].solve"></div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				
+				
+				
+			</div>
+			
+		</div>
+		
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<!-- <script src="../../js/utils/mui.pullToRefresh.js"></script> -->
+		<!-- <script src="../../js/utils/mui.pullToRefresh.material.js"></script> -->
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/layer/layer.js"></script>
+		<!-- <script src='../../js/utils/big.min.js'></script> -->
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		
+		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
+		<script type="text/javascript">
+			var pageSize = 20;
+			
+			var self;
+			var current_index_code = store.get('zxkt_current_index_code');
+			var userInfo = store.get(window.storageKeyName.PERSONALINFO) || {};
+			
+			mui.init();
+			
+			mui.plusReady(function(){
+				
+				self = plus.webview.currentWebview();
+				
+				//知识点名
+				testing.headerTitle = self.sub_name; 
+				
+				// 获取题目
+				testing.getQuestions();
+				
+				// 滚动区域
+				mui('.mui-scroll-wrapper').scroll({
+					indicators: false
+				});
+				
+			});
+			
+
+			var testing = new Vue({
+				el: "#testing",
+				data: {
+					headerTitle: "",
+					index: 0,
+					questions: [],
+					page_number: 1,
+					last_page: false,
+					total: 0,
+					diskey: "",
+				},
+				computed: {
+					//选项
+					transOption: function() {
+						var cur_qes = this.questions[this.index];
+						if(cur_qes&&cur_qes.option) {
+							var op = JSON.parse(cur_qes.option);
+							var new_op = {}
+							op.forEach(function(v){
+								new_op[v.substr(0,1)] = v.split(/^[a-zA-Z]\W/, 2).pop();
+							});
+							return new_op;
+						}else{
+							return [];
+						}
+					}
+				},
+				mounted: function() {
+					var _this = this;
+					//左右划
+					mui(".mui-content").on("swipeleft", ".question-box", function(){
+						!_this.isSelecting&&_this.changeIndex(1);
+					});
+					mui(".mui-content").on("swiperight", ".question-box", function(){
+						!_this.isSelecting&&_this.changeIndex(-1);
+					});
+				},
+				methods: {
+					getQuestions: function(callback) {
+						var _this = this;
+						plus.nativeUI.showWaiting();
+						postDataEncry(window.storageKeyName.INTERFACE_ZXKT + "/mistake/mistakeDetail", {}, {
+							per_code: self.per_code,
+							sub_code: self.sub_code,
+							page_size: pageSize,
+							page_number: _this.page_number,
+							index_code: current_index_code,
+							user_code: userInfo.user_code,
+						}, 2, function(res) {
+							plus.nativeUI.closeWaiting();
+							if(res.state=="ok") {
+								_this.questions = _this.questions.concat(res.data.page.list);
+								_this.page_number = res.data.page.page_number;
+								_this.last_page = res.data.page.last_page;
+								_this.total = res.data.page.total_row;
+								callback && callback();
+							} else {
+								if(res.code!=404) mui.toast(res.msg);
+							}
+						});
+					},
+					//切换题目
+					changeIndex: function(d){
+						var des = this.index+d;
+						if(des>=this.questions.length){
+							if(!this.last_page) {
+								this.page_number = this.page_number + 1;
+								var _this = this;
+								this.getQuestions(function() {
+									_this.index = des;
+								});
+							}
+						}else if(des<0){
+							return;
+						}else{
+							this.index = des;
+							//滚动到顶
+							mui('.mui-scroll-wrapper').scroll().scrollTo(0,0);
+						}
+					},
+					// 判断答案是正确、错误或没选
+					answerJudge: function(key) {
+						var answer = this.questions[this.index].answer;
+						var stu_answer = this.questions[this.index].stu_answer;
+						if(!answer||!stu_answer) return "";
+						if(answer.indexOf(key)!=-1&&stu_answer.indexOf(key)!=-1) {
+							return "selected";
+						}else if(stu_answer.indexOf(key)!=-1){
+							return "err";
+						}else if(answer.indexOf(key)!=-1) {
+							return "selected";
+						}else{
+							return "";
+						}
+					},
+					getAnswerName: function(answer) {
+						var asr = "";
+						if(answer){
+							var an1 = answer.match(/[a-zA-Z]/);
+							if(an1){
+								asr = an1[0];
+							}
+						}
+						return asr;
+					}
+				}
+			});
+			
+		</script>
+	</body>
+
+</html>

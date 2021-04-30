@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<title>Document</title>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.css" />
+		<style type="text/css">
+			canvas {
+				width: 100%;
+				height: 100%;
+				border: 1px solid black;
+			}
+		</style>
+		<script src="https://unpkg.com/pdfjs-dist@1.9.426/build/pdf.min.js"></script>
+		<!--<script type="text/javascript" src="build/pdf.js" ></script>-->
+		<script type="text/javascript" src="index.js"></script>
+		<script type="text/javascript" src="../mui.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/storageKeyName.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" style="background-color:#00CFBD;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 id="title" style="color: white;" class="mui-title">资源详情</h1>
+		</header>
+		<script type="text/javascript">
+//			var curPage = {};
+			mui.plusReady(function() {
+				// events.showWaiting();
+//				curPage = utils.getDataFromUrl(window.location.href);
+//				console.log('2222:' + JSON.stringify(curPage));
+			});
+		</script>
+	</body>
+
+</html>

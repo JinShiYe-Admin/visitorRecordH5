@@ -1,0 +1,718 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/student_performance/stuScore.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+
+			.circular-square {
+				border-radius: 10%;
+				width: 30px;
+				height: 30px;
+			}
+
+			.mui-grid-view.mui-grid-9 {
+				margin: 0;
+				padding: 0;
+				border-top: 0px solid #eee;
+				border-left: 0px solid #eee;
+				background-color: white;
+			}
+
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+				background: white;
+				margin: 0;
+				padding: 11px 15px;
+				vertical-align: top;
+				border-right: 0px solid #eee;
+				border-bottom: 0px solid #eee;
+			}
+
+			.pieChart {
+				height: 120px;
+				margin: 10px;
+				padding: 0px;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background: white;" id="contentData">
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a @tap="clickSegControl(0)" class="mui-control-item mui-active" href="#item1">总分及排名</a>
+					<a @tap="clickSegControl(1)" class="mui-control-item" href="#item2">优劣学科</a>
+					<a @tap="clickSegControl(2)" class="mui-control-item" href="#item3">成绩pk</a>
+				</div>
+			</div>
+			<div>
+				<div id="item1" class="mui-control-content mui-active">
+					<h4 class="examName">{{scoreRank.name}}</h4>
+					<ul class="mui-table-view mui-grid-view mui-grid-9">
+						<li class="mui-table-view-cell no-bgc mui-media mui-col-xs-3" style="padding-left: 32px;">
+							<span class="mui-icon scoreOrderBorder">
+								<span class="scoreOrder">{{scoreRank.grd_order}}</span>
+							</span>
+							<div class="mui-media-body scoreOrderName">年级排名</div>
+						</li>
+						<li class="mui-table-view-cell no-bgc mui-media mui-col-xs-6">
+							<div class="pieChart" id="pieChartScore"></div>
+						</li>
+						<li class="mui-table-view-cell no-bgc mui-media mui-col-xs-3" style="margin-left: -20px;">
+							<span class="mui-icon scoreOrderBorder">
+								<span class="scoreOrder">{{scoreRank.cls_order}}</span>
+							</span>
+							<div class="mui-media-body scoreOrderName">班级排名</div>
+						</li>
+					</ul>
+					<ul class="mui-table-view mui-grid-view mui-grid-9">
+						<li class="mui-table-view-cell no-bgc mui-media mui-col-xs-6 mui-col-sm-6" style="text-align: left;padding-left: 30px;">
+							<div class="mui-media-body scoreDetail">年级最高分：{{scoreRank.grd_max_score}}</div>
+							<div class="mui-media-body scoreDetail">班级最高分：{{scoreRank.cls_max_score}}</div>
+						</li>
+						<li class="mui-table-view-cell no-bgc mui-col-xs-6 mui-col-sm-6" style="text-align: left;">
+							<div class="mui-media-body scoreDetail">年级均分：{{scoreRank.grd_avg_score}}</div>
+							<div class="mui-media-body scoreDetail">班级均分：{{scoreRank.cls_avg_score}}</div>
+						</li>
+					</ul>
+					<div class="mui-row" style="padding: 10px;">
+						<template v-for="(item,index) in scoreRank.child_paper_list">
+							<template v-if="scoreRank.child_paper_list.length<=1">
+								<div class="mui-col-xs-6 mui-col-sm-6" style="border: 1px solid #eee;padding: 15px;">
+									<a style="margin-top: 5px;"><span style="color: #333333;">{{item.sub_name}}：</span><span style="color: red;">{{item.stu_score}} </span><span>/{{item.score}}</span></a>
+								</div>
+							</template>
+							<template v-else>
+								<div v-if="index%2==0" class="mui-col-xs-6 mui-col-sm-6" style="border: 1px solid #eee;padding: 15px;border-right: 0;">
+									<a style="margin-top: 5px;"><span style="color: #333333;">{{item.sub_name}}：</span><span style="color: red;">{{item.stu_score}} </span><span>/{{item.score}}</span></a>
+								</div>
+								<div v-else class="mui-col-xs-6 mui-col-sm-6" style="border: 1px solid #eee;padding: 15px;">
+									<a style="margin-top: 5px;"><span style="color: #333333;">{{item.sub_name}}：</span><span style="color: red;">{{item.stu_score}} </span><span>/{{item.score}}</span></a>
+								</div>
+							</template>
+						</template>
+					</div>
+					<h4 class="spaceLine">总分趋势</h4>
+					<p class="spaceLineName">历次考试成绩趋势如下：</p>
+					<div class="chart" id="lineChartScore"></div>
+					<h4 class="spaceLine">排名趋势</h4>
+					<p class="spaceLineName">历次考试排名趋势如下：</p>
+					<div class="chart" id="lineChartRank"></div>
+				</div>
+				<div id="item2" class="mui-control-content">
+					<h4 class="examName">{{goodBadSub.name}}</h4>
+					<div style="margin-top: 20px;">
+						<span class="goodBadSub" style="background:  #f86a6a;">优势学科</span>
+						<span v-if="goodBadSub.pros_sub_names ==null" style="margin-left: 10px;">暂无</span>
+						<span style="margin-left: 10px;">{{goodBadSub.pros_sub_names}}</span>
+					</div>
+					<div style="margin-top: 20px;">
+						<span class="goodBadSub" style="background: #43cf7c;">劣势学科</span>
+						<span v-if="goodBadSub.cons_sub_names ==null" style="margin-left: 10px;">暂无</span>
+						<span style="margin-left: 10px;">{{goodBadSub.cons_sub_names}}</span>
+					</div>
+					<div class="chart" id="radarChart"></div>
+					<div style="margin-left: 20px;">各科标准分：</div>
+					<div class="mui-row" style="padding: 10px;">
+						<template v-for="(item,index) in goodBadSub.list">
+							<template v-if="goodBadSub.list.length<=1">
+								<div class="mui-col-xs-6 mui-col-sm-6" style="border: 1px solid #eee;padding: 15px;">
+									<a style="margin-top: 5px;"><span style="color: #333333;">{{item.sub_name}}：<span>{{item.standard_score}}</span></a>
+								</div>
+							</template>
+							<template v-else>
+								<div v-if="index%2==0" class="mui-col-xs-6 mui-col-sm-6" style="border: 1px solid #eee;padding: 15px;border-right: 0;">
+									<a style="margin-top: 5px;"><span style="color: #333333;">{{item.sub_name}}：<span>{{item.standard_score}}</span></a>
+								</div>
+								<div v-else class="mui-col-xs-6 mui-col-sm-6" style="border: 1px solid #eee;padding: 15px;">
+									<a style="margin-top: 5px;"><span style="color: #333333;">{{item.sub_name}}：<span>{{item.standard_score}}</span></a>
+								</div>
+							</template>
+						</template>
+					</div>
+					<div style="margin-left: 20px;font-size: 13px;padding-bottom: 20px;">注：优劣学科将各科分值转化为标准分后再进行比较。</div>
+				</div>
+				<div id="item3" class="mui-control-content">
+					<h4 class="examName">{{fullSubPk.name}}</h4>
+					<button style="float: right;margin-right: 20px;background: #43cf7c;border-color: #43cf7c;color: white;" type="button" class="mui-btn" @click="yaoqing()">邀请</button>
+					<button style="float: right;margin-right: 20px;background: #5da4ef;border-color: #5da4ef;color: white;" type="button"
+					 class="mui-btn" @click="tiaozhanzhe()">挑战者<span v-if="fullSubPk.challenge_list.length>0" class="mui-badge" style="background: red;color: white;">{{fullSubPk.challenge_list.length}}</span></button>
+					<h4 class="spaceLine" style="margin: 50px 0 10px;">PK榜</h4>
+					<div class="mui-row">
+						<ul class="mui-table-view" style="font-size: 13px;">
+							<li class="mui-table-view-cell beauline talbeLiFirst">
+								<div class="mui-row">
+									<div class="mui-col-xs-1">次序</div>
+									<div class="mui-col-xs-2">对手</div>
+									<div class="mui-col-xs-2">总分</div>
+									<div class="mui-col-xs-5">各科</div>
+									<div class="mui-col-xs-2"> </div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell beauline bg-gray" style="text-align: center;" v-for="(item,index) in fullSubPk.pk_list">
+								<div class="mui-row">
+									<div class="mui-col-xs-1">{{index}}</div>
+									<div class="mui-col-xs-2">{{item.pk_user_name}}</div>
+									<div v-if="item.my_score==item.pk_user_score" class="mui-col-xs-2" style="color: #FDD60C;font-size: 20px;font-weight: 900;">平</div>
+									<div v-if="item.my_score>item.pk_user_score" class="mui-col-xs-2" style="color: #008080;font-size: 20px;font-weight: 900;">胜</div>
+									<div v-if="item.my_score<item.pk_user_score" class="mui-col-xs-2" style="color: red;font-size: 20px;font-weight: 900;">败</div>
+									<div class="mui-col-xs-5">
+										<span style="color: red;font-size: 20px;font-weight: 900;">{{item.pkb}}胜</span>
+										<span style="color: #008080;font-size: 20px;font-weight: 900;">{{item.pkc}}败</span>
+										<span style="color: #FDD60C;font-size: 20px;font-weight: 900;">{{item.pka}}平</span>
+									</div>
+									<div class="mui-col-xs-2" @click="toDetailPage(item)"><img style="width: 15px;height: 15px; margin:2px 0 0 8px;"
+										 src="../../img/homeSchool/search.png"></img></div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/echarts/echarts-en.min.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+
+		<script type="text/javascript">
+			mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					showBack: 0,
+					headTitle: '全科成绩'
+				}
+			});
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					scoreRank: { //成绩及排名
+						name: '', //考试名称
+						total_score: '', //考试满分
+						score: '', //用户得分
+						grd_order: '', //年级排名
+						cls_order: '', //班级排名
+						grd_stuc: '', //年级人数
+						cls_stuc: '', //班级人数
+						grd_max_score: '', //年级最高分
+						cls_max_score: '', //班级最高分
+						grd_avg_score: '', //年级平均分
+						cls_avg_score: '', //班级平均分
+						child_paper_list: [], //各科成绩列表
+						pieChatDetail: {
+							legend: {
+								orient: "vertical",
+								left: "left",
+							},
+							graphic: [{
+								type: "text",
+								left: "center",
+								top: "20%",
+								style: {
+									text: "我的成绩",
+									textAlign: "center",
+									fill: "#000",
+									fontSize: 12,
+								}
+							}, {
+								type: "text",
+								left: "center",
+								top: "35%",
+								style: {
+									text: "",
+									textAlign: "center",
+									fill: "red",
+									fontSize: 35,
+									fontWeight: 700
+								}
+							}, {
+								type: "text",
+								left: "72%",
+								top: "48%",
+								style: {
+									text: "分",
+									fill: "#000",
+									fontSize: 15,
+								}
+							}, {
+								type: "text",
+								left: "center",
+								top: "70%",
+								style: {
+									text: "",
+									textAlign: "center",
+									fill: "#000",
+									fontSize: 12,
+								}
+							}],
+							series: [{
+								radius: ['80%', '100%'],
+								type: "pie",
+								data: [{
+									value: 0,
+								}, {
+									value: 0,
+								}],
+								labelLine: {
+									show: false
+								}
+							}]
+						},
+						echartScoreDetail: {
+							legend: {
+								data: ['我的成绩', '班级平均分', '年级平均分']
+							},
+							grid: {
+								x: 45, //到左侧的距离
+								x2: 10, //到右侧的距离
+								y: 30, //到上面的距离
+								y2: 60 //到下面的距离
+							},
+							toolbox: {
+								show: false, //默认值为true，是否显示工具栏组件
+								//各工具配置项。
+								feature: {
+									//辅助线标志 
+									mark: {
+										show: true
+									},
+									//数据视图工具，可以展现当前图表所用的数据，编辑后可以动态更新。show->是否显示该工具，readOnly->是否不可编辑，optionToContent->自定义 dataView 展现函数，用以取代默认的 textarea 使用更丰富的数据编辑。可以返回 dom 对象或者 html 字符串，backgroundColor->数据视图浮层背景色。
+									dataView: {
+										show: true,
+										readOnly: false
+									},
+									//动态类型切换。show->是否显示该工具，type->这是个数组，启用的动态类型，包括'line'（切换为折线图）, 'bar'（切换为柱状图）, 'stack'（切换为堆叠模式）, 'tiled'（切换为平铺模式）。 
+									magicType: {
+										show: true,
+										type: ['line']
+									},
+									//配置项还原。主要属性是show->是否显示该工具。 
+									restore: {
+										show: true
+									},
+									//这个工具可以把图表保存为图片。里面有些常用的参数，type->保存图片的格式，name->保存文件的名字，backgroundColor->保存图片的背景色，show->是否显示该工具 
+									saveAsImage: {
+										show: true
+									}
+								}
+							},
+							//是否启用拖拽重计算特性，默认关闭(即值为false) 
+							calculable: false,
+							//直角坐标系中横轴数组，数组中每一项代表一条横轴坐标轴，仅有一条时可省略数值    
+							//横轴通常为类目型，但条形图时则横轴为数值型，散点图时则横纵均为数值型
+							xAxis: [{
+								axisLabel: {
+									interval: 0,
+									rotate: 50
+								},
+								name: '',
+								type: 'category', //坐标轴类型，横轴默认为类目型'category'
+								data: [] //类目型坐标轴文本标签数组，指定label内容。 数组项通常为文本，'\n'指定换行
+							}],
+							//直角坐标系中纵轴数组，数组中每一项代表一条纵轴坐标轴，仅有一条时可省略数值    
+							//纵轴通常为数值型，但条形图时则纵轴为类目型 
+							yAxis: [{
+								type: 'value', //坐标轴类型，纵轴默认为数值型'value'
+								name: '分数',
+								minInterval: 1,
+								nameLocation: 'middle',
+								nameTextStyle: {
+									color: "black",
+									fontSize: 14,
+									padding: 10
+								},
+								splitArea: { //分隔区域，默认不显示
+									show: true
+								}
+							}],
+							//sereis的数据: 用于设置图表数据之用。series是一个对象嵌套的结构；对象内包含对象
+							series: [{
+									symbol: false,
+									showAllSymbol: false,
+									name: '我的成绩', //系列名称，如果启用legend，该值将被legend.data索引相关
+									type: 'line', //图表类型，必要参数！如为空或不支持类型，则该系列数据不被显示。
+									data: [] //系列中的数据内容数组，折线图以及柱状图时数组长度等于所使用类目轴文本标签数组axis.data的长度，并且他们间是一一对应的。数组项通常为数值 
+								},
+								{
+									symbol: false,
+									showAllSymbol: false,
+									name: '班级平均分', //系列名称，如果启用legend，该值将被legend.data索引相关
+									type: 'line', //图表类型，必要参数！如为空或不支持类型，则该系列数据不被显示。
+									data: [] //系列中的数据内容数组，折线图以及柱状图时数组长度等于所使用类目轴文本标签数组axis.data的长度，并且他们间是一一对应的。数组项通常为数值 
+								}, {
+									symbol: false,
+									showAllSymbol: false,
+									name: '年级平均分', //系列名称，如果启用legend，该值将被legend.data索引相关
+									type: 'line', //图表类型，必要参数！如为空或不支持类型，则该系列数据不被显示。
+									data: [] //系列中的数据内容数组，折线图以及柱状图时数组长度等于所使用类目轴文本标签数组axis.data的长度，并且他们间是一一对应的。数组项通常为数值 
+								}
+							]
+						},
+						echartOrderDetail: {
+							legend: {
+								data: ['班级排名', '年级排名']
+							},
+							grid: {
+								x: 45, //到左侧的距离
+								x2: 10, //到右侧的距离
+								y: 30, //到上面的距离
+								y2: 60 //到下面的距离
+							},
+							toolbox: {
+								show: false, //默认值为true，是否显示工具栏组件
+								//各工具配置项。
+								feature: {
+									//辅助线标志 
+									mark: {
+										show: true
+									},
+									//数据视图工具，可以展现当前图表所用的数据，编辑后可以动态更新。show->是否显示该工具，readOnly->是否不可编辑，optionToContent->自定义 dataView 展现函数，用以取代默认的 textarea 使用更丰富的数据编辑。可以返回 dom 对象或者 html 字符串，backgroundColor->数据视图浮层背景色。
+									dataView: {
+										show: true,
+										readOnly: false
+									},
+									//动态类型切换。show->是否显示该工具，type->这是个数组，启用的动态类型，包括'line'（切换为折线图）, 'bar'（切换为柱状图）, 'stack'（切换为堆叠模式）, 'tiled'（切换为平铺模式）。 
+									magicType: {
+										show: true,
+										type: ['line']
+									},
+									//配置项还原。主要属性是show->是否显示该工具。 
+									restore: {
+										show: true
+									},
+									//这个工具可以把图表保存为图片。里面有些常用的参数，type->保存图片的格式，name->保存文件的名字，backgroundColor->保存图片的背景色，show->是否显示该工具 
+									saveAsImage: {
+										show: true
+									}
+								}
+							},
+							//是否启用拖拽重计算特性，默认关闭(即值为false) 
+							calculable: false,
+							//直角坐标系中横轴数组，数组中每一项代表一条横轴坐标轴，仅有一条时可省略数值    
+							//横轴通常为类目型，但条形图时则横轴为数值型，散点图时则横纵均为数值型
+							xAxis: [{
+								axisLabel: {
+									interval: 0,
+									rotate: 50
+								},
+								name: '',
+								type: 'category', //坐标轴类型，横轴默认为类目型'category'
+								data: [] //类目型坐标轴文本标签数组，指定label内容。 数组项通常为文本，'\n'指定换行
+							}],
+							//直角坐标系中纵轴数组，数组中每一项代表一条纵轴坐标轴，仅有一条时可省略数值    
+							//纵轴通常为数值型，但条形图时则纵轴为类目型 
+							yAxis: [{
+								type: 'value', //坐标轴类型，纵轴默认为数值型'value'
+								name: '排名',
+								minInterval: 1,
+								nameLocation: 'middle',
+								nameTextStyle: {
+									color: "black",
+									fontSize: 14,
+									padding: 10
+								},
+								splitArea: { //分隔区域，默认不显示
+									show: true
+								}
+							}],
+							//sereis的数据: 用于设置图表数据之用。series是一个对象嵌套的结构；对象内包含对象
+							series: [{
+									symbol: false,
+									showAllSymbol: false,
+									name: '班级排名', //系列名称，如果启用legend，该值将被legend.data索引相关
+									type: 'line', //图表类型，必要参数！如为空或不支持类型，则该系列数据不被显示。
+									data: [] //系列中的数据内容数组，折线图以及柱状图时数组长度等于所使用类目轴文本标签数组axis.data的长度，并且他们间是一一对应的。数组项通常为数值 
+								},
+								{
+									symbol: false,
+									showAllSymbol: false,
+									name: '年级排名', //系列名称，如果启用legend，该值将被legend.data索引相关
+									type: 'line', //图表类型，必要参数！如为空或不支持类型，则该系列数据不被显示。
+									data: [] //系列中的数据内容数组，折线图以及柱状图时数组长度等于所使用类目轴文本标签数组axis.data的长度，并且他们间是一一对应的。数组项通常为数值 
+								}
+							]
+						}
+					},
+					goodBadSub: {
+						name: '', //
+						pros_sub_names: '', //
+						cons_sub_names: '', //
+						list:[],//
+						radarChartDetail: {
+							radar: {
+								name: {
+									textStyle: {
+										color: '#000',
+										// backgroundColor: '#999',
+										borderRadius: 3,
+										padding: -20,
+									}
+								},
+								indicator: []
+							},
+							series: [{
+								// name: '预算 vs 开销（Budget vs spending）',
+								type: 'radar',
+								// areaStyle: {normal: {}},
+								data: [{
+									value: [],
+									label: {
+										show: true,
+										formatter: function(params) {
+											return params.value;
+										}
+									}
+								}]
+							}]
+						}
+					},
+					fullSubPk:{
+						name:'',
+						challenge_list:[],
+						pk_list:[]
+					}
+				},
+				methods: {
+					clickSegControl: function(flag) {
+						if (contentData.semFlag != flag) {
+							contentData.semFlag = flag;
+							if (flag == 0 && contentData.scoreRank.name.length == 0) {
+								// 1.9.全科总分及排名趋势
+								getSumScoreOrder();
+							} else if (flag == 1 && contentData.goodBadSub.name.length == 0) {
+								// 1.10.全科优劣学科
+								getFullSubAnalysis();
+							} else if (flag == 2 && contentData.fullSubPk.name.length == 0) {
+								// 1.11.全科成绩pk
+								getFullSubPK();
+							}
+						}
+					},
+					toDetailPage: function(model) {
+						model.name = contentData.fullSubPk.name;
+						utils.mOpenWithData("pk_xiangqing.html", model);
+					},
+					tiaozhanzhe: function() {
+						if(contentData.fullSubPk.challenge_list.length==0){
+							mui.toast('暂时没有挑战者');
+						}else{
+							var tempM = {
+								access:curPage.access,
+								list:contentData.fullSubPk.challenge_list
+							}
+							utils.mOpenWithData("tiaozhanzhe.html", tempM);
+						}
+					},
+					yaoqing: function() {
+						utils.mOpenWithData("yaoqing.html", curPage);
+					}
+				},
+			});
+
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				var ws = plus.webview.currentWebview();
+				console.log("当前Webview：" + JSON.stringify(ws.preload));
+				if (ws.preload) {
+					tempHead.headTitle = ws.preload.name;
+				} else {
+					tempHead.showBack = 1;
+				}
+
+				// 1.9.全科总分及排名趋势
+				getSumScoreOrder();
+			});
+			//获取未读数
+			window.addEventListener('getFullSubPK', function(data) {
+				// 1.11.全科成绩pk
+				getFullSubPK();
+			});
+
+			// 1.9.全科总分及排名趋势
+			var getSumScoreOrder = function() {
+				comData = {
+					user_code: personal.user_code,
+					id: curPage.id,
+					index_code: curPage.access,
+				}
+				events.showWaiting();
+				postDataEncry(window.storageKeyName.INTERFACE_STUSCORE + 'fullSub/scoreOrder', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						contentData.scoreRank.name = data.data.name; //考试名称
+						contentData.scoreRank.total_score = data.data.total_score; //考试满分
+						contentData.scoreRank.score = data.data.score; //用户得分
+						contentData.scoreRank.grd_order = data.data.grd_order; //年级排名
+						contentData.scoreRank.cls_order = data.data.cls_order; //班级排名
+						contentData.scoreRank.grd_stuc = data.data.grd_stuc; //年级人数
+						contentData.scoreRank.cls_stuc = data.data.cls_stuc; //班级人数
+						contentData.scoreRank.grd_max_score = data.data.grd_max_score; //年级最高分
+						contentData.scoreRank.cls_max_score = data.data.cls_max_score; //班级最高分
+						contentData.scoreRank.grd_avg_score = data.data.grd_avg_score; //年级平均分
+						contentData.scoreRank.cls_avg_score = data.data.cls_avg_score; //班级平均分
+						contentData.scoreRank.pieChatDetail.graphic[1].style.text = data.data.score; //用户得分
+						contentData.scoreRank.pieChatDetail.graphic[3].style.text = '满分：' + data.data.total_score; //考试满分
+						var tempArray = [];
+						tempArray.push({
+							value: data.data.total_score
+						});
+						tempArray.push({
+							value: data.data.score
+						});
+						contentData.scoreRank.pieChatDetail.series[0].data = tempArray; //饼图比例
+						// 我的成绩饼图
+						var pieChartScore = echarts.init(document.getElementById('pieChartScore'));
+						pieChartScore.setOption(contentData.scoreRank.pieChatDetail);
+						contentData.scoreRank.child_paper_list = data.data.child_paper_list;
+						// 趋势
+						var tempArr0 = []; //考试名称
+						var tempArr1 = []; //用户得分
+						var tempArr2 = []; //年级排名
+						var tempArr3 = []; //班级排名
+						var tempArr4 = []; //年级平均分
+						var tempArr5 = []; //班级平均分
+						for (var a = 0; a < data.data.order_list.length; a++) {
+							var tempM = data.data.order_list[a];
+							tempArr0.push(tempM.name);
+							tempArr1.push(tempM.score);
+							tempArr2.push(tempM.grd_order);
+							tempArr3.push(tempM.cls_order);
+							tempArr4.push(tempM.grd_avg_score);
+							tempArr5.push(tempM.cls_avg_score);
+						}
+						// 成绩
+						// contentData.scoreRank.echartScoreDetail.xAxis[0].data = tempArr0;
+						contentData.scoreRank.echartScoreDetail.series[0].data = tempArr1;
+						contentData.scoreRank.echartScoreDetail.series[1].data = tempArr5;
+						contentData.scoreRank.echartScoreDetail.series[2].data = tempArr4;
+						//
+						var lineChartScore = echarts.init(document.getElementById('lineChartScore'));
+						lineChartScore.setOption(contentData.scoreRank.echartScoreDetail);
+						// 排名
+						// contentData.scoreRank.echartOrderDetail.xAxis[0].data = tempArr0;
+						contentData.scoreRank.echartOrderDetail.series[0].data = tempArr3;
+						contentData.scoreRank.echartOrderDetail.series[1].data = tempArr2;
+						//
+						var lineChartRank = echarts.init(document.getElementById('lineChartRank'));
+						lineChartRank.setOption(contentData.scoreRank.echartOrderDetail);
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+
+			// 1.10.全科优劣学科
+			var getFullSubAnalysis = function() {
+				comData = {
+					user_code: personal.user_code,
+					id: curPage.id,
+					index_code: curPage.access,
+				}
+				events.showWaiting();
+				postDataEncry(window.storageKeyName.INTERFACE_STUSCORE + 'fullSub/subAnalyse', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						contentData.goodBadSub.name = curPage.name;
+						contentData.goodBadSub.pros_sub_names = data.data.pros_sub_names;
+						contentData.goodBadSub.cons_sub_names = data.data.cons_sub_names;
+						contentData.goodBadSub.list = data.data.list;
+						var tempArray = [];
+						var tempArray1 = [];
+						for (var a = 0; a < data.data.list.length; a++) {
+							var tempM = data.data.list[a];
+							var tempM1 = {
+								name: tempM.sub_name,
+								max: tempM.standard_score
+								// max: 100
+							}
+							tempArray.push(tempM1);
+							tempArray1.push(tempM.standard_score);
+						}
+						// tempArray.push({"name":"物理","max":100});
+						// tempArray1.push(100);
+						contentData.goodBadSub.radarChartDetail.radar.indicator = [].concat(tempArray);
+						contentData.goodBadSub.radarChartDetail.radar.center = ['50%', '50%']
+						contentData.goodBadSub.radarChartDetail.series[0].data[0].value = [].concat(tempArray1);
+						// 优劣学科雷达图
+						var radarChart = echarts.init(document.getElementById('radarChart'));
+						radarChart.setOption(contentData.goodBadSub.radarChartDetail);
+						// let abc={"radar":{"name":{"textStyle":{"color":"#000","borderRadius":3,"padding":[0,0]}},"indicator":[{"name":"物理","max":100},{"name":"测试1","max":100},{"name":"test2","max":100}], center: ['50%', '60%'],},"series":[{"type":"radar","data":[{"value":["54.17","74.17","66"],"label":{"show":true}}]}]}
+						// radarChart.setOption(abc);
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			// 1.11.全科成绩pk
+			var getFullSubPK = function() {
+				comData = {
+					user_code: personal.user_code,
+					id: curPage.id,
+					index_code: curPage.access,
+				}
+				events.showWaiting();
+				postDataEncry(window.storageKeyName.INTERFACE_STUSCORE + 'fullSub/pk', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						contentData.fullSubPk.name = data.data.name;
+						contentData.fullSubPk.challenge_list = [].concat(data.data.challenge_list);
+						contentData.fullSubPk.pk_list = [].concat(data.data.pk_list);
+						for(var a=0;a<data.data.pk_list.length;a++){
+							var tempM = data.data.pk_list[a];
+							tempM.pka = 0;//平
+							tempM.pkb = 0;//胜
+							tempM.pkc = 0;//败
+							for(var b=0;b<tempM.sub_score_list.length;b++){
+								var tempN = tempM.sub_score_list[b];
+								if(tempN.my_score == tempN.pk_user_score){
+									tempM.pka++;
+								}else if(tempN.my_score > tempN.pk_user_score){
+									tempM.pkb++;
+								}else if(tempN.my_score < tempN.pk_user_score){
+									tempM.pkc++;
+								}
+							}
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

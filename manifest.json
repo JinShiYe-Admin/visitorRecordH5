@@ -1,0 +1,756 @@
+{
+    "@platforms" : [ "android", "iPhone", "iPad" ],
+    "id" : "H50C56911",
+    /*应用的标识，创建应用时自动生成，勿手动修改*/
+    "name" : "教宝校园",
+    /*应用名称，程序桌面图标名称*/
+    "version" : {
+        "name" : "2.1.4",
+        /*应用版本名称*/
+        "code" : 84
+    },
+    "description" : "",
+    /*应用描述信息*/
+    "icons" : {
+        "72" : "icon.png"
+    },
+    "launch_path" : "html/login/loginIndex.html",
+    /*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "developer" : {
+        "name" : "",
+        /*开发者名称*/
+        "email" : "",
+        /*开发者邮箱地址*/
+        "url" : "http://www.dcloud.io"
+    },
+    "permissions" : {
+        "Cache" : {
+            "description" : "管理应用缓存"
+        },
+        "Console" : {
+            "description" : "跟踪调试输出日志"
+        },
+        "Events" : {
+            "description" : "应用扩展事件"
+        },
+        "Maps" : {},
+        "UIWebview" : {},
+        "Push" : {}
+    },
+    "fullscreen" : false,
+    "plus" : {
+        "statusbar" : {
+            "immersed" : false
+        },
+        // "statusbar" : {
+        //     // "immersed" : "supportedDevice"
+        //     // "style" : "dark"
+        // },
+        "splashscreen" : {
+            "autoclose" : true,
+            /*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
+            "waiting" : true
+        },
+        "kernel" : {
+            "ios" : "UIWebview"
+        },
+        "runmode" : "liberate",
+        /*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
+        "signature" : "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",
+        /*可选，保留给应用签名，暂不使用*/
+        "distribute" : {
+            "apple" : {
+                "appid" : "plus.H50C56911",
+                /*iOS应用标识，苹果开发网站申请的appid，如io.dcloud.HelloH5*/
+                "mobileprovision" : "",
+                /*iOS应用打包配置文件*/
+                "password" : "",
+                /*iOS应用打包个人证书导入密码*/
+                "p12" : "",
+                /*iOS应用打包个人证书，打包配置文件关联的个人证书*/
+                "devices" : "universal",
+                /*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
+                "frameworks" : [],
+                "idfa" : true
+            },
+            "google" : {
+                "packagename" : "plus.H50C56911",
+                /*Android应用包名，如io.dcloud.HelloH5*/
+                "keystore" : "",
+                /*Android应用打包使用的密钥库文件*/
+                "password" : "",
+                /*Android应用打包使用密钥库中证书的密码*/
+                "aliasname" : "",
+                /*Android应用打包使用密钥库中证书的别名*/
+                "permissions" : [
+                    "<uses-feature android:name=\"android.hardware.camera\"/>",
+                    "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+                    "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+                    "<uses-permission android:name=\"android.permission.INTERNET\"/>",
+                    "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+                    "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+                    "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                ],
+                "targetSdkVersion" : 28,
+                "minSdkVersion" : 21,
+                "abiFilters" : [ "armeabi-v7a", "arm64-v8a", "x86" ]
+            },
+            "orientation" : [ "portrait-primary", "portrait-secondary" ],
+            /*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
+            "icons" : {
+                "ios" : {
+                    "prerendered" : true,
+                    /*应用图标是否已经高亮处理，在iOS6及以下设备上有效*/
+                    "auto" : "",
+                    /*应用图标，分辨率：512x512，用于自动生成各种尺寸程序图标*/
+                    "iphone" : {
+                        "normal" : "",
+                        /*iPhone普通屏幕程序图标，分辨率：57x57*/
+                        "retina" : "",
+                        /*iPhone高分屏程序图标，分辨率：114x114*/
+                        "retina7" : "",
+                        /*iPhone iOS7高分屏程序图标，分辨率：120x120*/
+                        "spotlight-normal" : "",
+                        /*iPhone Spotlight搜索程序图标，分辨率：29x29*/
+                        "spotlight-retina" : "",
+                        /*iPhone高分屏Spotlight搜索程序图标，分辨率：58x58*/
+                        "spotlight-retina7" : "",
+                        /*iPhone iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+                        "settings-normal" : "",
+                        /*iPhone设置页面程序图标，分辨率：29x29*/
+                        "settings-retina" : "",
+                        "app@2x" : "unpackage/res/icons/120x120.png",
+                        "app@3x" : "unpackage/res/icons/180x180.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png",
+                        "notification@3x" : "unpackage/res/icons/60x60.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "settings@3x" : "unpackage/res/icons/87x87.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png",
+                        "spotlight@3x" : "unpackage/res/icons/120x120.png"
+                    },
+                    "ipad" : {
+                        "normal" : "",
+                        /*iPad普通屏幕程序图标，分辨率：72x72*/
+                        "retina" : "",
+                        /*iPad高分屏程序图标，分辨率：144x144*/
+                        "normal7" : "",
+                        /*iPad iOS7程序图标，分辨率：76x76*/
+                        "retina7" : "",
+                        /*iPad iOS7高分屏程序图标，分辨率：152x152*/
+                        "spotlight-normal" : "",
+                        /*iPad Spotlight搜索程序图标，分辨率：50x50*/
+                        "spotlight-retina" : "",
+                        /*iPad高分屏Spotlight搜索程序图标，分辨率：100x100*/
+                        "spotlight-normal7" : "",
+                        /*iPad iOS7 Spotlight搜索程序图标，分辨率：40x40*/
+                        "spotlight-retina7" : "",
+                        /*iPad iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+                        "settings-normal" : "",
+                        /*iPad设置页面程序图标，分辨率：29x29*/
+                        "settings-retina" : "",
+                        "app" : "unpackage/res/icons/76x76.png",
+                        "app@2x" : "unpackage/res/icons/152x152.png",
+                        "notification" : "unpackage/res/icons/20x20.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png",
+                        "proapp@2x" : "unpackage/res/icons/167x167.png",
+                        "settings" : "unpackage/res/icons/29x29.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "spotlight" : "unpackage/res/icons/40x40.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png"
+                    },
+                    "appstore" : "unpackage/res/icons/1024x1024.png"
+                },
+                "android" : {
+                    "mdpi" : "",
+                    /*普通屏程序图标，分辨率：48x48*/
+                    "ldpi" : "",
+                    /*大屏程序图标，分辨率：48x48*/
+                    "hdpi" : "unpackage/res/icons/72x72.png",
+                    /*高分屏程序图标，分辨率：72x72*/
+                    "xhdpi" : "unpackage/res/icons/96x96.png",
+                    /*720P高分屏程序图标，分辨率：96x96*/
+                    "xxhdpi" : "unpackage/res/icons/144x144.png",
+                    "xxxhdpi" : "unpackage/res/icons/192x192.png"
+                }
+            },
+            "splashscreen" : {
+                "ios" : {
+                    "iphone" : {
+                        "default" : "",
+                        /*iPhone3启动图片选，分辨率：320x480*/
+                        "retina35" : "",
+                        /*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
+                        "retina40" : "",
+                        "portrait-896h@3x" : "",
+                        "portrait-896h@2x" : "",
+                        "iphonex" : "",
+                        "retina55" : "",
+                        "retina47" : ""
+                    },
+                    "ipad" : {
+                        "portrait" : "",
+                        /*iPad竖屏启动图片，分辨率：768x1004*/
+                        "portrait-retina" : "",
+                        /*iPad高分屏竖屏图片，分辨率：1536x2008*/
+                        "landscape" : "",
+                        /*iPad横屏启动图片，分辨率：1024x748*/
+                        "landscape-retina" : "",
+                        /*iPad高分屏横屏启动图片，分辨率：2048x1496*/
+                        "portrait7" : "",
+                        /*iPad iOS7竖屏启动图片，分辨率：768x1024*/
+                        "portrait-retina7" : "",
+                        /*iPad iOS7高分屏竖屏图片，分辨率：1536x2048*/
+                        "landscape7" : "",
+                        /*iPad iOS7横屏启动图片，分辨率：1024x768*/
+                        "landscape-retina7" : ""
+                    }
+                },
+                "android" : {
+                    "mdpi" : "",
+                    /*普通屏启动图片，分辨率：240x282*/
+                    "ldpi" : "",
+                    /*大屏启动图片，分辨率：320x442*/
+                    "hdpi" : "G:/back/APP/教宝校园/系统图标/启动图/安卓/480x762.png",
+                    /*高分屏启动图片，分辨率：480x762*/
+                    "xhdpi" : "G:/back/APP/教宝校园/系统图标/启动图/安卓/720x1242.png",
+                    /*720P高分屏启动图片，分辨率：720x1242*/
+                    "xxhdpi" : "G:/back/APP/教宝校园/系统图标/启动图/安卓/1080x1882.png"
+                },
+                "androidStyle" : "default"
+            },
+            "plugins" : {
+                "speech" : {
+                    "ifly" : {}
+                },
+                "ad" : {},
+                "maps" : {
+                    "baidu" : {
+                        "appkey_ios" : "vVTmvcbT1QKF5prUbNysqKh5Nt38ixSC",
+                        "appkey_android" : "KL26g3s3V8zUMawkq4v0QZ4sVXOkpZ8l"
+                    }
+                },
+                "push" : {
+                    "unipush" : {}
+                },
+                "payment" : {},
+                "oauth" : {}
+            }
+        },
+        "screenOrientation" : [ "portrait-primary", "portrait-secondary" ]
+    },
+    "dependencies" : {
+        "pages" : {
+            "html/page4/index.html" : {
+                "href" : "html/page4/index.html",
+                "resources" : [
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "css/common.css",
+                    "js/utils/storageKeyName.js",
+                    "js/utils/mui.min.js",
+                    "js/utils/vconsole.min.js",
+                    "js/utils/vue.js",
+                    "js/utils/utils.js",
+                    "js/utils/store.js",
+                    "js/utils/publicProtocolNew.js",
+                    "js/utils/events.js",
+                    "js/libs/jquery.js",
+                    "js/utils/pushPermission.js",
+                    "js/utils/clearIcon.js"
+                ],
+                "priority" : 0
+            },
+            "html/page5/index.html" : {
+                "href" : "html/page5/index.html",
+                "resources" : [
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "css/common.css",
+                    "js/utils/storageKeyName.js",
+                    "js/utils/mui.min.js",
+                    "js/utils/vconsole.min.js",
+                    "js/utils/vue.js",
+                    "js/utils/utils.js",
+                    "js/utils/store.js",
+                    "js/utils/publicProtocolNew.js",
+                    "js/utils/events.js",
+                    "js/libs/jquery.js",
+                    "js/utils/pushPermission.js",
+                    "js/utils/clearIcon.js"
+                ],
+                "priority" : 1
+            },
+            "html/page1/index.html" : {
+                "href" : "html/page1/index.html",
+                "resources" : [
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "css/common.css",
+                    "img/homeSchool/u298.png",
+                    "img/homeSchool/u292.png",
+                    "img/homeSchool/u296.png",
+                    "img/homeSchool/schoolPage8.png"
+                ],
+                "priority" : 2
+            },
+            "html/page2/index.html" : {
+                "href" : "html/page2/index.html",
+                "resources" : [
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "css/common.css",
+                    "img/homeSchool/schoolPage8.png"
+                ],
+                "priority" : 3
+            },
+            "html/more/index.html" : {
+                "href" : "html/more/index.html",
+                "resources" : [
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "css/common.css",
+                    "js/utils/storageKeyName.js",
+                    "js/utils/mui.min.js",
+                    "js/utils/vconsole.min.js",
+                    "js/utils/vue.js",
+                    "js/utils/utils.js",
+                    "js/utils/store.js",
+                    "js/utils/publicProtocolNew.js",
+                    "js/utils/events.js",
+                    "js/libs/jquery.js",
+                    "js/utils/pushPermission.js",
+                    "js/utils/clearIcon.js",
+                    "img/homeSchool/schoolPage8.png"
+                ],
+                "priority" : 4
+            },
+            "html/page6/index.html" : {
+                "href" : "html/page6/index.html",
+                "resources" : [
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "css/common.css",
+                    "js/utils/storageKeyName.js",
+                    "js/utils/mui.min.js",
+                    "js/utils/vconsole.min.js",
+                    "js/utils/vue.js",
+                    "js/utils/utils.js",
+                    "js/utils/store.js",
+                    "js/utils/publicProtocolNew.js",
+                    "js/utils/events.js",
+                    "js/libs/jquery.js",
+                    "js/utils/pushPermission.js",
+                    "js/utils/clearIcon.js"
+                ],
+                "priority" : 5
+            },
+            "html/page3/index.html" : {
+                "href" : "html/page3/index.html",
+                "resources" : [
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "css/common.css",
+                    "js/utils/storageKeyName.js",
+                    "js/utils/mui.min.js",
+                    "js/utils/vconsole.min.js",
+                    "js/utils/vue.js",
+                    "js/utils/utils.js",
+                    "js/utils/store.js",
+                    "js/utils/publicProtocolNew.js",
+                    "js/utils/events.js",
+                    "js/libs/jquery.js",
+                    "js/utils/pushPermission.js",
+                    "js/utils/clearIcon.js"
+                ],
+                "priority" : 6
+            },
+            "html/login/index.html" : {
+                "href" : "html/login/index.html",
+                "resources" : [
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "fonts/iconfont.css",
+                    "fonts/iconfont.ttf",
+                    "fonts/iconfont2.css",
+                    "fonts/iconfont.ttf",
+                    "css/common.css",
+                    "js/utils/mui.min.js",
+                    "js/utils/vue.js",
+                    "js/utils/storageKeyName.js",
+                    "js/utils/store.js",
+                    "js/utils/utils.js",
+                    "js/libs/jquery.js",
+                    "js/utils/vconsole.min.js"
+                ],
+                "refer" : [
+                    "html/page4/index.html",
+                    "html/page5/index.html",
+                    "html/page1/index.html",
+                    "html/page2/index.html",
+                    "html/more/index.html",
+                    "html/page6/index.html",
+                    "html/page3/index.html"
+                ],
+                "priority" : 0
+            },
+            "html/mine/modifyPassword.html" : {
+                "href" : "html/mine/modifyPassword.html",
+                "resources" : [
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "css/common.css",
+                    "js/utils/storageKeyName.js",
+                    "js/utils/mui.min.js",
+                    "js/utils/vconsole.min.js",
+                    "js/utils/vue.js",
+                    "js/utils/utils.js",
+                    "js/utils/store.js",
+                    "js/utils/publicProtocolNew.js",
+                    "js/utils/events.js",
+                    "js/libs/jquery.js"
+                ],
+                "refer" : [ "html/login/index.html" ],
+                "priority" : 1
+            },
+            "html/login/register.html" : {
+                "href" : "html/login/register.html",
+                "resources" : [
+                    "js/utils/storageKeyName.js",
+                    "js/utils/vconsole.min.js",
+                    "js/utils/mui.min.js",
+                    "js/utils/vue.js",
+                    "js/libs/RSA/Barrett.js",
+                    "js/libs/RSA/BigInt.js",
+                    "js/libs/RSA/RSA.js",
+                    "js/libs/encryption/RSAEncrypt.js",
+                    "js/libs/encryption/sortSign.js",
+                    "js/libs/crypto-js/require.js",
+                    "js/libs/encryption/signHmacSHA1.js",
+                    "js/libs/jquery.js",
+                    "js/utils/publicProtocolNew.js",
+                    "js/utils/store.js",
+                    "js/utils/utils.js",
+                    "js/utils/events.js",
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "css/common.css",
+                    "img/register/phone.png",
+                    "img/register/idencode.png",
+                    "img/register/username.png",
+                    "img/register/password.png"
+                ],
+                "priority" : 2
+            },
+            "html/login/loginIndex.html" : {
+                "href" : "html/login/loginIndex.html",
+                "resources" : [
+                    "js/utils/storageKeyName.js",
+                    "js/utils/vconsole.min.js",
+                    "js/libs/RSA/Barrett.js",
+                    "js/libs/RSA/BigInt.js",
+                    "js/libs/RSA/RSA.js",
+                    "js/libs/encryption/RSAEncrypt.js",
+                    "js/libs/crypto-js/require.js",
+                    "js/libs/encryption/signHmacSHA1.js",
+                    "js/libs/jquery.js",
+                    "js/libs/encryption/sortSign.js",
+                    "js/utils/publicProtocolNew.js",
+                    "js/utils/store.js",
+                    "js/utils/utils.js",
+                    "js/utils/events.js",
+                    "js/utils/md5.js",
+                    "css/mui.min.css",
+                    "fonts/mui.ttf",
+                    "js/utils/mui.min.js",
+                    "css/common.css",
+                    "img/login/username.png",
+                    "img/login/password.png"
+                ],
+                "refer" : [
+                    "html/login/index.html",
+                    "html/mine/modifyPassword.html",
+                    "html/login/register.html"
+                ],
+                "priority" : 0
+            }
+        },
+        "idle" : {
+            "resources" : [
+                "js/libs/RSA/jQuery.md5.js",
+                "img/homeSchool/schoolPage6.png",
+                "js/pdfjs/LICENSE",
+                "js/utils/mui.previewimage.js",
+                "js/utils/cryption.js",
+                "img/homeSchool/schoolPage10.png",
+                "js/muiPicker/mui.poppicker.js",
+                "js/libs/CryptoJS/rollups/rabbit.js",
+                "js/libs/CryptoJS/rollups/pbkdf2.js",
+                "js/libs/CryptoJS/components/md5.js",
+                "img/homeSchool/schoolPage5.png",
+                "fonts/iconfont2.ttf",
+                "js/libs/CryptoJS/components/mode-cfb.js",
+                "js/libs/crypto-js/sha3.js",
+                "js/libs/CryptoJS/components/pbkdf2-min.js",
+                "js/picVideoAudio/camera.js",
+                "js/cloud/load.js",
+                "js/libs/crypto-js/hmac-sha3.js",
+                "js/libs/CryptoJS/components/pad-iso10126-min.js",
+                "js/libs/CryptoJS/rollups/hmac-sha1.js",
+                "js/libs/CryptoJS/rollups/hmac-sha512.js",
+                "js/utils/mui.pullToRefresh.js",
+                "js/libs/crypto-js/rabbit-legacy.js",
+                "js/picVideoAudio/video.js",
+                "js/libs/CryptoJS/components/hmac-min.js",
+                "img/homeSchool/warning.png",
+                "css/utils/MultiMedia.css",
+                "js/libs/crypto-js/bower.json",
+                "js/utils/vue.min.js",
+                "js/libs/CryptoJS/components/sha1-min.js",
+                "css/utils/custom-textarea.css",
+                "js/utils/mui.pullToRefresh.material.js",
+                "js/swiper/swiper.esm.js",
+                "img/homeSchool/schoolPage2.png",
+                "js/libs/crypto-js/package.json",
+                "js/libs/CryptoJS/components/md5-min.js",
+                "js/libs/CryptoJS/components/rc4.js",
+                "js/libs/CryptoJS/rollups/aes.js",
+                "js/picVideoAudio/gallerypick.js",
+                "js/libs/crypto-js/rabbit.js",
+                "js/libs/CryptoJS/components/mode-ecb-min.js",
+                "js/libs/crypto-js/hmac.js",
+                "js/qiniu/plupload.min.js",
+                "js/libs/CryptoJS/components/pad-zeropadding.js",
+                "js/libs/crypto-js/pad-iso10126.js",
+                "js/libs/RSA/jsencrypt.js",
+                "js/utils/mui.zoom.js",
+                "js/libs/CryptoJS/components/sha3-min.js",
+                "img/homeSchool/lookCount.png",
+                "js/utils/mui.js",
+                "js/libs/CryptoJS/components/x64-core-min.js",
+                "js/utils/publicProtocol.js",
+                "js/libs/CryptoJS/rollups/hmac-sha224.js",
+                "js/utils/echarts-all.js",
+                "js/qiniu/moxie.js",
+                "js/libs/crypto-js/pad-ansix923.js",
+                "js/libs/CryptoJS/components/aes.js",
+                "js/libs/CryptoJS/components/enc-utf16-min.js",
+                "js/swiper/swiper.min.css",
+                "js/utils/payUtil.js",
+                "js/utils/mui.lazyload.img.js",
+                "css/utils/preview.css",
+                "js/libs/crypto-js/crypto-js.js",
+                "js/cloud/mui.previewimage.js",
+                "js/picVideoAudio/playutil.js",
+                "js/libs/CryptoJS/components/rc4-min.js",
+                "js/utils/echarts.min.js",
+                "js/libs/CryptoJS/components/mode-cfb-min.js",
+                "js/libs/CryptoJS/components/pad-iso10126.js",
+                "js/swiper/swiper.js",
+                "js/libs/CryptoJS/rollups/rc4.js",
+                "js/libs/CryptoJS/components/sha384.js",
+                "img/homeSchool/redColor.png",
+                "js/libs/CryptoJS/components/sha1.js",
+                "js/libs/echarts.min.js",
+                "css/utils/audiopopover.css",
+                "js/libs/RSA/MD5.js",
+                "js/libs/crypto-js/enc-latin1.js",
+                "js/qiniu/plupload.full.min.js",
+                "js/libs/crypto-js/pad-zeropadding.js",
+                "img/homeSchool/schoolPage7.png",
+                "js/libs/CryptoJS/components/cipher-core.js",
+                "js/libs/CryptoJS/components/sha256.js",
+                "js/libs/CryptoJS/components/format-hex.js",
+                "html/mine/headImg.html",
+                "js/libs/CryptoJS/rollups/hmac-sha3.js",
+                "js/libs/crypto-js/tripledes.js",
+                "js/libs/CryptoJS/components/sha3.js",
+                "js/utils/app-update.js",
+                "css/utils/common.css",
+                "js/qiniu/qiniu.js",
+                "js/libs/CryptoJS/components/pad-iso97971.js",
+                "js/libs/crypto-js/hmac-sha512.js",
+                "js/swiper/swiper.esm.bundle.js",
+                "js/swiper/bootstrap-treeview.js",
+                "img/homeSchool/wxpay.png",
+                "js/libs/CryptoJS/components/pad-ansix923.js",
+                "js/picVideoAudio/MultiMedia.js",
+                "js/swiper/swiper.min.js",
+                "js/libs/crypto-js/hmac-md5.js",
+                "js/libs/CryptoJS/rollups/hmac-sha384.js",
+                "js/libs/CryptoJS/components/cipher-core-min.js",
+                "img/homeSchool/schoolPage11.png",
+                "js/utils/jquery-1.8.3.min.js",
+                "js/libs/CryptoJS/rollups/sha1.js",
+                "js/libs/crypto-js/lib-typedarrays.js",
+                "js/libs/crypto-js/evpkdf.js",
+                "js/libs/crypto-js/x64-core.js",
+                "css/mui.poppicker.css",
+                "js/libs/CryptoJS/components/ripemd160.js",
+                "js/libs/crypto-js/sha1.js",
+                "img/homeSchool/schoolPage1.png",
+                "js/libs/CryptoJS/rollups/sha384.js",
+                "js/libs/CryptoJS/rollups/sha256.js",
+                "js/libs/CryptoJS/components/format-hex-min.js",
+                "js/libs/CryptoJS/components/mode-ofb-min.js",
+                "js/libs/CryptoJS/rollups/hmac-sha256.js",
+                "img/homeSchool/schoolPage3.png",
+                "js/libs/CryptoJS/components/aes-min.js",
+                "js/qiniu/Moxie.xap",
+                "html/mine/mine.html",
+                "img/homeSchool/schoolPage13.png",
+                "js/libs/CryptoJS/rollups/tripledes.js",
+                "img/homeSchool/Radio_sel.png",
+                "img/login/headImg.png",
+                "js/libs/crypto-js/aes.js",
+                "css/slide/mui.min.css",
+                "css/utils/pullToRefresh.css",
+                "js/pdfjs/index.js",
+                "js/libs/CryptoJS/components/sha224-min.js",
+                "js/utils/echarts.common.min.js",
+                "fonts/iconfont1.ttf",
+                "js/picVideoAudio/UploadHeadImage.js",
+                "fonts/mui-icons-extra.ttf",
+                "js/libs/CryptoJS/components/hmac.js",
+                "js/libs/CryptoJS/rollups/sha512.js",
+                "js/utils/mui.picker.js",
+                "js/libs/crypto-js/sha224.js",
+                "js/libs/CryptoJS/components/lib-typedarrays.js",
+                "js/libs/crypto-js/format-hex.js",
+                "img/homeSchool/schoolPage9.png",
+                "js/utils/postData.js",
+                "js/libs/CryptoJS/components/rabbit-min.js",
+                "js/utils/h5fresh.js",
+                "js/libs/CryptoJS/components/rabbit.js",
+                "js/libs/CryptoJS/components/sha224.js",
+                "js/utils/mui.poppicker.js",
+                "js/libs/CryptoJS/components/enc-base64-min.js",
+                "js/slide/mui.min.js",
+                "js/utils/common.js",
+                "js/libs/crypto-js/hmac-sha1.js",
+                "js/libs/crypto-js/enc-hex.js",
+                "js/utils/permissionChecker.js",
+                "js/libs/crypto-js/sha256.js",
+                "index.html",
+                "js/libs/crypto-js/enc-base64.js",
+                "js/cloud/CloudFileUtil.js",
+                "js/libs/CryptoJS/components/enc-base64.js",
+                "css/mui.picker.all.css",
+                "js/picVideoAudio/compress.js",
+                "js/libs/crypto-js/LICENSE",
+                "js/libs/crypto-js/hmac-sha256.js",
+                "js/libs/crypto-js/sha512.js",
+                "js/libs/crypto-js/pad-nopadding.js",
+                "js/libs/crypto-js/mode-ofb.js",
+                "js/libs/CryptoJS/components/mode-ctr-gladman-min.js",
+                "js/libs/crypto-js/mode-ctr.js",
+                "img/homeSchool/schoolPage12.png",
+                "js/cloud/AndroidFileSystem.js",
+                "js/libs/CryptoJS/components/sha512-min.js",
+                "fonts/mui1.ttf",
+                "js/muiPicker/mui.picker.js",
+                "js/libs/CryptoJS/components/sha384-min.js",
+                "js/libs/crypto-js/hmac-ripemd160.js",
+                "js/libs/CryptoJS/components/enc-utf16.js",
+                "js/libs/CryptoJS/rollups/sha3.js",
+                "js/libs/CryptoJS/components/pad-nopadding.js",
+                "html/mine/about.html",
+                "js/libs/jquery.lazyload.min.js",
+                "js/libs/CryptoJS/components/pad-iso97971-min.js",
+                "js/libs/CryptoJS/components/pad-ansix923-min.js",
+                "js/libs/require/require.js",
+                "js/libs/crypto-js/hmac-sha224.js",
+                "js/libs/CryptoJS/components/pad-zeropadding-min.js",
+                "js/libs/crypto-js/mode-ecb.js",
+                "js/libs/CryptoJS/components/ripemd160-min.js",
+                "js/libs/crypto-js/pbkdf2.js",
+                "js/libs/crypto-js/CONTRIBUTING.md",
+                "js/libs/CryptoJS/components/mode-ctr-min.js",
+                "js/libs/crypto-js/hmac-sha384.js",
+                "js/picVideoAudio/recordvideoutil.js",
+                "js/libs/CryptoJS/rollups/hmac-md5.js",
+                "css/utils/notice-img.css",
+                "js/libs/CryptoJS/components/evpkdf-min.js",
+                "js/libs/CryptoJS/components/mode-ctr-gladman.js",
+                "img/homeSchool/contentCount.png",
+                "js/libs/crypto-js/core.js",
+                "js/picVideoAudio/recordaudioutil.js",
+                "js/libs/CryptoJS/components/lib-typedarrays-min.js",
+                "css/mui.picker.min.css",
+                "js/libs/CryptoJS/components/core-min.js",
+                "img/homeSchool/schoolPage4.png",
+                "js/libs/CryptoJS/rollups/hmac-ripemd160.js",
+                "js/utils/mui.lazyload.js",
+                "css/mui.css",
+                "js/libs/crypto-js/enc-utf16.js",
+                "js/cloud/cloud.js",
+                "fonts/iconfont1.css",
+                "js/libs/CryptoJS/components/tripledes.js",
+                "css/utils/publish-answer.css",
+                "js/muiPicker/mui.picker.min.js",
+                "js/libs/crypto-js/sha384.js",
+                "js/libs/CryptoJS/components/evpkdf.js",
+                "js/libs/CryptoJS/components/mode-ctr.js",
+                "js/libs/crypto-js/README.md",
+                "js/qiniu/plupload.dev.js",
+                "js/libs/crypto-js/md5.js",
+                "js/libs/crypto-js/mode-cfb.js",
+                "js/libs/crypto-js/mode-ctr-gladman.js",
+                "js/libs/crypto-js/pad-iso97971.js",
+                "js/libs/crypto-js/docs/QuickStartGuide.wiki",
+                "js/libs/CryptoJS/components/sha256-min.js",
+                "js/libs/crypto-js/pad-pkcs7.js",
+                "js/qiniu/cloudutil.js",
+                "css/icons-extra.css",
+                "js/libs/CryptoJS/components/pbkdf2.js",
+                "js/pdfjs/index.html",
+                "img/register/bgimg.png",
+                "js/libs/CryptoJS/components/sha512.js",
+                "fonts/mui-icons-extra1.ttf",
+                "js/picVideoAudio/showaudio.js",
+                "js/libs/CryptoJS/components/x64-core.js",
+                "js/libs/CryptoJS/rollups/md5.js",
+                "js/libs/crypto-js/rc4.js",
+                "img/homeSchool/Radio_def.png",
+                "js/libs/CryptoJS/components/rabbit-legacy-min.js",
+                "js/picVideoAudio/compressVideo.js",
+                "img/homeSchool/schoolPage0.png",
+                "js/libs/crypto-js/cipher-core.js",
+                "js/libs/CryptoJS/rollups/ripemd160.js",
+                "js/utils/mui.picker.min.js",
+                "js/libs/CryptoJS/components/tripledes-min.js",
+                "js/libs/CryptoJS/rollups/sha224.js",
+                "js/picVideoAudio/showvideoutil.js",
+                "fonts/fangzheng1.ttf",
+                "css/mui.picker.css",
+                "js/libs/CryptoJS/components/mode-ecb.js",
+                "js/libs/CryptoJS/components/core.js",
+                "img/homeSchool/noData.png",
+                "js/libs/CryptoJS/rollups/rabbit-legacy.js",
+                "js/libs/crypto-js/index.js",
+                "js/libs/CryptoJS/components/rabbit-legacy.js",
+                "js/muiPicker/mui.picker.all.js",
+                "js/libs/CryptoJS/components/pad-nopadding-min.js",
+                "js/libs/CryptoJS/components/mode-ofb.js",
+                "js/qiniu/Moxie.swf",
+                "js/libs/crypto-js/enc-utf8.js",
+                "js/libs/crypto-js/format-openssl.js",
+                "js/libs/crypto-js/ripemd160.js"
+            ]
+        }
+    },
+    "screenOrientation" : [ "portrait-primary" ]
+}

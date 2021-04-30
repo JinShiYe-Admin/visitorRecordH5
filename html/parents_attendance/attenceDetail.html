@@ -1,0 +1,271 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+			.month-picker{
+				text-align: left;
+				padding-left: 15px;
+			}
+			
+			.mui-table-view-cell:after {
+			    height: 0px;
+			}
+			
+			.mui-pull-top-tips,.mui-pull-top-tips.mui-transitioning,.mui-pull-top-wrapper,.mui-pull-top-canvas {
+			   z-index: 100 !important;
+			}
+			
+			.mui-dtpicker-header button:last-child{
+				background-color:#00CFBD;
+				border-color:#00CFBD ;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background: white;" id="contentData">
+			<div class="mui-row" style="height: 45px;background: #EAEAEA;text-align: left; padding: 12px 0;font-size: 14px;">
+				<span id='months' style="color: #00CFBD;" data-options='{"type":"month","title":"开始时间"}'  @tap="months($event)"  class="month-picker"></span><span class="mui-icon mui-icon-arrowdown" style="font-size: 15px;margin-left: 3px;"></span>
+			</div>
+			<div class="mui-row">
+				<div class="mui-col-xs-12" style="padding: 0 15px;margin-top: 10px;text-align: center;font-size: 14px;">
+					<span>{{item_txt}}次数：</span><span style="color: #FF3333;font-size: 18px;">{{total_count}}</span> 
+				</div>
+			</div>
+			<div class="mui-row">
+				<div class="mui-scroll-wrapper" style="margin-top: 120px;">
+					<div class="mui-scroll">
+						<ul class="mui-table-view no-line" style="font-size: 13px;min-height: calc(100vh - 100px);">
+							<li class="mui-table-view-cell no-bgc" style="padding: 0 0;" v-for="(item,index) in pageData">
+								<div style="height: 30px;background-color: #F3EDDB;margin-top:15px;">
+									<div style="margin-left: 5px;text-align: center;background-color: #FF9900;border-radius: 50%;width: 30px;height: 30px;">
+										<div style="color: #FFFFFF;font-size: 14px;font-weight: 600;display: inline-block;margin-top: 5px;">{{++index}}</div>
+									</div>
+								</div>
+								<div style="padding: 10px 20px 0;">
+									<div class="mui-row mui-col-xs-12" style="margin-top: 10px;"><p class="mui-col-xs-4" style="float: left;">考勤日期：</p><p class="mui-col-xs-8" style="float: left;">{{item.attendance_time?item.attendance_time:'暂无'}}</p></div>
+									<div class="mui-row mui-col-xs-12" style="margin-top: 10px;"><p class="mui-col-xs-4" style="float: left;">星期：</p><p class="mui-col-xs-8" style="float: left;"> {{item.day?item.day:'暂无'}}</p></div>
+									<div class="mui-row mui-col-xs-12" style="margin-top: 10px;"><p class="mui-col-xs-4" style="float: left;">节次：</p><p class="mui-col-xs-8" style="float: left;"> {{item.class_node?item.class_node:'暂无'}}</p></div>
+									<div class="mui-row mui-col-xs-12" style="margin-top: 10px;"><p class="mui-col-xs-4" style="float: left;">科目：</p><p class="mui-col-xs-8" style="float: left;">{{item.sub_name?item.sub_name:'暂无'}}</p></div>
+									<div class="mui-row mui-col-xs-12" style="margin-top: 10px;word-break: break-all;"><p class="mui-col-xs-4" style="float: left;">说明：</p><p class="mui-col-xs-8" style="float: left;">{{item.comment?item.comment:'暂无'}}</p></div>
+									<div class="mui-row mui-col-xs-12" style="margin-top: 10px;"><p class="mui-col-xs-4" style="float: left;">记录人：</p><p class="mui-col-xs-8" style="float: left;">{{item.create_user_name?item.create_user_name:'暂无'}}</p></div>
+								</div> 
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script> 
+		<script src="../../js/muiPicker/mui.picker.all.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/moment.min.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			mui.init();
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					showBack: 1,
+					headTitle: '',
+				}
+			});
+			//vue数据 
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					refrushFlag: 0, //0刷新1加载更多
+					pageNumber: 1,
+					startTime:'',
+					endTime:'',
+					total_page:0,//总页数
+					total_count:'',//次数
+					item_txt:'',//名称
+					personal:store.get(window.storageKeyName.PERSONALINFO),
+					pageData: [],
+				},
+				methods:{
+					months:function(e){
+						let that=e.target
+						var _self = that;
+						var optionsJson = that.getAttribute('data-options') || '{}';
+						var options = JSON.parse(optionsJson);
+						options.endDate=new Date(currentYear(),currentMonth());
+						options.value=contentData.startTime
+						var id = that.getAttribute('id');
+						var picker = new mui.DtPicker(options);
+						picker.show(function(rs) {
+							let start_monthStr=moment(rs.text).format('YYYY年MM月')
+							let end_monthStr=moment(rs.text).add(5, 'M').format('YYYY年MM月');
+							let start_month=moment(rs.text).format('YYYY-MM')
+							let end_month=moment(rs.text).add(5, 'M').format('YYYY-MM');
+							$('#months').html(start_monthStr+' ~ '+end_monthStr)
+							contentData.startTime=start_month;
+							contentData.endTime=end_month;
+							contentData.refrushFlag = 0; //0刷新1加载更多
+							contentData.pageNumber = 1; 
+							getPageAttendanceDetail();
+							picker.dispose();
+							picker = null;
+						});
+					}
+				}
+			});  
+			var loading=true;
+			var pageSize =10;
+			var self = 0;
+			let curPage=''
+			mui.plusReady(function() {
+				(function($) {
+					$('.mui-scroll-wrapper').scroll({
+						indicators: true //是否显示滚动条
+					});
+					$.ready(function() {
+						$.each(document.querySelectorAll('.mui-scroll-wrapper .mui-scroll'), function(index, pullRefreshEl) {
+							$(pullRefreshEl).pullToRefresh({
+								down: {
+									callback: function() {
+										self = this;
+										contentData.refrushFlag = 0; //0刷新1加载更多
+										contentData.pageNumber = 1; 
+										getPageAttendanceDetail();
+										setTimeout(function() {
+											//结束下拉刷新
+											self.endPullDownToRefresh();
+										}, 1000);
+									}
+								},
+								up: {
+									callback: function() {
+										self = this;
+										contentData.refrushFlag = 1; //0刷新1加载更多
+										if (contentData.pageNumber <= contentData.total_page) {
+											getPageAttendanceDetail();
+											setTimeout(function() {
+												//结束下拉刷新
+												self.endPullUpToRefresh();
+												if (mui(".mui-table-view-cell").length < 10) {
+													mui(".mui-pull-loading")[0].innerHTML = "";
+												}
+											}, 1000);
+										} else {
+											//结束下拉刷新
+											self.endPullUpToRefresh();
+											mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+										}
+									}
+								}
+							});
+						});
+					});
+				})(mui);
+				curPage = utils.getDataFromUrl(window.location.href);
+				contentData.total_count=curPage.num
+				contentData.item_txt=curPage.item_txt
+				tempHead.headTitle=curPage.item_txt +'详情';
+				let end_monthStr=moment().format('YYYY年MM月')
+				let start_monthStr=moment().subtract(5, 'M').format('YYYY年MM月');
+				let end_month=moment().format('YYYY-MM')
+				let start_month=moment().subtract(5, 'M').format('YYYY-MM');
+				$('#months').html(start_monthStr+' ~ '+end_monthStr)
+				contentData.startTime=start_month;
+				contentData.endTime=end_month;
+				
+				getPageAttendanceDetail();
+			});
+			
+			//分页查询考勤项目详情
+			function getPageAttendanceDetail(){ 
+				if(loading){events.showWaiting();}
+				let user_code=personal.user_code;
+				if(personal.type_code=='YHLX0004'){
+					user_code=personal.stu_code;
+				}
+				comData = {
+					stu_code:user_code,
+					begintime:contentData.startTime,
+					endtime:contentData.endTime,
+					page_size:pageSize,
+					page_number: contentData.pageNumber,
+					attendance_type:curPage.attendance_type,
+					item_code:curPage.item_code,
+					index_code: curPage.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.PARENTS_ATTENDANCE + 'attendance/pageAttendanceDetail', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					loading=false;
+					if (data.code == 0) {
+						 console.log("data.data.list: " + JSON.stringify(data.data.list));
+						 contentData.total_page=data.data.total_page
+						 contentData.total_count=data.data.total_row
+						 if (contentData.refrushFlag == 0) {
+						 	contentData.pageData = [].concat(data.data.list);
+							if(data.data.list.length<pageSize){
+								mui(".mui-pull-loading")[0].style.display="none"
+							}
+						 	setTimeout(() => {
+						 		self && self.endPullDownToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 } else {
+						 	contentData.pageData = contentData.pageData.concat(data.data.list);
+						 	// if(data.data.list.length==0){
+						 	// 	mui.toast('暂无更多数据');
+						 	// }    
+						 	setTimeout(() => {
+						 		self && self.endPullUpToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 }
+						 contentData.pageNumber++;
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			function currentYear(){
+				return moment().format("YYYY")
+			}
+			
+			function currentMonth(){
+				return moment().months()
+			}
+		</script>
+	</body>
+
+</html>

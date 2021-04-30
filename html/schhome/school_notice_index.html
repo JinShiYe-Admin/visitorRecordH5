@@ -1,0 +1,546 @@
+<!doctype html>
+<html>
+	<!-- 考勤模块  课堂考勤记录 
+	列表页
+	-->
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<style>
+			[v-cloak] {
+				visibility: hidden;
+				display: none !important;
+			}
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+			
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			
+			.mui-pull-top-tips .mui-pull-loading {
+				margin: 0;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			}
+			.peopleImg {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+			}
+			.time {
+				font-size: 14px;
+				float: right;
+				color: gray;
+			}
+			
+			.biaoti {
+				color: #000000;
+				width: 80%;
+				font-size: 1.0625rem;
+				white-space:normal;
+			}
+			
+			.tempCss {
+				font-size: 14px;
+				color: gray;
+			}
+			
+			.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
+			    margin-top: 0;
+			}
+			.mui-table h4{
+			    line-height: 21px;
+			    font-weight: 500;
+			}
+					
+			.mui-table .oa-icon{
+			    position: absolute;
+			    right:0;
+			    bottom: 0;
+			}
+			.mui-table .oa-icon-star-filled{
+			    color:#f14e41;
+			}
+			
+			.mui-table-cell-1{
+				margin-top: 1.25rem;
+			}
+			
+			.select{
+				position: fixed;
+				z-index: 2;
+			}
+			
+			.line{
+				background-color: #00CFBD;
+				margin-bottom: 0rem;
+				height: 0.125rem;
+			}
+			.selectDiv{
+				background-color: #eaeaea;
+			}
+			.selectBtn{
+				border: 0rem;
+				border-radius: 0rem;
+				background-color: #FFFFFF;
+				height: 3rem;
+			}
+			
+			.ant-avatar{
+				-webkit-box-sizing: border-box;
+				    box-sizing: border-box;
+				    margin: 0;
+				    padding: 0;
+				    color: rgba(0, 0, 0, 0.65);
+				    font-size: 14px;
+				    font-variant: tabular-nums;
+				    line-height: 1.5;
+				    list-style: none;
+				    -webkit-font-feature-settings: 'tnum';
+				    font-feature-settings: 'tnum';
+				    position: relative;
+				    display: inline-block;
+				    overflow: hidden;
+				    color: #fff;
+				    white-space: nowrap;
+				    text-align: center;
+				    vertical-align: middle;
+				    background: #ccc;
+				    width: 32px;
+				    height: 32px;
+				    line-height: 32px;
+				    border-radius: 50%;
+			}
+			
+			.ant-avatar-lg {
+			    width: 40px;
+			    height: 40px;
+			    line-height: 40px;
+			    border-radius: 50%;
+			}
+			
+			.mui-segmented-control {
+				border: 0px;
+				background: #F0F0F0;
+			}
+			
+			.mui-segmented-control .mui-control-item {
+				border: 0px;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.mui-segmented-control .mui-control-item.mui-active {
+				background-color: transparent;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.mui-segmented-control .mui-control-item span {
+				font-size: 12px;
+				padding: 0 0 0 5px;
+				color: #666;
+			}
+			
+			.mui-dtpicker-header button:last-child {
+			    background-color: #00CFBD;
+				border: #00CFBD;
+			}
+			
+			.action{
+				border: 1px solid #FF9F0E;
+				color: #FF9F0E;
+				font-size: 12px;
+				margin-right: 0.2875rem;
+				padding:0.125rem
+			}
+			
+			.mui-table-view-cell>a:not(.mui-btn){
+				    white-space: inherit;
+			}
+			
+			.tow-line{
+				overflow: hidden !important;
+				text-overflow: ellipsis !important;
+				display: -webkit-box !important;
+				-webkit-box-orient:vertical !important;
+				-webkit-line-clamp: 2 !important;
+				min-height:22px !important;
+				max-height:45px !important;
+				margin-top: 0.55rem !important;
+				word-break: break-all !important;
+			}
+			
+			.three-line{
+				overflow: hidden !important;
+				text-overflow: ellipsis !important;
+				display: -webkit-box !important;
+				-webkit-box-orient:vertical !important;
+				-webkit-line-clamp: 3 !important;
+				min-height:22px !important;
+				max-height:70px !important;
+				margin-top: 0.55rem !important;
+				word-break: break-all !important;
+			}
+			
+			.mui-input-row label {
+			    line-height: 1.1;
+			    float: right;
+			    width: 15%;
+				margin:0.3125rem 1% 0.3125rem 1%;
+				background-color: #00CFBD;
+				color: #FFFFFF;
+				height: 40px;
+				border-radius: 0.5rem;
+			    padding: 8px 18px;
+			}
+			
+			.mui-input-row label~input {
+			    float: left;
+			    width: 82%;
+				margin:0.3125rem 0 0.3125rem 1%;
+			    margin-bottom: 0;
+				border-radius: 0.5rem;
+			    padding-left: 10px;
+				background-color: #FFFFFF;
+			    border: 0;
+			}
+			
+			::-webkit-input-placeholder { /* WebKit browsers */
+			  font-size: 14px;
+			}
+
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{titleName}}</h1>
+			<a v-if="showAdd" @click="add()" class="mui-pull-right" style="font-size: 1.5625rem;margin-top: 0px;">+</a>
+		</header>
+		<div v-cloak id="datasource" class="mui-content mui-fullscreen" style="z-index:0">
+			<div v-cloak class="mui-scroll-wrapper" style="margin-top: 44px;">
+				<div v-cloak class="mui-scroll" >
+					<div v-cloak class="mui-input-row" style="border-bottom: 1px solid #00cfbd;">
+						<label @tap="selectItem"><span class="mui-icon mui-icon-search"></span></label>
+						<input v-model="inputText" oninput="inputChange(this)" type="text" placeholder="输入内容关键字">
+					</div>
+					<template v-cloak v-if="pageArray.length>0">
+						<ul v-cloak class="mui-table-view">
+							<li v-cloak v-for="model in pageArray" class="mui-table-view-cell" @tap="clickLi(model)">
+								<a class="mui-navigate-right"><!-- mui-navigate-right -->
+									<div class="mui-table">
+										<div class="mui-table-cell mui-col-xs-11">
+											<div style="margin-top: 0.55rem;">
+												<div class="mui-table-cell mui-col-xs-12">
+													<h5 class="mui-ellipsis mui-text-left " style="font-size: 16px;">{{model.send_time}}</h5>
+												</div>
+											</div>
+											<p class="three-line" v-if="model.msg_content">{{model.msg_content}}</p>
+										</div>
+										<div class="mui-table-cell mui-col-xs-1">
+											<h5 class="mui-text-right" ></h5>
+										</div>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</template>
+					<template v-else>
+						<div></div>
+					</template>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<!-- <script src="../../js/utils/vconsole.min.js"></script> -->
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/mui.picker.min.js"></script>
+		<script src="../../js/utils/mui.poppicker.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			var $M = mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var curPage = {};
+			var pageIndex = 1; //请求数据页面
+			var totalPageCount; //总页码
+			var flagRef = 0; //是刷新0，还是加载更多1
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					titleName: '',
+					showAdd: false,
+				},
+				methods: {
+					add: function() {
+							let model = {};
+							let index_code = curPage.access.split('#')[1]
+							model.index_code = index_code;
+							model.title=curPage.name
+							utils.mOpenWithData("../../html/schhome/school_notice_add.html", model);
+					},
+				} 
+			});
+			var datasource = new Vue({
+				el: "#datasource",
+				data: {
+					canDelete:false,
+					pageArray: [], //界面总数组
+					inputText:'',//输入的搜索内容
+				},
+				methods: {
+					clickLi: function(model) {
+						let index_code = curPage.access.split('#')[1]
+						model.index_code = index_code;
+						utils.mOpenWithData("../../html/schhome/school_notice_detail.html", model);
+					},
+					selectItem:function(){
+						if(datasource.inputText==''){
+							mui.toast('请先输入搜索内容')
+						}else{
+							pageIndex = 1;
+							flagRef = 0;
+							events.showWaiting();
+							getPageDataArray()
+						}
+					},
+				}
+			});
+			
+			function inputChange(input){
+				if(input.value==''){
+					pageIndex = 1;
+					flagRef = 0;
+					events.showWaiting();
+					datasource.inputText=''
+					getPageDataArray();
+				}
+			}
+
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				tempVue.titleName = curPage.name;
+
+				//阻尼系数、初始化刷新加载更多
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+
+				window.addEventListener('refreshList', function(data) {
+					events.showWaiting();
+					pageIndex = 1;
+					flagRef = 0;
+					datasource.pageArray = [];
+					getPageDataArray();
+				});
+
+				//上拉下拉注册
+				mui(".mui-scroll-wrapper .mui-scroll").pullToRefresh({
+					down: {
+						callback: function() {
+							//清除节点
+							// document.getElementById('list-container').innerHTML = "";
+							var self = this;
+							//console.log("下拉刷新");
+							pageIndex = 1;
+							flagRef = 0;
+							events.showWaiting();
+							datasource.pageArray = [];
+							getPageDataArray();
+							setTimeout(function() {
+								//结束下拉刷新
+								self.endPullDownToRefresh();
+							}, 1000);
+						}
+					},
+					up: {
+						callback: function() {
+							var self = this;
+							//console.log("上拉加载更多");
+							flagRef = 1;
+							if (pageIndex <= totalPageCount) {
+								events.showWaiting();
+								getPageDataArray();
+								setTimeout(function() {
+									//结束下拉刷新
+									self.endPullUpToRefresh();
+									if (mui(".mui-table-view-cell").length < 10) {
+										mui(".mui-pull-loading")[0].innerHTML = "";
+									}
+								}, 1000);
+							} else {
+								//结束下拉刷新
+								self.endPullUpToRefresh();
+								mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+							}
+						}
+					}
+				});
+
+				events.showWaiting();
+				// 获取权限
+				getPermissionByPosition('add', curPage.access, function(data) {
+					console.log('getPermissionByPosition:' + JSON.stringify(data));
+					if (data.code == 0) {
+						let result =data.data.result.split(",")
+						if(result[0]==1){
+							tempVue.showAdd = true;
+						}
+					}
+				});
+				getPageDataArray(); 
+			});
+
+
+			function getPageDataArray() {
+				//需要加密的数据
+				comData = {
+					get_unit_code:personal.unit_code,
+					msg_type:window.storageKeyName.MSG_SMS.SCHOOL.MSG_TYPE,
+					msg_content:datasource.inputText,
+					dest_user:'',
+					send_time_begin:'1970-01-01',
+					send_time_end:'2051-01-01',
+					send_user:personal.user_code,
+					grd_code:'',
+					cls_code:'',
+					serviced:'0,1,99,100',
+					page_number: pageIndex, //当前页数 
+					page_size: 10, //每页记录数
+					index_code: curPage.access.split('#')[1],
+				}  
+				// 1.1.列表页 
+				postDataEncry(window.storageKeyName.INTERFACE_SCHHOME + 'api/appsms/appsmsp', {}, comData, 2, function(
+					data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						if(data.data!=null){
+							totalPageCount = data.data.total_page;
+							pageIndex++;
+							if (flagRef == 0) { //刷新
+								datasource.pageArray = data.data.list
+								if (data.data.list.length == 0) {
+									mui.toast('暂无数据');
+								}
+								mui(".mui-scroll-wrapper").scroll().refresh();
+							} else { //加载更多
+								//合并数组
+								datasource.pageArray = datasource.pageArray.concat(data.data.list);
+								if (data.data.list.length == 0) {
+									mui.toast('已加载全部');
+								}
+							}
+							if (mui(".mui-table-view-cell").length < 10 && mui(".mui-pull-loading")[0]) {
+								mui(".mui-pull-loading")[0].innerHTML = "";
+							}
+						}else{
+							datasource.pageArray =[]
+							mui.toast('暂无数据');
+							mui(".mui-pull-loading")[0].innerHTML = "";
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			};
+		</script>
+	</body>
+
+</html>

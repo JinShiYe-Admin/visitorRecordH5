@@ -1,0 +1,482 @@
+<!doctype html>
+<html>
+	<!-- 考务模块  列表页
+
+ -->
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../fonts/iconfont1.css" />
+		<link rel="stylesheet" href="../../css/utils/MultiMedia.css" />
+		<link rel="stylesheet" href="../../css/utils/preview.css" />
+		<link rel="stylesheet" href="../../css/utils/audiopopover.css" />
+		<style>
+			[v-cloak] {
+				visibility: hidden;
+				display:none !important;
+			}
+			html,
+			body {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-content{
+				background-color: #FFFFFF;
+			}
+			
+			.time {
+				font-size: 14px;
+				float: right;
+				color: gray;
+			}
+			
+			
+			.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
+			    margin-top: 0;
+			}
+			.mui-table h4{
+			    line-height: 21px;
+			    font-weight: 500;
+			}
+					
+			.mui-table .oa-icon{
+			    position: absolute;
+			    right:0;
+			    bottom: 0;
+			}
+			.mui-table .oa-icon-star-filled{
+			    color:#f14e41;
+			}
+			
+			.mui-table-cell-1{
+				margin-top: 1.25rem;
+			}
+			
+			.selectDiv{
+				background-color: #eaeaea;
+			}
+			.selectBtn{
+				border: 0rem;
+				border-radius: 0rem;
+				background-color: #FFFFFF;
+				height: 3rem;
+			}
+			
+			.aCss {
+				font-size: 15px;
+				color: #333;
+				width: 5rem;
+			}
+			
+			.icon-right {
+				position: fixed;
+				float: right;
+				font-size: 14px;
+				margin-top: 11px;
+				right: 5%;
+			}
+			
+			.mui-input-row label~input,.mui-input-row label~select, .mui-input-row label~textarea ,
+			input::-webkit-input-placeholder,textarea::-webkit-input-placeholder {
+				color: #999;
+				/* placeholder字体大小  */
+				font-size: 14px;
+			}
+			
+			.line {
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #e4e4e4;
+			}
+			
+			.mui-input-row:after {
+				height: 0px;
+			}
+			
+			.mui-input-row {
+				margin:0.3125rem 0;
+			}
+			
+			.mui-input-row label {
+			    font-family: 'Helvetica Neue',Helvetica,sans-serif;
+			    line-height: 1.1;
+			    float: left;
+			    width: 30%;
+			    padding: 11px 15px;
+			}
+			
+			.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea {
+			    float: right;
+			    width: 68%;
+				margin-right: 2%;
+			    margin-bottom: 0;
+			    padding-left: 0.625rem;
+			    border: 0;
+			}
+			
+			.mui-dtpicker-header button:last-child {
+			    background-color: #00CFBD;
+				border: #00CFBD;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{titleName}}</h1>
+			<a @click="submit()" class="mui-pull-right" style="font-size: 0.875rem" v-if="curPage.edit==1">确定</a>
+		</header>
+		<div v-cloak id="datasource" class="mui-content mui-fullscreen" style="z-index:0">
+			<div v-cloak class="mui-scroll-wrapper" style="margin-top: 44px;">
+				<div v-cloak class="mui-scroll">
+					<div class="" v-cloak style="margin-top: 0.625rem;">
+						<div v-cloak class="mui-input-row">
+							<label v-cloak class="aCss">行为详情</label>
+							<div style="width: 68%;float: right;margin-right: 2%;">
+								<div class="mui-ellipsis">
+									<p style="margin-top: 0.55rem;">{{curPage.grd_name}}&ensp;{{curPage.class_name}}&ensp;{{curPage.stu_name}}</p>
+								</div>
+								<div class="mui-ellipsis mui-col-xs-12">
+									<p style="margin-top: 0.55rem;">{{curPage.behavior_time}}&ensp;&ensp;{{curPage.item_txt}}</p><!-- 行为细项 -->
+								</div>
+								<!-- <div class="mui-ellipsis">
+									<p style="margin-top: 0.55rem;">{{curPage.behavior_time}}</p>
+								</div> --><!-- 发生时间 -->
+								<p style="margin-top: 0.55rem;word-break: break-word;">{{curPage.comment}}</p>
+								<div v-for="model in curPage.behavior_asset_ids" style="margin-top:8px;font-size: 14px;">
+									<a @tap="clickImg(model.url)"  href="javascript:void(0)">{{model.name}}</a>
+								</div>
+							</div>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showDate()">谈话日期</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showDate()" placeholder="请选择" v-model="formData.time" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row" >
+							<label class="aCss">谈话记录</label>
+							<textarea style="border: 1px solid rgba(0,0,0,.2);" @tap="tsttt()" :readonly="curPage.edit==0"  maxlength="100" v-model="formData.comment" rows="5" placeholder="请输入内容"></textarea>
+						</div>
+						<div class="line" v-if="curPage.edit==1"></div>
+						<div v-cloak class="mui-input-row" v-show="curPage.edit==1">
+							<label class="aCss">附件</label>
+							<div style="width: 74%;float: right;margin-top:-2.5rem;" >
+								<div id="MultiMedia">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="videoPopover" class="mui-popover">
+						<video id="video" style="position: absolute;z-index: 999;" controls="controls" webkit-playsinline playsinline>
+							您的浏览器不支持 video 标签。
+						</video>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		
+		<script src="../../js/picVideoAudio/MultiMedia.js"></script>
+		<script src="../../js/cloud/AndroidFileSystem.js"></script>
+		<script src="../../js/qiniu/qiniu.js"></script>
+		<script src="../../js/utils/cryption.js"></script>
+		<script src="../../js/cloud/CloudFileUtil.js"></script>
+		<script src="../../js/cloud/qn_upload.js"></script>
+		<script src="../../js/utils/mui.zoom.js"></script>
+		<script src="../../js/utils/mui.previewimage.js"></script>
+		<script src="../../js/picVideoAudio/compress.js"></script>
+		<script src="../../js/picVideoAudio/recordvideoutil.js"></script>
+		<script src="../../js/picVideoAudio/playutil.js"></script>
+		<script src="../../js/picVideoAudio/showvideoutil.js"></script>
+		<script src="../../js/picVideoAudio/showaudio.js"></script>
+		<script src="../../js/picVideoAudio/gallerypick.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src='../../js/picVideoAudio/compressVideo.js'></script>
+		<script src="../../js/qiniu/cloudutil.js"></script>
+		<script src="../../js/utils/mui.picker.min.js"></script>
+		<script src="../../js/utils/mui.poppicker.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			var $M = mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var curPage = {};
+			
+			var hideOption; //隐藏键盘的数据
+			var multiMedia; //多媒体控件
+			
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					curPage:{},
+					titleName: '新建行为谈话'
+				},
+				methods:{
+					submit:function(){//表单提交
+						 if(datasource.formData.time==''){
+							mui.toast('请选择发生日期')
+						}else if(datasource.formData.comment==''){
+							mui.toast('请填写谈话记录')
+						}else{
+							if (multiMedia.data.PictureArray.length == 0) { //没有传附件
+								var wd = events.showWaiting();
+								submitData(wd,datasource.formData)
+							} else {
+								var wd = events.showWaiting('上传中...');
+								//上传文件
+								qn_upload.uploadFile(wd,function(wd, type, encAddrStr, encImgrStr, encLen, encNameStr){
+									submitData(wd,datasource.formData,type,encAddrStr,encImgrStr,encLen,encNameStr)
+								});
+							}
+						}
+					},
+				}
+			});
+			var datasource = new Vue({
+				el: "#datasource",
+				data: {
+					curPage:{},
+					formData: {
+						id:'',//已阅操作后，返回的id，需要在保存的时候使用此id
+						time:'',//发生日期择值
+						comment:'',//说明
+					}, //表单内容
+				},
+				methods: {
+					showDate: function() {
+						let myDate=new Date()
+						var year = myDate.getFullYear();
+						var month = myDate.getMonth() + 1;
+						var date = myDate.getDate();
+						let dtObj={value:datasource.formData.time,endYear:year,endMonth:month,endDay:date,type:"date"}
+						var datePicker=new $M.DtPicker(dtObj);
+						datePicker.show(function(rs) {
+							datasource.formData.time=rs.text
+							datePicker.dispose();
+							datePicker = null;
+						});
+					},
+					clickImg:function(url){
+						plus.runtime.openURL(url);
+					},
+					tsttt:function(){
+						if(this.curPage.edit==0){
+							mui.toast('无操作权限！')
+						}
+					}
+				}
+			});
+			
+			
+
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				// tempVue.titleName = curPage.title;
+				console.log("curPage: " + JSON.stringify(curPage));
+				datasource.curPage=curPage
+				tempVue.curPage=curPage
+				if(curPage.id!='null'||curPage.id!=null){
+					datasource.formData.id=curPage.id
+				}
+				//阻尼系数、初始化刷新加载更多
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+
+
+				window.addEventListener('refreshStudent', function(data) {
+					datasource.formData.stu={}
+					console.log("data: " + JSON.stringify(data.detail));
+					let checkedStudents=data.detail;
+					let names=[]
+					let ids=[]
+					checkedStudents.map(function(currentValue){
+						names.push(currentValue.name)
+						ids.push(currentValue.value)
+					})
+					let obj={}
+					obj.text=names.join(",")
+					obj.value=ids.join(",")
+					console.log("obj: " + JSON.stringify(obj));
+					datasource.formData.stu=obj
+				});
+				
+				if(curPage.status=='unTalk'){
+					sendRead();//已阅操作是根据item的add==1判断的，在列表页已经判断过
+				}
+				
+				if(curPage.status=='read'){
+					setTimeout(function(){
+						init(); //初始化控件 
+					},100)
+				}
+				// 获取当前日期
+				getCurrentDate();
+				
+			});
+			
+			
+			
+			/*
+			 * 初始化控件
+			 */
+			function init() {
+				
+				//多媒体控件
+				multiMedia = MultiMedia.multiMedia({
+					MultiMediaId: 'MultiMedia', //存放多媒体对象控件的id
+					Key: store.get(window.storageKeyName.PERSONALINFO).user_code, //
+					Picture: true, //是否显示图片图标
+					PictureTuku:true,//是否显示图库图标，默认显示
+					Audio: false, //是否显示音频图标
+					Video: false, //是否显示视频图标
+					TotalPicture: 5, //图片的个数
+					TotalAudio: 1, //音频的个数
+					TotalVideo: 1, //视频的个数
+				});
+				
+				events.blurBack();
+			
+				//图片查看控件
+				mui.previewImage();
+				multiMedia.initEvent();
+			 
+				//获取配置信息
+				hideOption = events.initHideKeyBoard();
+				// 初始化七牛上传参数
+				var tempM = {
+					qn_appId:window.storageKeyName.QN_APPID,
+					qn_appKey:window.storageKeyName.QN_APPKEY,
+					qn_mainSpace:window.storageKeyName.QN_PB_NAME,
+					qn_uploadSpace:window.storageKeyName.QN_XSXW_XSTH,
+					qn_multiMedia:multiMedia,
+				}
+				qn_upload.uploadInit(tempM);
+			}
+			
+			//发送已阅请求
+			function sendRead(){
+				 events.showWaiting();
+				comData = {
+					grd_code: curPage.grd_code,
+					cls_code: curPage.cls_code,
+					student_behavior_id: curPage.student_behavior_id,
+					index_code: curPage.index_code,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_STUXWSUB + 'Talk/read', {}, comData, 2, function(data) {
+					if (data.code == 0) {
+						   events.closeWaiting();
+						   let id=data.data.id
+						   datasource.curPage.edit=data.data.edit
+						   if(data.data.edit==1){
+							  setTimeout(function(){
+								   init(); //初始化控件 
+							  },100)
+						   }
+						   datasource.formData.id=id
+						   let model={}
+							model.id=data.data.id
+							model.edit=data.data.edit
+						    model.bid= curPage.student_behavior_id
+						   setTimeout(function(){
+								 mui.fire(plus.webview.currentWebview().opener(), 'refreshId', model);  
+						   },100)
+					} else {
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			 
+			// 提交表单数据
+			function submitData(wd,data,type,encAddrStr,encImgrStr,encLen,encNameStr) {
+				let asset_ids=[]
+				if(encNameStr){
+					let names=encNameStr.split('|')
+					let addrs=encAddrStr.split('|')
+					names.map(function(item,index){
+						let obj={}
+						obj.id=''
+						obj.url=addrs[index]
+						obj.ext=item.split(".")[1]
+						obj.name='附件'+(index+1)
+						asset_ids.push(obj)
+					})
+				}
+				comData = {
+					grd_code:curPage.grd_code,
+					cls_code: curPage.cls_code,
+					student_behavior_id: ''+curPage.student_behavior_id,
+					id:''+data.id,
+					chat_detail: data.comment?data.comment:'',
+					chat_time: data.time,
+					asset_ids:asset_ids,
+					index_code: curPage.index_code,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_STUXWSUB + 'Talk/editSave', {}, comData, 2, function(data) {
+					if (data.code == 0) {
+						 mui.toast(data.msg);
+						 wd.close();
+						 setTimeout(function(){
+							 mui.fire(plus.webview.currentWebview().opener(), 'refreshList', {});
+							 mui.back()
+						 },1500)
+					} else {
+						wd.close();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			// 获取当前日期
+			function getCurrentDate(){
+				var myDate=new Date()
+			    var year = myDate.getFullYear();
+			    var month = myDate.getMonth() + 1;
+				var date = myDate.getDate();
+				var hours = myDate.getHours();
+				var minutes = myDate.getMinutes();
+				var now = year + '-' + conver(month) + "-" + conver(date)
+				// + " " + hours + ":" + minutes
+				datasource.formData.time=now;
+			}
+			function conver(s) {
+				return s < 10 ? '0' + s : s;
+			}
+			
+		</script>
+	</body>
+
+</html>

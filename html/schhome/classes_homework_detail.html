@@ -1,0 +1,442 @@
+<!doctype html>
+<html>
+	<!-- 课堂考勤详情
+
+ -->
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<style>
+			[v-cloak] {
+				visibility: hidden;
+				display: none !important;
+			}
+			html,
+			body {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-content{
+				background-color: #FFFFFF;
+			}
+			
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+			
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			
+			.mui-pull-top-tips .mui-pull-loading {
+				margin: 0;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			}
+			.peopleImg {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+			}
+			.time {
+				font-size: 14px;
+				float: right;
+				color: gray;
+			}
+			
+			.biaoti {
+				color: #000000;
+				width: 80%;
+				font-size: 1.0625rem;
+				white-space:normal;
+			}
+			
+			.tempCss {
+				font-size: 14px;
+				color: gray;
+			}
+			
+			.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
+			    margin-top: 0;
+			}
+			.mui-table h4{
+			    line-height: 21px;
+			    font-weight: 500;
+			}
+					
+			.mui-table .oa-icon{
+			    position: absolute;
+			    right:0;
+			    bottom: 0;
+			}
+			.mui-table .oa-icon-star-filled{
+			    color:#f14e41;
+			}
+			
+			.mui-table-cell-1{
+				margin-top: 1.25rem;
+			}
+			
+			.line{
+				background-color: #00CFBD;
+				margin-bottom: 0.3125rem;
+				height: 0.125rem;
+			}
+			.selectDiv{
+				background-color: #eaeaea;
+			}
+			.selectBtn{
+				border: 0rem;
+				border-radius: 0rem;
+				background-color: #FFFFFF;
+				height: 3rem;
+			}
+			
+			.ant-avatar{
+				-webkit-box-sizing: border-box;
+				    box-sizing: border-box;
+				    margin: 0;
+				    padding: 0;
+				    color: rgba(0, 0, 0, 0.65);
+				    font-size: 14px;
+				    font-variant: tabular-nums;
+				    line-height: 1.5;
+				    list-style: none;
+				    -webkit-font-feature-settings: 'tnum';
+				    font-feature-settings: 'tnum';
+				    position: relative;
+				    display: inline-block;
+				    overflow: hidden;
+				    color: #fff;
+				    white-space: nowrap;
+				    text-align: center;
+				    vertical-align: middle;
+				    background: #ccc;
+				    width: 32px;
+				    height: 32px;
+				    line-height: 32px;
+				    border-radius: 50%;
+			}
+			
+			.ant-avatar-lg {
+			    width: 40px;
+			    height: 40px;
+			    line-height: 40px;
+			    border-radius: 50%;
+			}
+			
+			.mui-segmented-control {
+				border: 0px;
+				background: #F0F0F0;
+			}
+			
+			.mui-segmented-control .mui-control-item {
+				border: 0px;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.mui-segmented-control .mui-control-item.mui-active {
+				background-color: transparent;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.mui-segmented-control .mui-control-item span {
+				font-size: 12px;
+				padding: 0 0 0 5px;
+				color: #666;
+			}
+			
+			.aCss {
+				font-size: 15px;
+				color: #333;
+				width: 5rem;
+			}
+			
+			.icon-right {
+				position: fixed;
+				float: right;
+				font-size: 14px;
+				margin-top: 11px;
+				right: 5%;
+			}
+			
+			.mui-input-row label~input,.mui-input-row label~select, .mui-input-row label~textarea ,
+			input::-webkit-input-placeholder,textarea::-webkit-input-placeholder {
+				color: #999;
+				/* placeholder字体大小  */
+				font-size: 14px;
+			}
+			
+			.line {
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				background: #00cfbd;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+			}
+			
+			.mui-input-row:after {
+				height: 0px;
+			}
+			
+			.mui-input-row {
+				margin:0.3125rem 0;
+			}
+			
+			.mui-input-row label {
+			    font-family: 'Helvetica Neue',Helvetica,sans-serif;
+			    line-height: 1.1;
+			    float: left;
+			    width: 28%;
+			    padding: 11px 15px;
+			}
+			
+			.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea {
+			    float: right;
+			    width: 70%;
+				margin-right: 2%;
+			    margin-bottom: 0;
+			    padding-left: 0.625rem;
+			    border: 0;
+			}
+			
+			.double-line{
+				height: 10px;
+				background-color: #EAEAEA;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{titleName}}</h1>
+		</header>
+		<div id="datasource" class="mui-content mui-fullscreen" style="z-index:0">
+			<div v-cloak class="mui-scroll-wrapper" style="margin-top: 44px;">
+				<div v-cloak class="mui-scroll">
+						 <div style="padding: 15px 15px 0;">
+							 <p class="tow-line" v-if="formData.msg_content" style="font-size: 16px;color: #000000;word-break: break-all;">{{formData.msg_content}}</p>
+							 <!-- <h5 class="mui-ellipsis" >状态:{{formData.is_copy?'已发送':'等待'}}</h5> -->
+							 <div style="margin-top: 0.55rem;">
+							 	<div class="mui-table-cell mui-col-xs-5">
+							 		<h5 class="mui-ellipsis" >发布人:{{formData.send_user_tname}}</h5>
+							 	</div>
+							 	<div class="mui-table-cell mui-col-xs-7">
+							 		<h5 class="mui-ellipsis mui-text-right">{{formData.send_time}}</h5>
+							 	</div>
+							 </div>
+						 </div>
+						 <div class="double-line"></div>
+						 <div class="mui-input-row">
+						 	<label class="aCss">接收人</label>
+						 </div>
+						 <div class="line"></div>
+						 <div class="mui-input-row">
+							<div v-cloak v-for="grd_child in student" >
+								<div v-cloak v-for="cls_child in grd_child.children" v-if="cls_child.children.length>0" style="margin: 0 15px;">
+										<p style="font-size: 15px;margin-top: 10px;">{{cls_child.grd_name}}{{cls_child.cls_name}}</p>
+										<span style="font-size: 14px;" v-for="(stu_child,index) in cls_child.children" v-if="stu_child.stu_name">
+											<template v-if="index==cls_child.children.length-1">
+												{{stu_child.stu_name}}
+											</template>
+											<template v-else>
+												{{stu_child.stu_name}},
+											</template>
+										</span>
+										<!-- <div class="line"></div> -->
+								</div>
+							</div>
+						 </div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<!-- <script src="../../js/utils/vconsole.min.js"></script> -->
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/mui.picker.min.js"></script>
+		<script src="../../js/utils/mui.poppicker.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			var $M = mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var curPage = {};
+			var pageIndex = 1; //请求数据页面
+			var totalPageCount; //总页码
+			var flagRef = 0; //是刷新0，还是加载更多1
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					titleName: '通知详情',
+				}
+			});
+			var datasource = new Vue({
+				el: "#datasource",
+				data: {
+					formData: {}, //表单内容
+					student:[]//年级 班级 学生 数组
+				},
+			});
+
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				datasource.formData=curPage;
+				//阻尼系数、初始化刷新加载更多
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+				events.showWaiting();
+				getStudentFromHR();
+			});
+			
+			
+			function getStudentFromHR() {
+				let tousers=curPage.tousers
+				let grd_list = []
+				let grd_codes=[]
+				let cls_list = []
+				let cls_codes=[]
+				for (var i = 0; i < tousers.length; i++) {
+					if(grd_codes.indexOf(tousers[i].grd_code)===-1){
+						grd_codes.push(tousers[i].grd_code)
+						grd_list.push({
+							grd_code:tousers[i].grd_code,
+							grd_name:tousers[i].grd_name,
+						})
+					}
+					cls_codes.push(tousers[i].cls_code)
+				} 
+				grd_list.map(function(grd_item){
+					let children=[]
+					tousers.map(function(cls_item){
+						if(grd_item.grd_code==cls_item.grd_code){
+							children.push(cls_item)
+						}
+					})
+					grd_item.children=children
+				})
+				 
+				const params = {
+					grd_codes:grd_codes.join(","),
+					cls_codes:cls_codes.join(","),
+					op_code:'index',
+					index_code: curPage.index_code,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'stu', {}, params, 2, function(data) {
+					events.closeWaiting();
+					if(data.data.list && data.data.list.length>0){
+						let stu_list =data.data.list
+						grd_list.map(function(grd_item){ 
+							let cls_list=grd_item.children
+							let grd_code=grd_item.grd_code
+							cls_list.map(function(cls_item){
+								let cls_code=cls_item.cls_code
+								let children=[]
+								stu_list.map(function(stu_item){
+									 if(grd_code== stu_item.grd_code && cls_code==stu_item.cls_code){
+										 children.push(stu_item)
+									 }
+								})
+								cls_item.children=children
+							})
+						})
+						datasource.student=grd_list
+					}
+				});
+			}
+		</script>
+	</body>
+</html>

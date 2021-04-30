@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>开始测试</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
+		<style type="text/css">
+			.lv-box {
+				border-bottom: 1px solid #ECECEC;
+			}
+			.btn-group {
+				display: flex;
+				flex-direction: column;
+			    justify-content: center;
+			    align-items: center;
+			    min-height: 6.8rem;
+			    padding-top: 1.2rem;
+			    padding-bottom: 0.6rem;
+			}
+			.btn-group > .btn {
+				width: 2rem;
+				height: 2rem;
+				border-radius: 50%;
+				text-align: center;
+				line-height: 2rem;
+				color: #FFFFFF;
+				font-size: 0.28rem;
+			}
+			.btn-group > .btn + .btn {
+				margin-top: 0.4rem;
+			}
+			.btn-group > .btn.start {
+				background-color: #3C9DFB;
+			}
+			.btn-group > .btn.cancle {
+				background-color: #EBAE73;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav theme">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title"></h1>
+		</header>
+		
+		<div class="mui-content">
+			<div id="level" class="lv-box">
+				<p class="lv-title">学习进度</p>
+				<div class="lv-bar">
+					<div class="lv-item" v-for="(v,i) in difficulty" :class="{'active': v<=current_id}">
+						<div class="lv-icon-box"><span class="lv-icon">LV.{{v}}</span></div>
+						<div class="lv-msg">{{getLevel(v)}}<span v-if="v==current_id">(当前)</span></div>
+					</div>
+				</div>
+			</div>
+			<div class="btn-group">
+				<a class="btn start">开始做题</a>
+				<a class="btn cancle" >取消做题</a>
+			</div>
+		</div>
+		
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<!-- <script src="../../js/utils/echarts-all.js"></script> -->
+		<!-- <script src="../../js/echarts/echarts-en.min.js"></script> -->
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		
+		<script type="text/javascript" src="../../js/btlearn/common.js"></script>
+		<script type="text/javascript">
+			
+			var level = new Vue({
+				el: "#level",
+				data: {
+					difficulty: [],
+					current_id: 0
+				},
+				methods: {
+					getLevel: function(id){
+						if(id==3) {
+							return "提升";
+						}else if(id==2) {
+							return "巩固";
+						}else {
+							return "基础";
+						}
+					}
+				}
+			});
+			
+			mui.plusReady(function(){
+				self = plus.webview.currentWebview();
+				var curPage = utils.getDataFromUrl(window.location.href);
+				
+				mui.init();
+				
+				var headerTitle = document.querySelector('.mui-title');
+				var nodeId = null;
+				
+				//传来 开始数据
+				window.addEventListener("getData", function(e){
+					headerTitle.innerHTML = e.detail.title;
+					level.difficulty = e.detail.difficulty.levels; //难度分多少级
+					level.current_id = e.detail.difficulty.schedule.difficulty_level_id; //当前难度
+					nodeId = e.detail.catalogId;
+				});
+				
+				//取消做题
+				mui(".btn-group").on("tap", ".cancle", function(e){
+					mui.back();
+				});
+				
+				//开始做题
+				mui(".btn-group").on("tap", ".start", function(e){
+					newTest(nodeId, headerTitle.innerHTML);
+				});
+				
+			});
+		</script>
+	</body>
+
+</html>

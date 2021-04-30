@@ -1,0 +1,156 @@
+ <!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display:none !important;
+			}
+
+			.circular-square,.circular-square2{
+				border-radius: 10%;
+				width: 40px;
+				height: 40px;
+			}
+
+			.circular-square2{
+				width: 34px;
+				height: 34px;
+			}
+			
+			.mui-badge {
+				font-size: 12px;
+				line-height: 1;
+				display: inline-block;
+				padding: 3px 6px;
+				color: white;
+				border-radius: 100px;
+				background-color: red;
+				margin-top: -40px;
+				margin-right: -10px;
+			}
+
+			.mui-card-content-inner {
+				margin-top: -10px;
+				padding: 0px;
+			}
+
+			.mui-grid-view.mui-grid-9 {
+				border-top: 0px solid #eee;
+				border-left: 0px solid #eee;
+				background-color: white;
+			}
+
+			.mui-card {
+				font-size: 14px;
+				position: relative;
+				overflow: hidden;
+				margin: 10px;
+				border-radius: 10px;
+				background-color: #fff;
+				background-clip: padding-box;
+				box-shadow: 0 0px 0px rgba(0, 0, 1, .3);
+			}
+
+			.mui-card-header:after {
+				height: 0px;
+			}
+
+			.mui-card-header {
+				color: black;
+				font-size: 15px;
+				font-weight: 800;
+			}
+			
+			.mui-table-view-cell .mui-media-body{
+				text-overflow: initial !important;
+				overflow: initial;
+			}
+			
+			.mui-active{
+				background-color: #FFFFFF !important;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: #f2f2f2;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<h1 class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" id="contentData" style="background-color: #f2f2f2;padding-bottom: 5px;">
+			<div v-cloak class="mui-card" v-for="(model,index) in gridList">
+				<div v-cloak class="mui-card-header">{{model.name}}</div>
+				<div v-cloak class="mui-card-content">
+					<div v-cloak class="mui-card-content-inner">
+						<template v-if="model.childList.length>0"><!-- 如果有子菜单 -->
+							<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: white;padding-left: 7px;margin-top: 0px;">
+								<li v-for="(childModel,childIndex) in model.childList" @tap="clickFunction(childModel)" class="mui-table-view-cell mui-media mui-col-sm-3 mui-col-xs-3" style="border: 0px;padding:10px 5px">
+									<a href="javascript:void(0)">
+										<img class="circular-square2" :src=childModel.icon />
+										<div class="mui-media-body divNameCss" >{{childModel.name}}</div>
+									</a>
+								</li>
+							</ul>
+						</template>
+						<template v-if="model.childList.length==0"><!-- 如果没有子菜单 -->
+							<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: white;padding-left: 7px;margin-top: 0px;">
+								<li v-cloak @tap="clickFunction(model)" class="mui-table-view-cell mui-media mui-col-sm-3 mui-col-xs-3"  style="border: 0px;padding:10px 5px">
+									<a href="javascript:void(0)">
+										<img class="circular-square" :src=model.img_href />
+										<div class="mui-media-body divNameCss">{{model.name}}</div>
+									</a>
+								</li>
+							</ul>
+						</template>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script type="text/javascript" src="../../js/utils/vconsole.min.js"></script>
+		<script type="text/javascript" src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/utils.js" type="text/javascript" charset="utf-8"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/publicProtocolNew.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					headTitle: '更多'
+				}
+			});
+
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					gridList: []
+				},
+				methods: {
+					clickFunction: function(model) {
+						console.log("model: " + JSON.stringify(model));
+						// var personal0 = store.get(window.storageKeyName.PERSONALINFO);
+						utils.mOpenWithData(model.href, model);
+					}
+				}
+			});
+
+			mui.plusReady(function() {
+				var ws = plus.webview.currentWebview();
+				console.log("当前Webview窗口：" + JSON.stringify(ws.preload));
+				contentData.gridList = [].concat(store.get(window.storageKeyName.MOREMENU));
+				console.log('contentData.gridList:' + JSON.stringify(contentData.gridList));
+			});
+		</script>
+	</body>
+
+</html>

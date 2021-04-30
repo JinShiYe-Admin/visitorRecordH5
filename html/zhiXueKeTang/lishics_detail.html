@@ -1,0 +1,203 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
+		<style type="text/css">
+			.sub-list li .sub {
+				word-break: break-word;
+				max-width: 6rem;
+			}
+			.sub-list li .sub .time {
+				display: inline-block;
+				font-size: 75%;
+				color: #666666;
+				margin-left: 0.15rem;
+			}
+			#pullrefreshBox {
+				overflow-y: auto;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header id="header" class="mui-bar mui-bar-nav theme">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">{{title}}</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div id="testList" class="mui-control-content mui-active" style="height: 100%;">
+				<div id="pullrefreshBox" style="height: 100%;">
+					<div id="pullrefresh">
+						<div v-if="list.length" v-cloak style="padding-bottom: 1rem;">
+							<ul class="mui-table-view same-line-list sub-list">
+								<li class="mui-table-view-cell navigate-right" v-for="(item,i) in list" :key="i" @tap="goResult(item)">
+									<div class="sub">
+										{{item.name}}
+										<span class="time">{{item.create_time.substr(0,16)}}</span>
+									</div>
+									<span>{{item.score}}分</span>
+								</li>
+							</ul>
+							<div class="list-end" v-show="!loading&&!lastPage">上拉加载更多</div>
+							<div class="list-end" v-show="loading&&!lastPage">正在加载...</div>
+							<div class="list-end" v-show="lastPage">没有更多了~</div>
+						</div>
+						<div class="list-end" v-else v-show="!loading" v-cloak>暂无测试记录</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		
+		<script type="text/javascript" src="../../js/btlearn/common.js"></script>
+		<script type="text/javascript">
+			var self, index_code;
+			
+			var userInfo = store.get(window.storageKeyName.PERSONALINFO) || {};
+			var current_index_code = store.get('zxkt_current_index_code');
+			
+			mui.init();
+			
+			//头部
+			var header = new Vue({
+				el: "#header",
+				data: {
+					title: ""
+				},
+				methods: {
+					
+				}
+			});
+			
+			var testList = new Vue({
+				el: "#testList",
+				data: {
+					loading: false,
+					list: [],
+					pageNumber: 1,
+					lastPage: false
+				},
+				mounted: function() {
+					var _this = this;
+					//监听上拉刷新
+					setPullRefresh("#pullrefreshBox", function() {
+						// alert(1);
+						if(!_this.loading && !_this.lastPage) {
+							_this.pageNumber = _this.pageNumber + 1;
+							_this.getList();
+						}
+					});
+				},
+				methods: {
+					getList: function() {
+						var _this = this;
+						_this.loading = true;
+						postDataEncry(window.storageKeyName.INTERFACE_ZXKT + "/history/reportInfo", {}, {
+							sub_code: self.subcode,
+							per_code: self.percode||"",
+							page_number: _this.pageNumber,
+							page_size: 15,
+							index_code: current_index_code,
+							user_code: userInfo.user_code,
+						}, 2, function(res) {
+							_this.loading = false;
+							if(res.state=="ok") {
+								_this.list = _this.list.concat(res.data.report_info.list);
+								_this.lastPage = res.data.report_info.last_page;
+								_this.pageNumber = res.data.report_info.page_number;
+							} else {
+								if(res.code!=404) mui.toast(res.msg);
+							}
+						});
+					},
+					goResult: function(item) {
+						plus.nativeUI.showWaiting();
+						postDataEncry(window.storageKeyName.INTERFACE_ZXKT + "/history/reportDetail", {}, {
+							report_id: item.id,
+							index_code: current_index_code,
+							user_code: userInfo.user_code,
+						}, 2, function(res) {
+							plus.nativeUI.closeWaiting();
+							if(res.state=="ok") {
+								var bl_result = plus.webview.getWebviewById('bl-test-result');
+								var result_data = {
+									report: res.data.report,
+									detailInfo: res.data.detail_info,
+									levels: res.data.levels,
+									nodeTitle: item.name
+								};
+								if(bl_result){
+									mui.fire(bl_result, "resubmit", result_data);
+									bl_result.show("slide-in-right",250,function(){});
+								}else{
+									mui.openWindow({
+										url: "zujuancs_result.html",
+										id: "bl-test-result",
+										extras: result_data,
+										waiting: {
+											autoShow: true
+										}
+									});
+								}
+							} else {
+								if(res.code!=404) mui.toast(res.msg);
+							}
+						});
+					}
+				}
+			});
+			
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
+				
+				header.title = self.subname;
+				
+				testList.getList();
+				
+				// 刷新数据
+				window.addEventListener("refresh", function(e){
+					postDataEncry(window.storageKeyName.INTERFACE_ZXKT + "/history/reportInfo", {}, {
+						sub_code: self.subcode,
+						per_code: self.percode||"",
+						page_number: 1,
+						page_size: 15*testList.pageNumber,
+						index_code: current_index_code,
+						user_code: userInfo.user_code,
+					}, 2, function(res) {
+						if(res.state=="ok") {
+							testList.list = res.data.report_info.list;
+							testList.lastPage = res.data.report_info.last_page;
+						}
+					});
+				});
+			});
+			
+		</script>
+	</body>
+
+</html>

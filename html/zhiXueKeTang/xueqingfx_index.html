@@ -1,0 +1,348 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>学情分析</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
+		<style type="text/css">
+			.mui-bar-nav {
+				z-index: 999;
+			}
+			#header:after {
+				content: "";
+				position: absolute;
+				z-index: -1;
+				left: 0;
+			    right: 0;
+			    top: 0;
+			    bottom: 0;
+			}
+			.mui-bar-tab {
+				height: 1rem;
+				background-color: #F9F9F4;
+			}
+			.mui-bar-tab .mui-tab-item {
+				height: 1rem;
+			}
+			.mui-bar-tab .mui-tab-item .mui-icon {
+				font-size: 0.44rem;
+				top: 0;
+				margin-bottom: 0.04rem;
+				pointer-events: none;
+			}
+			.mui-bar-tab .mui-tab-item .mui-icon~.mui-tab-label {
+				font-size: 0.24rem;
+			}
+			.label-wrapper .done-box {
+				display: inline-block;
+				width: 0.32rem;
+				height: 0.32rem;
+				border: 1px solid #4AC058;
+				border-radius: 2px;
+				text-align: center;
+				line-height: 0.22rem;
+				position: absolute;
+				right: 0.6rem;
+				top: 50%;
+				margin-top: -0.16rem;
+			}
+			#subRadar {
+				min-height: 205px;
+				max-height: 440px;
+				margin-bottom: .6rem;
+			}
+			#analysis {
+				max-height: 100%;
+				overflow-y: auto;
+			}
+			.mui-android #bl-analysis .mui-table-view-cell:after, .mui-android #bl-analysis .same-line-list:after {
+				transform: none;
+				bottom: 1px;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header id="header" class="mui-bar mui-bar-nav theme">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">学情分析</h1>
+			<a class="mui-icon mui-pull-right grade" @tap.stop="showTopPannel" v-cloak>{{perSeleted?(perSeleted.per_name||"学段"):"学段"}}<span class="mui-icon-arrowdown"></span></a>
+			<transition name="slide-down">
+				<div class="options-pannel mui-clearfix" v-show="showItem" v-cloak>
+					<div v-for="(v, i) in per.list" class="radio-wrap">
+						<label :class="{selected:v.per_code==per.selected}" @click="selectItem">
+							<input type="radio" v-model="per.selected" name="item"  :value="v.per_code" />{{v.per_name||""}}
+						</label>
+					</div>
+				</div>
+			</transition>
+		</header>
+		
+		<div class="mui-content">
+			<!--学情分析-->
+			<div id="bl-analysis" class="mui-control-content mui-active">
+				<div id="analysisTab">
+					<div class="als-title mui-text-center mui-ellipsis" v-cloak>{{user_name}}学情分析报告<span v-if="pername">（{{pername}}）</span></div>
+					<div style="padding: .2rem .22rem .15rem;" v-cloak>学科均衡:</div>
+					<div id="subRadar"></div>
+					<ul class="mui-table-view als-list same-line-list" v-if="alsList.length" v-cloak>
+					    <li class="mui-table-view-cell" style="background-color: transparent;">
+					        <div class="sub">科目</div>
+					        <div class="times">学习次数</div>
+					        <div class="score">平均分/满分</div>
+					    </li>
+					    <li class="mui-table-view-cell navigate-right" v-for="(item, i) in alsList" @tap="goDetail(item)" :key="i">
+					    	<div class="sub">
+					    		<span class="label" v-if="item.remark==1">优势</span>
+					    		<span class="label bad" v-if="item.remark==-1">劣势</span>
+					    		{{item.subname}}
+					    	</div>
+					        <div class="times">{{item.count}}</div>
+					        <div class="score">{{item.avg_score}}分/100分</div>
+					    </li>
+					</ul>
+					<p v-else class="mui-text-center" v-show="isShowed" v-cloak>您还未提交过试题</p>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<script src="../../js/utils/echarts.min.js" ></script>
+		<!-- <script src="../../js/utils/echarts-all.js"></script> -->
+		<!-- <script src="../../js/echarts/echarts-en.min.js"></script> -->
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+
+		<script type="text/javascript" src="../../js/btlearn/common.js"></script>
+		<script type="text/javascript">
+			var self, index_code;
+			
+			var userInfo = store.get(window.storageKeyName.PERSONALINFO) || {};
+			
+			var mask = mui.createMask(function(){
+				header.showItem = false;
+			});
+			
+			mui.init();
+			
+			mui.plusReady(function() {
+				self = plus.webview.currentWebview();
+				
+				var curPage = utils.getDataFromUrl(window.location.href);
+				if (curPage && JSON.stringify(curPage) == '{}') { 
+					index_code = self.preload.access.split('#')[1];
+				} else {
+					index_code = curPage.access.split('#')[1];
+				}
+				
+				// 保存index_code
+				store.set("zxkt_current_index_code", index_code);
+				
+				// getAnalysisData();
+				// getSubRadar();
+				header.getPer();
+			});
+			
+			//头部
+			var header = new Vue({
+				el: "#header",
+				data: {
+					per: {selected: 0, list: []},
+					showItem: false
+				},
+				computed: {
+					// 已选学段
+					perSeleted: function() {
+						var selected = this.per.list?filterArray(this.per.list, "per_code", this.per.selected)[0]:null;
+						return selected;
+					},
+				},
+				methods: {
+					//显示头部选项
+					showTopPannel: function() {
+						if(this.showItem) {
+							this.showItem = false;
+							mask.close();
+						}else{
+							this.showItem = true;
+							mask.show();
+						}
+					},
+					// 获取学段
+					getPer: function() {
+						var _this = this;
+						plus.nativeUI.showWaiting();
+						postDataEncry(window.storageKeyName.INTERFACE_ZXKT + "/pub/resPer", {}, {
+							index_code,
+							user_code: userInfo.user_code,
+						}, 2, function(res) {
+							plus.nativeUI.closeWaiting();
+							if(res.state=="ok") {
+								var firstPer = res.data.list[0];
+								var per_code = firstPer ? firstPer.per_code : "";
+								_this.per = {
+									selected: per_code,
+									list: res.data.list,
+								}
+								
+								_this.$nextTick(function () {
+									getAnalysisData();
+								});
+							}else{
+								if(res.code!=404) mui.toast(res.msg);
+							}
+						});
+					},
+					//选择选项
+					selectItem: function(){
+						this.showItem = false;
+						mask.close();
+						
+						this.$nextTick(function () {
+							getAnalysisData();
+						});
+					}
+				}
+			});
+			
+			
+			//学情分析
+			var subRadar;
+			var analysis = new Vue({
+				el: "#analysisTab",
+				data: {
+					user_name: "",
+					pername: "",
+					alsList: [],
+					isShowed: false
+				},
+				mounted: function() {
+					subRadar = echarts.init(document.getElementById("subRadar"));
+				},
+				methods: {
+					// 学情分析详情
+					goDetail: function(item) {
+						mui.openWindow({
+							url:"xueqingfx_detail.html",
+							id: "bl-analysis-detail",
+							extras: {
+								subcode: item.subcode,
+								subname: item.subname,
+								percode: header.per.selected||"",
+							},
+							waiting: {
+								autoShow: true
+							}
+						});
+					}
+				}
+			});
+			
+			//获取分析数据
+			function getAnalysisData() {
+				plus.nativeUI.showWaiting();
+				postDataEncry(window.storageKeyName.INTERFACE_ZXKT + "/analysis", {}, {
+					per_code: header.per.selected,
+					index_code,
+					user_code: userInfo.user_code,
+				}, 2, function(res) {
+					plus.nativeUI.closeWaiting();
+					if(res.state=="ok") {
+						analysis.alsList = res.data.analysis;
+						analysis.pername = header.perSeleted?header.perSeleted.pername:"";
+						getSubRadar();
+						if(!analysis.isShowed) analysis.isShowed = true;
+					}else{
+						if(res.code!=404) mui.toast(res.msg);
+					}
+				});
+			}
+			
+			//生成雷达图
+			function getSubRadar() {
+				subRadar.resize();
+				var indicator = [], radar_value = [];
+				analysis.alsList.forEach(function(v){
+					indicator.push({name: v.subname, color: v.remark<0?"#DB4848":(v.remark>0?"#25AE38":"#222"), max: 100 });
+					radar_value.push(v.avg_score);
+				});
+				if(!indicator.length||!radar_value.length) {
+					indicator = [{name:"科目", max: 100}];
+					radar_value = [0];
+				}
+				subRadar.setOption({
+					radar:[
+						{
+							indicator: indicator,
+							name: {
+								color: "#222"
+							},
+							nameGap: 10,
+							center: ['50%', '50%'],
+							shape: "circle",
+							splitNumber: 4,
+							axisLine: {
+					            lineStyle: {
+					                color: '#A7A7A7'
+					            }
+					        },
+					        splitLine: {
+					            lineStyle: {
+					                color: '#A7A7A7'
+					            }
+					        },
+					        splitArea: {
+					            areaStyle: {
+					                color: ['none']
+					            }
+					        },
+						}
+					],
+					series: [
+						{
+				            type: 'radar',
+				            symbol: "circle",
+				            symbolSize: 4,
+				            data: [
+				                {value: radar_value}
+				            ],
+				            areaStyle: {
+			                    normal: {
+			                        opacity: 0.5,
+			                        color: "#4ACFC7"
+			                    }
+			               	},
+				            lineStyle: {
+				            	width: 0
+				            },
+				            itemStyle: {
+				            	color: "#10A3A0"
+				            }
+				        }
+					]
+				});
+			}
+			
+			// analysis.alsList = [{"subname":"语文","count":52,"subcode":"01","remark":"-1","avg_score":24},{"subname":"数学","count":92,"subcode":"02","remark":"0","avg_score":54},{"subname":"英语","count":82,"subcode":"03","remark":"0","avg_score":64}];
+		</script>
+	</body>
+
+</html>

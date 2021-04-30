@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>新消息</title>
+		<meta name="anthor" content="an" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../fonts/iconfont1.css" />
+		<link rel="stylesheet" href="../../css/utils/MultiMedia.css" />
+		<link rel="stylesheet" href="../../css/utils/preview.css" />
+		<link rel="stylesheet" href="../../css/utils/audiopopover.css" />
+		<style rel="stylesheet">
+			.selectBtn{
+				width: 83% !important;
+				margin-top: 5px;
+				margin-left: 5px;
+			}
+			.titleTemp{
+				color: black;
+				margin-left: 10px;
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: white;">
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">新建通知</h1>
+			<a @click="clickSubmitBtn" class="mui-pull-right" style="font-size: 14px;">确定</a>
+		</header>
+		<div id="message" class="mui-content" style="background-color: white;">
+			<template v-show="dataFlag>0">
+				<div class="" style="margin-top: 0px;">
+					<div class="mui-input-row">
+						<span class="titleTemp">标题</span>
+						<input type="text" v-model="title" class="selectBtn" maxlength="50" placeholder="请输入标题" value="">
+					</div>
+					<div class="mui-input-row">
+						<span style="float: left;" class="titleTemp">内容</span>
+						<textarea style="width: 83%;margin-left: 8px;" v-model="content" maxlength="300" id="textarea" rows="5" placeholder="请输入内容"></textarea>
+					</div>
+				</div>
+				<div id="MultiMedia">
+					<div class="mui-input-row mui-checkbox mui-left" id="senMSN" style="float: right;margin-top: 3px;display: none;">
+						<label style="font-size: 14px;color: #333333;">发送短信</label>
+						<input v-model="smsSend" name="checkbox1" type="checkbox">
+					</div>
+				</div>
+				<form class="mui-input-group">
+					<div @click="selectPeopleFun()" class="mui-input-row" style="height: 50px;">
+						<span style="float: left;margin-top: 15px;" class="titleTemp">接收人</span>
+						<span style="float: right;margin-right: 30px;margin-top: 15px;" class="mui-navigate-right">点击选择接收人</span>
+					</div>
+				</form>
+				<div style="margin: 10px;color: gray;word-break:break-all;word-wrap:break-word;">
+					{{'已选('+selectPeople.length+'人）:'}} {{showSelectPeople}}
+				</div>
+			</template>
+		</div>
+		<div id="videoPopover" class="mui-popover">
+			<video id="video" style="position: absolute;z-index: 999;" controls="controls" webkit-playsinline playsinline>
+				您的浏览器不支持 video 标签。
+			</video>
+		</div>
+		<div id="audioPopover" class="mui-popover">
+			<div id="audio_show" class="audio-show-popover">
+				<span id="audio_icon" class="mui-icon mui-icon-mic audio-icon"></span>
+				<canvas id="audio_canvas" class="audio-canvas"></canvas>
+				<span id="audio_close" class="mui-icon iconfont icon-guanbi"></span>
+				<div id="audio_time" class="audio-time">00:00</div>
+				<div id="audio_control" class="audio-control">
+					<div id="audio_play" class="audio-control-background audio-control-play">
+						<div></div>
+					</div>
+					<div id="audio_pause" class="audio-control-background audio-control-pause">
+						<div></div>
+						<div></div>
+					</div>
+				</div>
+				<audio id="audio_audio" autoplay="autoplay" preload="auto"></audio>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<!--  -->
+		<script src="../../js/utils/moment.min.js"></script>
+		<script src="../../js/utils/SMS-Utils.js"></script>
+		<!--  -->
+		<script src="../../js/picVideoAudio/MultiMedia.js"></script>
+		<script src="../../js/cloud/AndroidFileSystem.js"></script>
+		<script src="../../js/qiniu/qiniu.js"></script>
+		<script src="../../js/utils/cryption.js"></script>
+		<script src="../../js/cloud/CloudFileUtil.js"></script>
+		<script src="../../js/cloud/qn_upload.js"></script>
+		<script src="../../js/utils/mui.zoom.js"></script>
+		<script src="../../js/utils/mui.previewimage.js"></script>
+		<script src="../../js/picVideoAudio/compress.js"></script>
+		<script src="../../js/picVideoAudio/recordvideoutil.js"></script>
+		<script src="../../js/picVideoAudio/playutil.js"></script>
+		<script src="../../js/picVideoAudio/showvideoutil.js"></script>
+		<script src="../../js/picVideoAudio/showaudio.js"></script>
+		<script src="../../js/picVideoAudio/gallerypick.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src='../../js/picVideoAudio/compressVideo.js'></script>
+		<script src="../../js/qiniu/cloudutil.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					
+				},
+				methods: {
+					clickSubmitBtn: function() {
+						if (plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
+							mui.toast("网络连接失败,请重新尝试一下", "cancel");
+							sendFlag = 0;
+							return;
+						}
+						if (sendFlag == 0) {
+							sendFlag = 1;
+							if (message.title.trim().length == 0 || message.content.trim().length == 0) {
+								mui.toast("请填写具体内容后再发布", "cancel");
+								sendFlag = 0;
+								return;
+							}
+							if (message.title.length > 50) {
+								mui.toast("标题不能超过50字", "cancel");
+								sendFlag = 0;
+								return;
+							}
+							if (message.content.length > 300) {
+								mui.toast("内容不能超过300字", "cancel");
+								sendFlag = 0;
+								return;
+							}
+					
+							//判断输入是否符合要求
+							if (checkInput(message.title)) {
+								if (checkInput(message.content)) {
+									if (message.selectPeople.length == 0) {
+										mui.toast("请选择接收人");
+										sendFlag = 0;
+										return;
+									}
+									sendFlag = 1;
+									if (multiMedia.data.PictureArray.length == 0) { //没有传附件
+										var wd = events.showWaiting();
+										addNotice(wd, '3', '', '', 0, '');
+									} else {
+										var wd = events.showWaiting('上传中...');
+										//上传文件
+										qn_upload.uploadFile(wd,function(wd, type, encAddrStr, encImgrStr, encLen, encNameStr){
+											addNotice(wd, type, encAddrStr, encImgrStr, encLen, encNameStr);
+										});
+									}
+								}
+							}
+						}
+					}
+				}
+			});
+			var message = new Vue({
+				el: '#message',
+				data: {
+					dataFlag: 0, //是否加载完
+					showSelectPeople: '',
+					title: '',
+					content: '',
+					selectPeople: [],
+					smsConfig:{},//短信配置
+					smsWords:[],//拒绝关键字
+					smsSend:false,//是否发送短信
+				},
+				methods: {
+					selectPeopleFun: function() {
+						var data = {
+							flag: 1, //1 事务
+							needOrder:0,
+							access:curPage.access,
+							selectPeople: message.selectPeople
+						}
+						if(message.smsConfig.serviced){
+							data.serviced = message.smsConfig.serviced;
+						}else{
+							data.serviced = 99;
+						}
+						utils.mOpenWithData("../../html/oa/selectPeople.html", data);
+					}
+				}
+			})
+			var hideOption; //隐藏键盘的数据
+			var multiMedia; //多媒体控件
+			var sendFlag = 0; //0是未按确定按钮，1按确定按钮，防止多次触发
+			var curPage = {};
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				init(); //初始化控件
+				message.dataFlag = 1;
+				
+				SMSUtils.INDEX_CODE=curPage.access.split('#')[1];
+				SMSUtils.MSG_TYPE=window.storageKeyName.OA_MSG_SMS.NOTICE.MSG_TYPE;
+				SMSUtils.USER_TYPE=window.storageKeyName.OA_MSG_SMS.NOTICE.USER_TYPE;
+				SMSUtils.SMS_TYPE=window.storageKeyName.OA_MSG_SMS.SMS_TYPE;
+				SMSUtils.PERSONAL=store.get(window.storageKeyName.PERSONALINFO);
+				// 获取短信权限
+				SMSUtils.getConfig((msg)=>{
+					if(msg.SMS){
+						message.smsConfig=msg.CONFIG;
+						SMSUtils.getSmsWords((msg2)=>{
+							message.smsWords=msg2.WORDS;
+						},2);
+						//显示发送短信按钮
+						document.getElementById('senMSN').style.display = 'inherit';
+					}
+				});
+			});
+
+			//多媒体控件
+			multiMedia = MultiMedia.multiMedia({
+				MultiMediaId: 'MultiMedia', //存放多媒体对象控件的id
+				Key: store.get(window.storageKeyName.PERSONALINFO).user_code, //
+				Picture: true, //是否显示图片图标
+				Audio: false, //是否显示音频图标
+				Video: false, //是否显示视频图标
+				TotalPicture: 9, //图片的个数
+				TotalAudio: 1, //音频的个数
+				TotalVideo: 1, //视频的个数
+			});
+
+			/*
+			 * 初始化控件
+			 */
+			function init() {
+				events.blurBack();
+
+				//图片查看控件
+				mui.previewImage();
+				multiMedia.initEvent();
+				//获取配置信息
+				hideOption = events.initHideKeyBoard();
+				// 初始化七牛上传参数
+				var tempM = {
+					qn_appId:window.storageKeyName.QN_APPID,
+					qn_appKey:window.storageKeyName.QN_APPKEY,
+					qn_mainSpace:window.storageKeyName.QN_PB_NAME,
+					qn_uploadSpace:window.storageKeyName.QN_OA_TONGZ,
+					qn_multiMedia:multiMedia,
+				}
+				qn_upload.uploadInit(tempM);
+			}
+
+			var addNotice = function(wd, encType, encAddr, encImg, encLen, encName) {
+				//				console.log('encType:' + encType);
+				//				console.log('encAddr:' + encAddr);
+				//				console.log('encImg:' + encImg);
+				//				console.log('encLen:' + encLen);
+				//先判断有没有勾选短信按钮，如果勾选，判断内容是否有敏感词
+				if(message.smsSend){
+					let showToast=false;
+					let words=[];
+					let tempTitle = message.title.replace(/\n/g,'');
+					tempTitle = tempTitle.replace(' ','');
+					for (var i = 0; i < message.smsWords.length; i++) {
+						let word=message.smsWords[i].word;
+						if(tempTitle.indexOf(word)!==-1){
+							showToast=true;
+							words.push(word);
+						}
+					}
+					let comment = message.content.replace(/\n/g,'');
+					comment = comment.replace(' ','');
+					for (var i = 0; i < message.smsWords.length; i++) {
+						let word=message.smsWords[i].word;
+						if(comment.indexOf(word)!==-1){
+							showToast=true;
+							words.push(word);
+						}
+					}
+					if(showToast){
+						mui.toast('含有禁止使用的关键词	‘'+words.join("/")+'’	请编辑后再尝试发送')
+						events.closeWaiting();
+						sendFlag = 0;
+						return 0
+					}
+				}
+				var personal = store.get(window.storageKeyName.PERSONALINFO);
+				var ids = [];//接收人ID
+				var codes = [];//接收人账号
+				var names = [];//接收人姓名
+				var pics = [];//接收人头像
+				for (var i = 0; i < message.selectPeople.length; i++) {
+					var model = message.selectPeople[i];
+					ids.push(model.user_code)
+					codes.push('');
+					names.push(model.user_name);
+					if (model.user_img == ''||model.user_img == null) {
+						pics.push('');
+					} else {
+						var tempUrl = model.user_img;
+						tempUrl = tempUrl.replace(/\\/g, '/');
+						pics.push(tempUrl);
+					}
+				}
+				if (ids.length == 0) {
+					mui.toast("请选择接收人");
+					sendFlag = 0;
+					return;
+				}
+				if(message.smsSend) {
+					message.smsSend = 1;
+				} else {
+					message.smsSend = 0;
+				}
+				console.log('message.content:'+message.content);
+				events.showWaiting();
+				var tempData = {
+					schoolId: personal.unit_code, //学校ID
+					noticeTitle: message.title, //标题
+					noticeContent: message.content.replace(/\n/g,'<br>'), //内容
+					noticeEncName: encName, //附件名称
+					noticeEncAddr: encAddr, //附件地址
+					smsSync:message.smsSend,//是否短信同步
+					sendManId: personal.user_code, //发布人ID
+					sendManCode: personal.login_name, //发布人账号
+					sendManName: personal.user_name, //发布人姓名
+					sendManPic: personal.img_url, //发布人头像
+					receiveManIds: ids, //接收人人ID
+					receiveManCodes: codes, //接收人账号
+					receiveManPics: pics, //接收人头像
+					receiveManNames: names, //接收人姓名
+					index_code:curPage.access.split('#')[1],
+					op_code:'add'
+				}
+				console.log('tempData:'+JSON.stringify(tempData));
+				postDataEncry(window.storageKeyName.INTERFACE_OA + 'notice/addNotice', {}, tempData, 2,function(data) {
+					console.log('addNoticePro:' + JSON.stringify(data));
+					events.closeWaiting();
+					if (data.code == 0) {
+						mui.toast("发布成功")
+						if(message.smsSend == 1) {
+							let selectData=message.selectPeople;
+							let touser=[];
+							for (var i = 0; i < selectData.length; i++) {
+								let obj={
+									gen_type:SMSUtils.USER_TYPE,
+									dpt_code:selectData[i].dpt_code,
+									dpt_name:selectData[i].dpt_name,
+									grd_code:'',
+									grd_name:'',
+									cls_code:'',
+									cls_name:'',
+									stu_code:'',
+									stu_name:'',
+									gen_code:selectData[i].user_code,
+									gen_name:selectData[i].user_name,
+								}
+								touser.push(obj);
+							}
+							var tempContent = '';
+							if(message.smsConfig.content_type == 't'){
+								tempContent = message.title;
+							}else if(message.smsConfig.content_type == 'c'){
+								tempContent = message.content;
+							}else if(message.smsConfig.content_type == 'tc'){
+								tempContent = '【'+message.title+'】'+message.content;
+							}
+							tempContent = tempContent.replace(/\n/g,'');
+							tempContent = tempContent.replace(' ','');
+							SMSUtils.sendSMS((msg)=>{
+								// 82.设置通知的短信返回值
+								events.showWaiting();
+								var dosetData = {
+									noticeId: data.data.Result, //通知ID
+									msgType: SMSUtils.MSG_TYPE, //信息类型
+									smsMsgtypeCode: SMSUtils.SMS_TYPE, //信息类型代码
+									servied: message.smsConfig.serviced, //订购状态
+									hrSmsid: msg.hr_id, //人事短信接口码
+									isCheck:'1',//是否已审核
+									checkTime: '', //审核时间
+									checkUser: '', //审核人代码
+									checkUserTname: '', //审核人姓名
+									checkUserUnit: '', //审核人单位
+									index_code:curPage.access.split('#')[1],
+								}
+								console.log('dosetData:'+JSON.stringify(dosetData));
+								postDataEncry(window.storageKeyName.INTERFACE_OA + 'notice/doSetSms4Notice', {}, dosetData, 2,function(doData) {
+									events.closeWaiting();
+									setTimeout(function() {
+										mui.back();
+									}, 1000);
+									mui.fire(plus.webview.currentWebview().opener(), 'refreshMinePage', {});
+								});
+							},0,moment().format('YYYY-MM-DD HH:mm:ss'),tempContent,message.smsConfig.serviced,0,touser);
+						}else{
+							setTimeout(function() {
+								mui.back();
+							}, 1000);
+							mui.fire(plus.webview.currentWebview().opener(), 'refreshMinePage', {});
+						}
+					} else {
+						mui.toast(data.msg)
+						sendFlag = 0;
+					}
+				});
+			}
+			window.addEventListener('selectPeople', function(data) {
+				console.log("data" + JSON.stringify(data.detail))
+				message.selectPeople = data.detail.peopleArray;
+				var tempPeople = [];
+				for (var i = 0; i < message.selectPeople.length; i++) {
+					var tempModel = message.selectPeople[i];
+					tempPeople.push(tempModel.user_name);
+				}
+				message.showSelectPeople = tempPeople.join(',');
+			});
+			//判断是否输入了值
+			var checkInput = function(text) {
+				if (text.trim().length == 0) {
+					mui.toast('请输入标题或内容');
+					sendFlag = 0;
+					return false;
+				}
+				if (isNull(text)) {
+					mui.toast('请输入标题或内容');
+					sendFlag = 0;
+					return false;
+				}
+				return true;
+			}
+
+			//判断输入字符串是否为空或者全部都是空格
+			function isNull(str) {
+				if (str == "") return true;
+				var regu = "^[ ]+$";
+				var re = new RegExp(regu);
+				return re.test(str);
+			}
+		</script>
+	</body>
+
+</html>

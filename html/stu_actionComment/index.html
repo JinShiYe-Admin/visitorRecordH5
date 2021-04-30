@@ -1,0 +1,512 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.picker.min.css" />
+		<link rel="stylesheet" href="../../js/timeline/timeline.css">
+		<link rel="stylesheet" href="../../css/utils/preview.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+
+			.mui-media-body {
+				margin: 4px 0;
+			}
+
+			.mui-slider .mui-segmented-control.mui-segmented-control-inverted~.mui-slider-group .mui-slider-item {
+				border-top: 0px;
+				border-bottom: 0px;
+			}
+
+			.timelineDate {
+				width: 30%;
+				font-size: 0.75em;
+				padding-top: 0.40rem;
+				padding-right: 2rem;
+				text-align: left;
+			}
+
+			.timelineDesc {
+				margin: 0;
+				font-size: 14px;
+				font-weight: 400;
+				color: #808080;
+			}
+
+			.divTime {
+				color: gray;
+				float: left;
+				width: 70px;
+				height: 50px;
+				font-size: 13px;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				overflow: hidden;
+				margin-left: -15px;
+			}
+
+			.divContent {
+				margin-left: 65px;
+				width: calc(100% - 65px);
+			}
+			
+			.divContentComment{
+				margin-left: 85px;
+				width: calc(100% - 85px);
+			}
+
+			.divFlag {
+				height: 30px !important;
+				width: 70px;
+				text-align: center;
+				padding-top: 5px;
+				background: #3aca3a;
+				border-radius: 5px;
+				color: white;
+			}
+
+			.divNote {
+				width: calc(100%);
+			}
+
+			.divStuName {
+				font-size: 15px;
+				font-weight: 900;
+			}
+
+			.pieChart {
+				height: 250px;
+				margin: -30px 0px 0 20px;
+				padding: 0px;
+			}
+
+			/* 间隔 */
+			.spaceLine {
+				padding-left: 15px;
+				text-align: left;
+				padding-top: 15px;
+				padding-bottom: 15px;
+				background: #f8efef;
+				font-size: 14px;
+				color: #505050;
+			}
+
+			.mui-table-view-cell:after {
+				height: 0px;
+			}
+
+			.mui-navigate-right:after,
+			.mui-push-right:after {
+				color: #00baad;
+			}
+			
+			.mui-dtpicker-header button:last-child{
+				background-color:#00CFBD;
+				border-color:#00CFBD ;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak v-if="showBack==2" @click="clickLeftImg" class="mui-icon mui-pull-left">
+				<img v-cloak :src=headImg style="width: 26px;height: 26px;border-radius: 50%;" />
+			</a>
+			<a v-cloak v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content mui-fullscreen" style="margin-top: 0px;background: white;z-index:0;" id="contentData">
+			<div id="slider" class="mui-slider mui-fullscreen">
+				<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<a @tap="clickSeg(0)" class="mui-control-item mui-active" href="#item1mobile">
+						行为与谈话
+					</a>
+					<a @tap="clickSeg(1)" class="mui-control-item" href="#item2mobile">
+						教师评语
+					</a>
+				</div>
+				<div id="sliderProgressBar" class="mui-slider-progress-bar mui-col-xs-6"></div>
+				<div class="mui-slider-group">
+					<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div id="scroll1" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<section id="cd-timeline" class="cd-container" v-cloak style="min-height: calc(100vh - 100px);">
+									<div v-for="(item,index) in semFlag0Data.semFlag0List" class="cd-timeline-block">
+										<div class="cd-timeline-img" :class="[index==0?'cd-picture':'cd-movie']"></div>
+										<div class="cd-timeline-content">
+											<div class="divTime">{{item.order_time}}</div>
+											<div v-if="item.student_behavior_id  !=null" class="divContent" style="height: auto;"><!-- 行为项目文本不为空说明有行为记录 -->
+												<div class="divFlag" style="background: #ff9900;">{{item.item_txt}}</div>
+												<div style="margin: 5px 0 5px 0;padding: 0px;" class="divNote">{{item.behavior_time}}</div>
+												<div style="margin: 5px 0 5px 0;padding: 0px;" class="divNote">{{item.day}} {{item.class_node}} {{item.sub_name}}</div>
+												<div style="margin: 5px 0 5px 0;padding: 0px; word-break: break-all;" class="divNote">{{item.comment}}</div>
+												<template v-for="bitem in item.bimgs">
+													<img style="width: 100px;height: 100px;margin-right: 10px;object-fit: cover;" :data-preview-src=bitem.url+'?imageView2/3/w/360/h/360/q/55/format/png' :src=bitem.url+'?imageView2/3/w/100/h/100/q/55/format/png' />
+												</template>
+												<div style="text-align: right;margin-right: 20px;">
+													<span style="color: red;border: 1px solid red;border-radius: 50%;padding: 0.21875rem 5px ;">记</span>
+													<span style="">{{item.behavior_recorder}}</span>
+												</div>
+											</div>
+											<div v-if="item.id !=null" class="divContent" style="height: auto;"><!-- 谈话文本不为空说明有谈话记录 -->
+												<div class="divFlag">谈话</div>
+												<div style="margin: 5px 0 5px 0;padding: 0px;" class="divNote">{{item.chat_time&&item.chat_time.split(' ')[0]}}</div>
+												<div style="margin: 5px 0 5px 0;padding: 0px;word-break: break-all;">{{item.chat_detail}}</div>
+												<template v-for="aitem in item.aimgs">
+													<img style="width: 100px;height: 100px;margin-right: 10px; object-fit: cover;" :data-preview-src=aitem.url+'?imageView2/3/w/360/h/360/q/55/format/png' :src=aitem.url+'?imageView2/3/w/100/h/100/q/55/format/png' />
+												</template>
+												<div style="text-align: right;margin-right: 20px;">
+													<span style="color: red;border: 1px solid red;border-radius: 50%;padding: 0.21875rem 5px ;">谈</span>
+													<span style="">{{item.create_user_name}}</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+					<div id="item2mobile" class="mui-slider-item mui-control-content">
+						<div id="scroll2" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<ul class="mui-table-view no-line" style="margin-top: 10px;min-height: calc(100vh - 100px);">
+									<li v-for="(item,index) in semFlag1Data.semFlag1List" class="mui-table-view-cell no-bgc">
+										<template v-if="item.remark_type=='termRemark'"><!-- 期评 -->
+											<div class="divFlag divTime" style="background: #FF6666;margin-left: 0px;">{{item.remark_type_txt}}</div>
+										</template>
+										<template v-if="item.remark_type=='monthRemark'"><!-- 月评 -->
+											<div class="divFlag divTime" style="background: #5BBA5B;margin-left: 0px;">{{item.remark_type_txt}}</div>
+										</template>
+										<template v-if="item.remark_type=='weekRemark'"><!-- 周评 -->
+											<div class="divFlag divTime" style="background: #00CFBD;margin-left: 0px;">{{item.remark_type_txt}}</div>
+										</template>
+										<div class="divContentComment" style="height: auto;">
+											<div>
+												<span>{{item.year}} 学年</span>
+												<span>{{item.term_name}}</span>
+											</div>
+											<div style="margin: 5px 0 5px 0;padding: 0px;word-break: break-all;" class="divNote">{{item.remark}}</div>
+											<div style="text-align: right;">{{item.create_user_name}}</div>
+											<div style="text-align: right;">{{item.create_time}}</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/muiPicker/mui.picker.all.js"></script>
+		<script src="../../js/utils/moment.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/mui.zoom.js"></script>
+		<script src="../../js/utils/mui.previewimage.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+
+		<script type="text/javascript">
+			mui.init();
+			mui.previewImage();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					showBack: 0,
+					headTitle: '',
+					headImg: setImg(personal.img_url, 9)
+				},
+				methods: {
+					clickLeftImg: function() {
+						appPay.openMenu();
+					}
+				}
+			});
+			var loading=true,loading2=true;
+			var pageSize =10;	
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					semFlag: 0, //点击的seg索引
+					semFlag0Data: { //行为与谈话
+						refrushFlag: 0, //0刷新1加载更多
+						pageNumber: 1,
+						total_page:0,//总页数
+						semFlag0List: [],
+					},
+					semFlag1Data: { //教师评语
+						refrushFlag: 0, //0刷新1加载更多
+						pageNumber: 1,
+						total_page:0,//总页数
+						semFlag1List: []
+					}
+				},
+				methods: {
+					clickSeg: function(flag) {
+						if (contentData.semFlag != flag) {
+							contentData.semFlag = flag;
+							console.log(flag);
+							if(flag==0){
+								contentData.semFlag0Data.refrushFlag = 0; //0刷新1加载更多
+								contentData.semFlag0Data.pageNumber = 1; 
+								getBehavior();
+								mui('#scroll1').scroll().scrollTo(0, 0) 
+							}else if(flag==1){
+								contentData.semFlag1Data.refrushFlag = 0; //0刷新1加载更多
+								contentData.semFlag1Data.pageNumber = 1; 
+								getRemark();
+								mui('#scroll2').scroll().scrollTo(0, 0) 
+							}
+						}
+					},
+				},
+			});
+			var self = 0;
+			mui.plusReady(function() {
+				(function($) {
+					$('.mui-scroll-wrapper').scroll({
+						indicators: true //是否显示滚动条
+					});
+					$.ready(function() {
+						$.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+							$(pullRefreshEl).pullToRefresh({
+								down: {
+									callback: function() {
+										self = this;
+										if (contentData.semFlag == 0) {
+											contentData.semFlag0Data.refrushFlag = 0; //0刷新1加载更多
+											contentData.semFlag0Data.pageNumber = 1; 
+											getBehavior();
+										} else if (contentData.semFlag == 1) {
+											contentData.semFlag1Data.refrushFlag = 0; //0刷新1加载更多
+											contentData.semFlag1Data.pageNumber = 1; //
+											getRemark();
+										}  
+										setTimeout(function() {
+											//结束下拉刷新
+											self.endPullDownToRefresh();
+										}, 1000);
+									}
+								},
+								up: {
+									callback: function() {
+										self = this;
+										if (contentData.semFlag == 0) {
+											contentData.semFlag0Data.refrushFlag = 1; //0刷新1加载更多
+											if (contentData.semFlag0Data.pageNumber <= contentData.semFlag0Data.total_page) {
+												getBehavior();
+												setTimeout(function() {
+													//结束下拉刷新
+													self.endPullUpToRefresh();
+													if (mui(".mui-table-view-cell").length < 10) {
+														mui(".mui-pull-loading")[0].innerHTML = "";
+													}
+												}, 1000);
+											} else {
+												//结束下拉刷新
+												self.endPullUpToRefresh();
+												mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+											}
+										} else if (contentData.semFlag == 1) {
+											contentData.semFlag1Data.refrushFlag = 1; //0刷新1加载更多
+											if (contentData.semFlag1Data.pageNumber <= contentData.semFlag1Data.total_page) {
+												getRemark();
+												setTimeout(function() {
+													//结束下拉刷新
+													self.endPullUpToRefresh();
+													if (mui(".mui-table-view-cell").length < 10) {
+														mui(".mui-pull-loading")[1].innerHTML = "";
+													}
+												}, 1000);
+											} else {
+												//结束下拉刷新
+												self.endPullUpToRefresh();
+												mui(".mui-pull-loading")[1].innerHTML = "没有更多了";
+											}
+										}  
+									}
+								}
+							});
+						});
+					});
+				})(mui);
+
+				curPage = utils.getDataFromUrl(window.location.href);
+				tempHead.headTitle = curPage.name;
+				if (curPage && JSON.stringify(curPage) == '{}') { //前四个页面时，不显示返回按钮
+					var ws = plus.webview.currentWebview();
+					if (ws.preload) {
+						curPage = ws.preload;
+						tempHead.headTitle = ws.preload.name;
+					}
+					if (ws.preload.index == 0) {
+						tempHead.showBack = 2;
+					}
+				} else {
+					tempHead.showBack = 1; //更多页面打开时，显示返回按钮
+				}
+				getBehavior();
+			});
+			
+			//分页查询行为谈话记录
+			function getBehavior(){
+				if(loading){events.showWaiting();}
+				let user_code=personal.user_code;
+				if(personal.type_code=='YHLX0004'){
+					user_code=personal.stu_code;
+				}
+				comData = {
+					stu_code:user_code,
+					page_size:pageSize,
+					page_number: contentData.semFlag0Data.pageNumber,
+					index_code: curPage.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.PARENTS_ATTENDANCE + 'behavior/page', {}, comData, 2, function(data) {
+					loading=false;
+					if (data.code == 0) {
+						 contentData.semFlag0Data.total_page=data.data.total_page
+						 if (contentData.semFlag0Data.refrushFlag == 0) {
+							 //png、jpg、gif/bmp/jpeg
+							data.data.list.map(item=>{
+								let aimgs=[],bimgs=[];
+								item.asset_ids.map(aitem=>{
+									if(aitem.ext=='png' ||aitem.ext=='jpg'||aitem.ext=='jpeg'||aitem.ext=='gif'||aitem.ext=='bmp'){
+										aimgs.push(aitem)
+									}
+								})
+								item.aimgs=aimgs;
+								item.behavior_asset_ids.map(bitem=>{
+									if(bitem.ext=='png' ||bitem.ext=='jpg'||bitem.ext=='jpeg'||bitem.ext=='gif'||bitem.ext=='bmp'){
+										bimgs.push(bitem)
+									}
+								})
+								item.bimgs=bimgs;
+							})
+						 	contentData.semFlag0Data.semFlag0List = [].concat(data.data.list);
+							if(data.data.list.length<pageSize){
+								mui(".mui-pull-loading")[0].style.display="none"
+							}
+						 	setTimeout(() => {
+								events.closeWaiting();
+								self && self.endPullDownToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 } else {
+							 //png、jpg、gif/bmp/jpeg
+							 data.data.list.map(item=>{
+							 	let aimgs=[],bimgs=[];
+							 	item.asset_ids.map(aitem=>{
+							 		if(aitem.ext=='png' ||aitem.ext=='jpg'||aitem.ext=='jpeg'||aitem.ext=='gif'||aitem.ext=='bmp'){
+							 			aimgs.push(aitem)
+							 		}
+							 	})
+							 	item.aimgs=aimgs;
+							 	item.behavior_asset_ids.map(bitem=>{
+							 		if(bitem.ext=='png' ||bitem.ext=='jpg'||bitem.ext=='jpeg'||bitem.ext=='gif'||bitem.ext=='bmp'){
+							 			bimgs.push(bitem)
+							 		}
+							 	})
+							 	item.bimgs=bimgs;
+							 })
+						 	contentData.semFlag0Data.semFlag0List = contentData.semFlag0Data.semFlag0List.concat(data.data.list);
+						 	// if(data.data.list.length==0){
+						 	// 	mui.toast('暂无更多数据');
+						 	// }    
+						 	setTimeout(() => {
+								events.closeWaiting();
+						 		self && self.endPullUpToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 }
+						 contentData.semFlag0Data.pageNumber++;
+					} else {
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			//分页查询行为评语记录
+			function getRemark(){
+				if(loading2){events.showWaiting();}
+				let user_code=personal.user_code;
+				if(personal.type_code=='YHLX0004'){
+					user_code=personal.stu_code;
+				}
+				comData = {
+					stu_code:user_code,
+					page_size:pageSize,
+					page_number: contentData.semFlag1Data.pageNumber,
+					index_code: curPage.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.PARENTS_ATTENDANCE + 'remark/page', {}, comData, 2, function(data) {
+					loading2=false;
+					if (data.code == 0) {
+						 contentData.semFlag1Data.total_page=data.data.total_page
+						 if (contentData.semFlag1Data.refrushFlag == 0) {
+						 	contentData.semFlag1Data.semFlag1List = [].concat(data.data.list);
+							if(data.data.list.length<pageSize){
+								mui(".mui-pull-loading")[1].style.display="none"
+							}
+						 	setTimeout(() => {
+								events.closeWaiting();
+								self && self.endPullDownToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[1].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 } else {
+						 	contentData.semFlag1Data.semFlag1List = contentData.semFlag1Data.semFlag1List.concat(data.data.list);
+						 	// if(data.data.list.length==0){
+						 	// 	mui.toast('暂无更多数据');
+						 	// }    
+						 	setTimeout(() => {
+								events.closeWaiting();
+						 		self && self.endPullUpToRefresh();
+						 		if (data.data.page_number >= data.data.total_page) {
+						 			mui(".mui-pull-loading")[1].innerHTML = "没有更多了";
+						 		}
+						 	}, 1000)
+						 }
+						 contentData.semFlag1Data.pageNumber++;
+					} else {
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

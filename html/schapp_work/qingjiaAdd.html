@@ -1,0 +1,821 @@
+<!doctype html>
+<html>
+	<!-- 请假记录添加
+ -->
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<style>
+			[v-cloak] {
+				visibility: hidden;
+				display:none !important;
+			}
+			html,
+			body {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-content{
+				background-color: #FFFFFF;
+			}
+			
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+			
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			
+			.mui-pull-top-tips .mui-pull-loading {
+				margin: 0;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			}
+			.peopleImg {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+			}
+			.time {
+				font-size: 14px;
+				float: right;
+				color: gray;
+			}
+			
+			.biaoti {
+				color: #000000;
+				width: 80%;
+				font-size: 1.0625rem;
+				white-space:normal;
+			}
+			
+			.tempCss {
+				font-size: 14px;
+				color: gray;
+			}
+			
+			.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
+			    margin-top: 0;
+			}
+			.mui-table h4{
+			    line-height: 21px;
+			    font-weight: 500;
+			}
+					
+			.mui-table .oa-icon{
+			    position: absolute;
+			    right:0;
+			    bottom: 0;
+			}
+			.mui-table .oa-icon-star-filled{
+			    color:#f14e41;
+			}
+			
+			.mui-table-cell-1{
+				margin-top: 1.25rem;
+			}
+			
+			.line{
+				background-color: #00CFBD;
+				margin-bottom: 0.3125rem;
+				height: 0.125rem;
+			}
+			.selectDiv{
+				background-color: #eaeaea;
+			}
+			.selectBtn{
+				border: 0rem;
+				border-radius: 0rem;
+				background-color: #FFFFFF;
+				height: 3rem;
+			}
+			
+			.ant-avatar{
+				-webkit-box-sizing: border-box;
+				    box-sizing: border-box;
+				    margin: 0;
+				    padding: 0;
+				    color: rgba(0, 0, 0, 0.65);
+				    font-size: 14px;
+				    font-variant: tabular-nums;
+				    line-height: 1.5;
+				    list-style: none;
+				    -webkit-font-feature-settings: 'tnum';
+				    font-feature-settings: 'tnum';
+				    position: relative;
+				    display: inline-block;
+				    overflow: hidden;
+				    color: #fff;
+				    white-space: nowrap;
+				    text-align: center;
+				    vertical-align: middle;
+				    background: #ccc;
+				    width: 32px;
+				    height: 32px;
+				    line-height: 32px;
+				    border-radius: 50%;
+			}
+			
+			.ant-avatar-lg {
+			    width: 40px;
+			    height: 40px;
+			    line-height: 40px;
+			    border-radius: 50%;
+			}
+			
+			.mui-segmented-control {
+				border: 0px;
+				background: #F0F0F0;
+			}
+			
+			.mui-segmented-control .mui-control-item {
+				border: 0px;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.mui-segmented-control .mui-control-item.mui-active {
+				background-color: transparent;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.mui-segmented-control .mui-control-item span {
+				font-size: 12px;
+				padding: 0 0 0 5px;
+				color: #666;
+			}
+			
+			.aCss {
+				font-size: 15px;
+				color: #333;
+				width: 5rem;
+			}
+			
+			.icon-right {
+				position: fixed;
+				float: right;
+				font-size: 14px;
+				margin-top: 11px;
+				right: 5%;
+			}
+			
+			.mui-input-row label~input,.mui-input-row label~select, .mui-input-row label~textarea ,
+			input::-webkit-input-placeholder,textarea::-webkit-input-placeholder {
+				color: #999;
+				/* placeholder字体大小  */
+				font-size: 14px;
+			}
+			
+			.line {
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #e4e4e4;
+			}
+			
+			.mui-input-row:after {
+				height: 0px;
+			}
+			
+			.mui-input-row {
+				margin:0.3125rem 0;
+			}
+			
+			.mui-input-row label {
+			    font-family: 'Helvetica Neue',Helvetica,sans-serif;
+			    line-height: 1.1;
+			    float: left;
+			    width: 30%;
+			    padding: 11px 15px;
+			}
+			
+			.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea {
+			    float: right;
+			    width: 68%;
+				margin-right: 2%;
+			    margin-bottom: 0;
+			    padding-left: 0.625rem;
+			    border: 0;
+			}
+			
+			.mui-dtpicker-header button:last-child {
+			    background-color: #00CFBD;
+				border: #00CFBD;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title" v-cloak>{{titleName}}</h1>
+			<a @click="submit()" class="mui-pull-right" style="font-size: 0.875rem">确定</a>
+		</header>
+		<div v-cloak id="datasource" class="mui-content mui-fullscreen" style="z-index:0">
+			<div v-cloak class="mui-scroll-wrapper" style="margin-top: 44px;">
+				<div v-cloak class="mui-scroll">
+					<div v-cloak class="" style="margin-top: 0.625rem;">
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showGrd()">年级</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showGrd()" placeholder="请选择" v-model="formData.grd.text" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showCls()">班级</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showCls()" placeholder="请选择" v-model="formData.cls.text" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showStu()">姓名</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showStu()" placeholder="请选择" v-model="formData.stu.text" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showKqlx()">考勤项目</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showKqlx()" placeholder="请选择" v-model="formData.kqlx.text" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showCrqx()">出入权限</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showCrqx()" placeholder="请选择" v-model="formData.crqx.text" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showBeginDate()">开始时间</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showBeginDate()" placeholder="请选择" v-model="formData.begintime" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showEndDate()">结束时间</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showEndDate()" placeholder="请选择" v-model="formData.endtime" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss">说明</label>
+							<textarea style="border: 1px solid rgba(0,0,0,.2);"  maxlength="100" v-model="formData.comment" rows="5" placeholder="请输入内容"></textarea>
+						</div>
+						<template v-if="SHOW">
+							<div class="line"></div>
+							<div v-cloak class="mui-input-row">
+								<label class="aCss" style="width: 7.5rem;">是否发送短信</label>
+								<div class="mui-switch mui-switch-mini" @click="checkSMS()" :class="SMS?'mui-active':''" style="margin-right: 8px;z-index: 20 !important;">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</div>
+						</template>
+						<div class="line"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<!-- <script src="../../js/utils/vconsole.min.js"></script> -->
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/mui.picker.min.js"></script>
+		<script src="../../js/utils/mui.poppicker.js"></script>
+		<script src="../../js/utils/SMS-Utils.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			var $M = mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var curPage = {};
+			var pageIndex = 1; //请求数据页面
+			var totalPageCount; //总页码
+			var flagRef = 0; //是刷新0，还是加载更多1
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					titleName: ''
+				},
+				methods:{
+					submit:function(){//表单提交
+						if(datasource.formData.grd.value==''){
+							mui.toast('请选择年级')
+						}else if(datasource.formData.cls.value==''){
+							mui.toast('请选择班级')
+						}else if(datasource.formData.stu.value==''){
+							mui.toast('请选择姓名')
+						}else if(datasource.formData.kqlx.value==''){
+							mui.toast('请选择考勤项目')
+						}else if(datasource.formData.crqx.value==''){
+							mui.toast('请选择出入权限')
+						}else if(datasource.formData.begintime==''){
+							mui.toast('请选择开始时间')
+						}else if(datasource.formData.endtime==''){
+							mui.toast('请选择结束时间')
+						}else{
+							// console.log(JSON.stringify(datasource.formData))
+							submitData(datasource.formData)
+						}
+					}
+				}
+			});
+			var datasource = new Vue({
+				el: "#datasource",
+				data: {
+					formData: {
+						grd:{text:'',value:''},//年级选择值
+						cls:{text:'',value:''},//班级选择值
+						stu:{text:'',value:''},//学生选择值
+						kqlx:{text:'',value:''},//考勤类型选择值
+						crqx:{text:'',value:''},//出入权限选择值
+						begintime:'',//开始时间选择值
+						endtime:'',//结束时间选择值
+						comment:'',//说明
+					}, //表单内容
+					grdList: [], //年级数组
+					clsList: [], //班级数组
+					stuList: [], //学生数组
+					kqlxList:[], //考勤类型数组
+					crqxList: [], //出入权限数组
+					CONFIG:{},//短信配置 对象
+					WORDS:[],//拒绝关键字 对象
+					SHOW:false,//是否显示发送短信
+					SMS:false,//是否发送短信
+				},
+				methods: {
+					checkSMS:function(){
+						this.SMS=!this.SMS
+					},
+					showGrd: function() {
+						var userPicker = new $M.PopPicker();
+						console.log("datasource.grdList: " + JSON.stringify(datasource.formData.grd.value));
+						userPicker.setData(datasource.grdList);
+						setTimeout(function() {
+							userPicker.pickers[0].setSelectedValue(datasource.formData.grd.value);
+						}, 100);
+						userPicker.show(function(items) {
+							console.log(JSON.stringify(items[0]))
+							if(JSON.stringify(items[0]) =='{}'){
+								mui.toast('未选择年级')
+							}else{
+								datasource.formData.grd = items[0]
+								datasource.clsList=[]
+								datasource.stuList=[]
+								datasource.formData.cls={text:'',value:''}
+								datasource.formData.stu={text:'',value:''}
+								getClsList(items[0].value) 
+								userPicker.dispose();
+								userPicker = null;
+							}
+						});
+					},
+					showCls: function() {
+						var userPicker = new $M.PopPicker();
+						userPicker.setData(datasource.clsList);
+						setTimeout(function() {
+							userPicker.pickers[0].setSelectedValue(datasource.formData.cls.value);
+						}, 100);
+						userPicker.show(function(items) {
+							console.log(JSON.stringify(items[0]))
+							if(JSON.stringify(items[0]) =='{}'){
+								mui.toast('未选择班级')
+							}else{
+								datasource.formData.cls = items[0]
+								datasource.stuList=[]
+								datasource.formData.stu={text:'',value:''}
+								getStuList(datasource.formData.grd.value,items[0].value) 
+								userPicker.dispose();
+								userPicker = null;
+							}
+						});
+					},
+					showStu: function() {
+						var userPicker = new $M.PopPicker();
+						userPicker.setData(datasource.stuList);
+						setTimeout(function() {
+							userPicker.pickers[0].setSelectedValue(datasource.formData.stu.value);
+						}, 100);
+						userPicker.show(function(items) {
+							console.log(JSON.stringify(items[0]))
+							if(JSON.stringify(items[0]) =='{}'){
+								mui.toast('未选择学生')
+							}else{
+								datasource.formData.stu = items[0]
+								userPicker.dispose();
+								userPicker = null;
+							}
+						});
+					},
+					showKqlx: function() {
+						var userPicker = new $M.PopPicker();
+						userPicker.setData(datasource.kqlxList);
+						setTimeout(function() {
+							userPicker.pickers[0].setSelectedValue(datasource.formData.kqlx.value);
+						}, 100);
+						userPicker.show(function(items) {
+							console.log(JSON.stringify(items[0]))
+							if(JSON.stringify(items[0]) =='{}'){
+								mui.toast('未选择考勤项目')
+							}else{
+								datasource.formData.kqlx = items[0]
+								userPicker.dispose();
+								userPicker = null;
+							}
+						});
+					},
+					showCrqx: function() {
+						var userPicker = new $M.PopPicker();
+						userPicker.setData(datasource.crqxList);
+						setTimeout(function() {
+							userPicker.pickers[0].setSelectedValue(datasource.formData.crqx.value);
+						}, 100);
+						userPicker.show(function(items) {
+							console.log(JSON.stringify(items[0]))
+							if(JSON.stringify(items[0]) =='{}'){
+								mui.toast('未选择出入权限')
+							}else{
+								datasource.formData.crqx = items[0]
+								userPicker.dispose();
+								userPicker = null;
+							}
+						});
+					},
+					showBeginDate: function() {
+						var datePicker=new $M.DtPicker({value:datasource.formData.begintime,type:""});
+						datePicker.show(function(rs) {
+							if (compareTime(rs.text,datasource.formData.endtime) == 1) {
+								mui.toast("开始时间不能晚于结束时间", "cancel");
+								return 0;
+							}
+							datasource.formData.begintime=rs.text
+							datePicker.dispose();
+							datePicker = null;
+						});
+					},
+					showEndDate: function() {
+						var datePicker=new $M.DtPicker({value:datasource.formData.endtime,type:""});
+						datePicker.show(function(rs) {
+							if (compareTime(datasource.formData.begintime,rs.text) == 1) {
+								mui.toast("结束时间不能早于开始时间", "cancel");
+								return 0;
+							}
+							datasource.formData.endtime=rs.text
+							datePicker.dispose();
+							datePicker = null;
+						});
+					},
+				}
+			});
+
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log(JSON.stringify(curPage));
+				tempVue.titleName = '添加请假记录';
+
+				//阻尼系数、初始化刷新加载更多
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+				
+				SMSUtils.INDEX_CODE=curPage.index_code;
+				SMSUtils.MSG_TYPE=window.storageKeyName.STUKQ_MSG_SMS.ASKLEAVE.MSG_TYPE;
+				SMSUtils.USER_TYPE=window.storageKeyName.STUKQ_MSG_SMS.ASKLEAVE.USER_TYPE;
+				SMSUtils.PERSONAL=store.get(window.storageKeyName.PERSONALINFO);
+				
+				events.showWaiting();
+				//获取短信配置和屏蔽关键字
+				SMSUtils.getConfig((msg)=>{
+					if(msg.SMS){
+						datasource.CONFIG=msg.CONFIG
+						SMSUtils.getSmsWords((msg2)=>{
+							// events.closeWaiting();
+							datasource.WORDS=msg2.WORDS
+						},2)
+						datasource.SHOW=true
+					}else{
+						datasource.SHOW=false
+						// events.closeWaiting();
+					}
+				})
+
+				//获取数据范围授权：年级
+				getGrdList();
+				// 获取当前日期
+				getCurrentDate();
+
+			});
+			
+			// 获取数据范围授权：年级
+			function getGrdList() {
+				comData = {
+					op_code:'add',
+					get_grd:true,
+					index_code: curPage.index_code,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'acl/dataRange', {}, comData, 2, function(data) {
+					console.log(JSON.stringify(data))
+					if (data.code == 0) {
+						let grds = data.data.grd_list;
+						let grdList=[];
+						grds.map(function(currentValue) {
+							let obj = {};
+							obj.value = currentValue.value;
+							obj.text = currentValue.name;
+							grdList.push(obj)
+						})
+						if(grdList.length>0 ){
+							datasource.grdList=grdList;
+							let grd_id=grdList[0].value; 
+							datasource.formData.grd=grdList[0];
+							//获取数据范围授权：班级
+							getClsList(grd_id)
+						}else{
+							events.closeWaiting();
+							mui.toast('无数据授权 无法获取年级');
+						}
+					} else {
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			//获取数据范围授权：班级
+			function getClsList(grd_id) {
+				const params = {
+					op_code:'add',
+					grd_code:grd_id,
+					get_cls:true,
+					index_code: curPage.index_code,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'acl/dataRange', {}, params, 2, function(data) {
+					console.log(JSON.stringify(data))
+					if (data.code == 0) {
+						let clss = data.data.cls_list;
+						let clssList=[];
+						clss.map(function(currentValue) {
+							let obj = {};
+							obj.value = currentValue.value;
+							obj.text = currentValue.name;
+							clssList.push(obj)
+						})
+						if(clssList.length>0 ){
+							datasource.clsList=clssList;
+							let cls_id=clssList[0].value;
+							datasource.formData.cls=clssList[0];
+							//获取数据范围授权：学生
+							getStuList(grd_id,cls_id) 
+						}else{
+							events.closeWaiting();
+							mui.toast('无数据授权 无法获取班级');
+						}
+					}else{
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			//获取数据范围授权：学生
+			function getStuList(grd_id,cls_id) {
+				const params = {
+					op_code:'add',
+					grd_code: grd_id,
+					cls_code: cls_id,
+					get_stu:true,
+					index_code: curPage.index_code,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'acl/dataRange', {}, params, 2, function(data) {
+					console.log(JSON.stringify(data))
+					if (data.code == 0) {
+						let stu = data.data.stu_list;
+						let stuList=[];
+						stu.map(function(currentValue) {
+							let obj = {};
+							obj.value = currentValue.value;
+							obj.text = currentValue.name;
+							stuList.push(obj)
+						})
+						if(stuList.length>0 ){
+							datasource.stuList=stuList;
+							//获取请假类型,出入权限常量
+							getQjlxList();
+						}else{
+							events.closeWaiting();
+							mui.toast('无数据授权 无法获取学生');
+						}
+					}else{
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			
+			//获取请假类型常量
+			function getQjlxList() {
+				comData = {
+					index_code: curPage.index_code,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_WORK + 'LeaveRecord/getDict', {}, comData, 2, function(data) {
+					console.log(JSON.stringify(data))
+					events.closeWaiting();
+					if (data.code == 0) {
+						let kqlxList = [].concat(data.data.qaArray);
+						let crqxList=[].concat(data.data.inOutPermissionArray)
+						
+						if(kqlxList.length==0 && crqxList.length==0){
+							mui.toast('无法获取考勤项目');
+						}else{
+							datasource.kqlxList = kqlxList
+							datasource.crqxList = crqxList
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			// 提交表单数据
+			function submitData(data) {
+				events.showWaiting();
+				let comm=data.comment
+				let comment=comm.replace(/\s+/g, '').replace(/\n/g, '').replace(/\t/g, '').replace(/\r/g, '')
+				let flag=0;
+				if(datasource.SMS){
+					flag=1;
+					let showToast=false
+					 let words=[]
+					 for (var i = 0; i < datasource.WORDS.length; i++) {
+					 	let word=datasource.WORDS[i].word
+					 	if(comment.indexOf(word)!==-1){
+					 		showToast=true
+					 		words.push(word)
+					 	}
+					 }
+					 if(showToast){
+					 	mui.toast('含有禁止使用的关键词	‘'+words.join("/")+'’	请编辑后再尝试发送')
+					 	events.closeWaiting();
+					 	return 0
+					 }
+				}
+				comData = {
+					grd_code: data.grd.value,
+					cls_code: data.cls.value,
+					stu_code: data.stu.value,
+					item_code: data.kqlx.value,
+					in_out_permission_code: data.crqx.value,
+					comment: comment,
+					begintime: data.begintime,
+					endtime: data.endtime,
+					sms_parent_stu_flag:flag,
+					index_code: curPage.index_code,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_WORK + 'LeaveRecord/save', {}, comData, 2, function(data) {
+					console.log(JSON.stringify(data))
+					if (data.code == 0) {
+						 mui.toast(data.msg);
+						 setTimeout(function(){
+							  mui.fire(plus.webview.currentWebview().opener(), 'refreshList', {});
+							 mui.back()
+						 },1500)
+					} else {
+						mui.toast(data.msg);
+					}
+					events.closeWaiting();
+				});
+			}
+			
+			// 获取当前日期
+			function getCurrentDate(){
+				var myDate=new Date()
+			    var year = myDate.getFullYear();
+			    var month = myDate.getMonth() + 1;
+				var date = myDate.getDate();
+				var hours = myDate.getHours();
+				var minutes = myDate.getMinutes();
+				var now = year + '-' + conver(month) + "-" + conver(date)+ " " + conver(hours) + ":" + conver(minutes)
+				
+				var myDateEnd = new Date();
+				myDateEnd.setTime(myDateEnd.getTime()+24*60*60*1000);
+				var yearEnd  = myDateEnd.getFullYear();
+				var monthEnd  = myDateEnd.getMonth() + 1;
+				var dateEnd  = myDateEnd.getDate();
+				var hoursEnd  = myDateEnd.getHours();
+				var minutesEnd  = myDateEnd.getMinutes();
+				var nowEnd = yearEnd + '-' + conver(monthEnd) + "-" + conver(dateEnd)+ " " + conver(hoursEnd) + ":" + conver(minutesEnd)
+				datasource.formData.begintime=now;
+				datasource.formData.endtime=nowEnd;
+			}
+			function conver(s) {
+				return s < 10 ? '0' + s : s;
+			}
+ 
+			 //判断当前选择时间是否小于是指定时间
+			 function compareTime(beginTime,endTime) {
+				beginTime = beginTime.replace(/-/g, '');
+				beginTime = beginTime.replace(/ /g, '');
+				beginTime = beginTime.replace(/:/g, '');
+				endTime = endTime.replace(/-/g, '');
+				endTime = endTime.replace(/ /g, '');
+				endTime = endTime.replace(/:/g, '');
+				if (parseFloat(beginTime) < parseFloat(endTime)) {
+					return 0;
+				}
+				return 1;
+			 }
+			 
+		</script>
+	</body>
+
+</html>

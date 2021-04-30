@@ -1,0 +1,529 @@
+<!doctype html>
+<html>
+	<!-- 宿舍卫生 添加页
+
+ -->
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../fonts/iconfont1.css" />
+		<link rel="stylesheet" href="../../css/utils/MultiMedia.css" />
+		<link rel="stylesheet" href="../../css/utils/preview.css" />
+		<link rel="stylesheet" href="../../css/utils/audiopopover.css" />
+		<style>
+			[v-cloak] {
+				visibility: hidden;
+				display:none !important;
+			}
+			html,
+			body {
+				background-color: #FFFFFF;
+			}
+			
+			.mui-content{
+				background-color: #FFFFFF;
+			}
+			
+			.time {
+				font-size: 14px;
+				float: right;
+				color: gray;
+			}
+			
+			
+			.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
+			    margin-top: 0;
+			}
+			.mui-table h4{
+			    line-height: 21px;
+			    font-weight: 500;
+			}
+					
+			.mui-table .oa-icon{
+			    position: absolute;
+			    right:0;
+			    bottom: 0;
+			}
+			.mui-table .oa-icon-star-filled{
+			    color:#f14e41;
+			}
+			
+			.mui-table-cell-1{
+				margin-top: 1.25rem;
+			}
+			
+			.selectDiv{
+				background-color: #eaeaea;
+			}
+			.selectBtn{
+				border: 0rem;
+				border-radius: 0rem;
+				background-color: #FFFFFF;
+				height: 3rem;
+			}
+			
+			.aCss {
+				font-size: 15px;
+				color: #333;
+				width: 5rem;
+			}
+			
+			.icon-right {
+				position: fixed;
+				float: right;
+				font-size: 14px;
+				margin-top: 11px;
+				right: 5%;
+			}
+			
+			.mui-input-row label~input,.mui-input-row label~select, .mui-input-row label~textarea ,
+			input::-webkit-input-placeholder,textarea::-webkit-input-placeholder {
+				color: #999;
+				/* placeholder字体大小  */
+				font-size: 14px;
+			}
+			
+			.line {
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #e4e4e4;
+			}
+			
+			.mui-input-row:after {
+				height: 0px;
+			}
+			
+			.mui-input-row {
+				margin:0.3125rem 0;
+			}
+			
+			.mui-input-row label {
+			    font-family: 'Helvetica Neue',Helvetica,sans-serif;
+			    line-height: 1.1;
+			    float: left;
+			    width: 30%;
+			    padding: 11px 15px;
+			}
+			
+			.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea {
+			    float: right;
+			    width: 68%;
+				margin-right: 2%;
+			    margin-bottom: 0;
+			    padding-left: 0.625rem;
+			    border: 0;
+			}
+			
+			.mui-dtpicker-header button:last-child {
+			    background-color: #00CFBD;
+				border: #00CFBD;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{titleName}}</h1>
+			<a @click="submit()" class="mui-pull-right" style="font-size: 0.875rem">确定</a>
+		</header>
+		<div v-cloak id="datasource" class="mui-content mui-fullscreen" style="z-index:0">
+			<div v-cloak class="mui-scroll-wrapper" style="margin-top: 44px;">
+				<div v-cloak class="mui-scroll">
+					<div class="" v-cloak style="margin-top: 0.625rem;">
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showBuilding()">楼房</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showBuilding()" placeholder="请选择" v-model="formData.building.text" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showFloor()">楼层</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showFloor()" placeholder="请选择" v-model="formData.floor.text" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showDorm()">房间</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showDorm()" placeholder="请选择" v-model="formData.dorm.text" readonly>
+								<h6 style=" float: right; width: 68%;line-height: 1.25rem;margin-right: 2%" v-if="formData.dorm.text">已选择:	{{formData.dorm.text}}</h6>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showHealth()">卫生</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showHealth()" placeholder="请选择" v-model="formData.health.text" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss" @tap="showDate()">日期</label>
+							<input style="border: 1px solid rgba(0,0,0,.2);" type="text" @tap="showDate()" placeholder="请选择" v-model="formData.time" readonly>
+							<span class="mui-icon mui-icon-arrowdown icon-right"></span>
+						</div>
+						<div class="line"></div>
+						<div v-cloak class="mui-input-row">
+							<label class="aCss">说明</label>
+							<textarea style="border: 1px solid rgba(0,0,0,.2);"  maxlength="100" v-model="formData.comment" rows="5" placeholder="请输入内容"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src='../../js/picVideoAudio/compressVideo.js'></script>
+		<script src="../../js/qiniu/cloudutil.js"></script>
+		<script src="../../js/utils/mui.picker.min.js"></script>
+		<script src="../../js/utils/mui.poppicker.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			var $M = mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var curPage = {};
+			
+			
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					titleName: '新建宿舍卫生'
+				},
+				methods:{
+					submit:function(){//表单提交
+						if(datasource.formData.building.value==''){
+							mui.toast('请选择楼房')
+						}else if(datasource.formData.floor.value==''){
+							mui.toast('请选择楼层')
+						}else if(datasource.formData.dorm.value==''){
+							mui.toast('请选择房间')
+						}else if(datasource.formData.health.value==''){
+							mui.toast('请选择卫生细项')
+						}else{
+							events.showWaiting();
+							submitData()
+						}
+					}
+				}
+			});
+			var datasource = new Vue({
+				el: "#datasource",
+				data: {
+					formData: {
+						building:{text:'',value:''},//楼房选择值
+						floor:{text:'',value:''},//楼层选择值
+						dorm:{text:'',value:''},//房间选择值
+						health:{text:'',value:''},//考勤选择值
+						time:'',//日期选择值
+						comment:'',//说明
+					}, //表单内容
+					build_floor_list: [], //年级数组
+					buildingList: [], //宿舍楼数组
+					floorList: [], //楼层数组
+					dormList: [], //房间数组
+					healthList: [], //床位号数组
+				},
+				methods: {
+					showBuilding: function() {
+						var userPicker = new $M.PopPicker();
+						userPicker.setData(datasource.buildingList);
+						setTimeout(function() {
+							userPicker.pickers[0].setSelectedValue(datasource.formData.building.value);
+						}, 100);
+						userPicker.show(function(items) {
+							console.log(JSON.stringify(items[0]))
+							if (JSON.stringify(items[0]) == '{}') {
+								mui.toast('未选择楼号')
+							} else {
+								datasource.formData.building = items[0]
+								events.showWaiting();
+								datasource.floorList = [];
+								datasource.dormList = [];
+								getFloorList(items[0].value)
+								userPicker.dispose();
+								userPicker = null;
+							}
+						});
+					},
+					showFloor: function() {
+						var userPicker = new $M.PopPicker();
+						userPicker.setData(datasource.floorList);
+						setTimeout(function() {
+							userPicker.pickers[0].setSelectedValue(datasource.formData.floor.value);
+						}, 100);
+						userPicker.show(function(items) {
+							console.log(JSON.stringify(items[0]))
+							if (JSON.stringify(items[0]) == '{}') {
+								mui.toast('未选择楼层')
+							} else {
+								datasource.formData.floor = items[0]
+								events.showWaiting();
+								datasource.dormList = [];
+								getDormList(datasource.formData.building.value,items[0].value);
+								userPicker.dispose();
+								userPicker = null;
+							}
+						});
+					},
+					showDorm: function() {
+						
+						let dormChecked=datasource.formData.dorm;
+						let dormCheckedIds=[];
+						if(datasource.formData.dorm.value!=''){
+							dormCheckedIds=datasource.formData.dorm.value.split(",");
+						}
+						let dormList= datasource.dormList?datasource.dormList:[];
+						dormList.map(function(currDorm){
+							currDorm.isChecked=false;
+							let currDormId=currDorm.value
+							dormCheckedIds.map(function(id){
+								if(currDormId==id){
+									currDorm.isChecked=true;
+								}
+							})
+						})
+						if(dormList.length==0){
+							mui.toast('房间数据为空')
+						}else{
+							console.log("dormList: " + JSON.stringify(dormList));
+							let model = dormList
+							utils.mOpenWithData("../../html/stu_dorm/bedSelect.html", model);
+						} 
+					},
+					showHealth: function() {
+						var userPicker = new $M.PopPicker();
+						userPicker.setData(datasource.healthList);
+						setTimeout(function() {
+							userPicker.pickers[0].setSelectedValue(datasource.formData.health.value);
+						}, 100);
+						userPicker.show(function(items) {
+							console.log(JSON.stringify(items[0]))
+							if(JSON.stringify(items[0]) =='{}'){
+								mui.toast('未选择卫生细项')
+							}else{
+								datasource.formData.health = items[0]
+								userPicker.dispose();
+								userPicker = null;
+							}
+						});
+					},
+					showDate: function() {
+						let myDate=new Date()
+						var year = myDate.getFullYear();
+						var month = myDate.getMonth() + 1;
+						var date = myDate.getDate();
+						let dtObj={value:datasource.formData.time,endYear:year,endMonth:month,endDay:date,type:"date"}
+						var datePicker=new $M.DtPicker(dtObj);
+						datePicker.show(function(rs) {
+							datasource.formData.time=rs.text
+							datePicker.dispose();
+							datePicker = null;
+						});
+					},
+				}
+			});
+
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				// tempVue.titleName = '添加'+curPage.title;
+
+
+				//阻尼系数、初始化刷新加载更多
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+
+
+
+				events.showWaiting();
+				getBuildingList();
+				// 获取常量
+				getDict();
+				// 获取当前日期
+				getCurrentDate();
+			});
+			
+			
+			//获取宿舍楼号和楼层数组
+			function getBuildingList(){
+				comData = {
+					index_code: curPage.index_code,
+				} 
+				postDataEncry(window.storageKeyName.INTERFACE_DORM + 'dorm/queryDorm', {}, comData, 2, function(data) {
+					console.log("data: " + JSON.stringify(data));
+					if (data.code == 0) {
+							 let list =data.data.list
+							 if(list.length>0){
+								 datasource.build_floor_list=list
+								 let buildingList=[]
+								 list.map(function(item){
+									 let obj={}
+									 obj.text=item.text,
+									 obj.value=item.value,
+									 buildingList.push(obj)
+								 })
+								 datasource.buildingList=buildingList;
+								 // getFloorList(buildingList[0].value)
+								 events.closeWaiting();
+							 }else{
+								 mui.toast('无法获取楼号数据');
+								 events.closeWaiting();
+							 }
+					} else {
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			//根据宿舍楼号获取楼层
+			function getFloorList(building){
+				let list=datasource.build_floor_list
+				let floorList=[]
+				list.map(function(item){
+					  if(building==item.value){
+						  let array=item.floor_array
+						  array.map(function(item){
+							  if((item.text+'').indexOf('层')==-1){
+								  item.text=item.text+'层'
+							  }
+						  })
+						  floorList=array
+					  }
+				})
+				datasource.floorList=floorList
+				console.log("floorList: " + JSON.stringify(floorList));
+				// getDormList(building,floorList[0].value)
+				 events.closeWaiting(); 
+			}
+			
+			//根据宿舍楼号、楼层获取宿舍
+			function getDormList(building,floor) {
+				comData = {
+					dorm_name:building,
+					floor_num:floor,
+					index_code: curPage.index_code,
+				} 
+				postDataEncry(window.storageKeyName.INTERFACE_DORM + 'dorm/queryRoom', {}, comData, 2, function(data) {
+					console.log("data: " + JSON.stringify(data));
+					if (data.code == 0) {
+						let list=data.data.list
+						  datasource.dormList=list
+						  events.closeWaiting();
+					} else {
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			//获取常量
+			function getDict(){
+				comData = {
+					index_code: curPage.index_code,
+				} 
+				postDataEncry(window.storageKeyName.INTERFACE_DORM + 'dormHealth/getDict', {}, comData, 2, function(data) {
+					if (data.code == 0) {
+						 let datas=data.data
+						 datasource.healthList=datas.item_array
+						 events.closeWaiting();
+					} else {
+						events.closeWaiting();
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			window.addEventListener('refreshBed', function(data) {
+				datasource.formData.dorm={text:'',value:''}
+				console.log("data: " + JSON.stringify(data.detail));
+				let checkedDorms=data.detail;
+				let names=[]
+				let ids=[]
+				checkedDorms.map(function(currentValue){
+					names.push(currentValue.name)
+					ids.push(currentValue.value)
+				})
+				let obj={}
+				obj.text=names.join(",")
+				obj.value=ids.join(",")
+				console.log("obj: " + JSON.stringify(obj));
+				datasource.formData.dorm=obj
+			});
+			
+			// 提交表单数据
+			function submitData() {
+				comData = {
+					health_date:datasource.formData.time,
+					dorm_name:datasource.formData.building.value,
+					floor_num:''+datasource.formData.floor.value,
+					item_name:datasource.formData.health.value,
+					remark:datasource.formData.comment,
+					room_names:datasource.formData.dorm.value,
+					index_code: curPage.index_code,
+				}
+				console.log("comData: " + JSON.stringify(comData));
+				postDataEncry(window.storageKeyName.INTERFACE_DORM + 'dormHealth/add', {}, comData, 2, function(data) {
+					console.log("data: " + JSON.stringify(data));
+					events.closeWaiting();
+					if (data.code == 0) {
+						 mui.toast(data.msg);
+						 setTimeout(function(){
+							 mui.fire(plus.webview.currentWebview().opener(), 'refreshList', {});
+							 mui.back()
+						 },1500)
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			// 获取当前日期
+			function getCurrentDate(){
+				var myDate=new Date()
+			    var year = myDate.getFullYear();
+			    var month = myDate.getMonth() + 1;
+				var date = myDate.getDate();
+				var hours = myDate.getHours();
+				var minutes = myDate.getMinutes();
+				var now = year + '-' + conver(month) + "-" + conver(date)
+				// + " " + hours + ":" + minutes
+				datasource.formData.time=now;
+			}
+			function conver(s) {
+				return s < 10 ? '0' + s : s;
+			}
+			
+		</script>
+	</body>
+
+</html>

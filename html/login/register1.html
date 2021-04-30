@@ -1,0 +1,357 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../fonts/iconfont1.css" />
+		<link rel="stylesheet" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+
+		<style type="text/css">
+			[v-cloak] {
+				visibility: hidden;
+				display: none !important;
+			}
+
+			.mui-table-view-cell>a:not(.mui-btn) {
+				position: relative;
+				display: block;
+				overflow: hidden;
+				margin: -11px -15px;
+				padding: inherit;
+				white-space: normal;
+				text-overflow: ellipsis;
+				color: inherit;
+			}
+
+			body {
+				background: #F2F2F2;
+			}
+
+			.mui-popover {
+				width: 100%;
+				height: 0px;
+				border-radius: initial;
+				background-color: transparent;
+				border: none;
+				box-shadow: none;
+			}
+
+			.aCss {
+				font-size: 15px;
+				color: #333;
+				width: 110px;
+			}
+
+			.icon-right {
+				position: fixed;
+				float: right;
+				font-size: 14px;
+				margin-top: 11px;
+				right: 10px;
+			}
+
+			.code-btn {
+				background: #63BBFF !important;
+				border: none;
+				border-radius: 25px;
+				height: 25px;
+				width: 90px;
+				font-size: 10px;
+				padding: 4px 15px;
+				margin-top: -33px;
+				right: 5%;
+				float: right;
+			}
+
+			.rCss {
+				font-size: 13px;
+				color: #666666;
+				float: left;
+				margin: 0px 27px 0 16px;
+			}
+
+			.mui-table-view-cell {
+				min-height: 44px;
+			}
+
+			.mui-checkbox input[type=checkbox]:checked:before {
+				color: #00cfbd;
+			}
+
+			.mui-input-row label~input,
+			input::-webkit-input-placeholder {
+				color: #999;
+				/* placeholder字体大小  */
+				font-size: 14px;
+			}
+
+			.mui-navigate-right.rCss.no-icon:after {
+				content: ' ';
+			}
+
+			.mui-popover-arrow {
+				display: none;
+			}
+
+			.mui-table-view-cell>a:not(.mui-btn).mui-active {
+				background-color: #fff;
+			}
+
+			.mui-table-view:after {
+				height: 0px;
+			}
+
+			.mui-input-row:after {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #e4e4e4;
+			}
+
+			.mui-input-row.permission:after {
+				height: 0px;
+			}
+
+			.mui-input-row.permission label {
+				line-height: 0.9;
+			}
+
+			.mui-checkbox.mui-left label,
+			.mui-radio.mui-left label {
+				padding-right: 15px;
+				padding-left: 58px;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a @click="headReturn()" class="mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;">{{titleName}}</h1>
+		</header>
+		<div id="register-body" class="mui-content" style="background: white;">
+			<div style="background-color: white;height: 10px;"></div>
+			<h4 style="margin-left: 20px;margin-right: 20px;text-align: center;">{{curPage.user_info}}</h4>
+			<div style="background-color: white;height: 20px;"></div>
+			<div v-if="curPage.status==0" class="mui-input-row">
+				<label class="aCss">用户账号</label>
+				<input type="text" placeholder="请输入账号" v-model="uaccount">
+			</div>
+			<div v-if="curPage.status==1" class="mui-input-row">
+				<label class="aCss">用户账号</label>
+				<input type="text" placeholder="请输入账号" v-model="uaccount" disabled style="color: #000000;">
+			</div>
+			<div class="mui-input-row">
+				<label class="aCss">请输入{{tempStr}}密码</label>
+				<input type="password" placeholder="请输入密码" v-model="upassword">
+			</div>
+			<div class="mui-input-row">
+				<label class="aCss">请确认{{tempStr}}密码</label>
+				<input type="password" placeholder="请确认密码" v-model="confirmpassword">
+			</div>
+			<div v-if="curPage.status==0" style="margin-top: 10px;">
+				<div @click="clickPrivace()" style="float: right;margin:7px 20px 0 -10px;color: #00CFBD;text-decoration: underline;">《用户隐私政策》</div>
+				<div v-if="privaceFlag == 0" @click="clickFlag(0)" class="mui-input-row permission mui-checkbox mui-left" style="float: right;">
+					<label>同意</label>
+					<input name="checkbox1" value="Item 1" type="checkbox">
+				</div>
+				<div v-else-if="privaceFlag == 1" @click="clickFlag(1)" class="mui-input-row permission mui-checkbox mui-left"
+				 style="float: right;">
+					<label>同意</label>
+					<input name="checkbox1" value="Item 1" type="checkbox" checked>
+				</div>
+			</div>
+			<div style="text-align: center;margin-top: 100px;">本页面有效时间剩余：<span style=" color: red ">{{yanZMTime}}</span> 秒</div>
+			<div style="bottom: 0;position: fixed;width: 95%;margin: 0 2.5%;">
+				<button id='idenCodebtn' @click="submit" type="button" class="mui-btn mui-btn-block mui-btn-primary" style="background: #00CFBD;border: 0;height: 36px;font-size: 15px;line-height: 0;">确
+					定</button>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/mui.picker.js"></script>
+		<script src="../../js/utils/mui.poppicker.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script src='../../js/utils/md5.js'></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script type="text/javascript">
+			var $M = mui.init();
+			var userTypePicker = new $M.PopPicker();
+			var schoolPicker = new $M.PopPicker();
+			var tempType = '';
+			var tempName = '';
+			var tempPhone = '';
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				register.curPage = curPage;
+				register.uaccount = curPage.login_name;
+				if (curPage.status == 0) {
+					tempVue.titleName = '账号注册';
+				} else {
+					tempVue.titleName = '找回密码';
+					register.tempStr = '新';
+				}
+				var dateStart = Date.parse(new Date());
+				var tempTime = dateStart - curPage.yanzmStart;
+				let time1 = parseInt(tempTime);
+				let time2 = time1 / 1000;
+				let time3 = 600 - time2;
+				if (time3 < 0) {
+					time3 = 0;
+				}
+				register.yanZMTime = time3;
+				setTimeout(function() {
+					register.countDown()
+				}, 1000);
+			});
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					titleName: ''
+				},
+				methods:{
+					headReturn:function(){
+						register.refresh();
+					}
+				}
+			});
+
+			var register = new Vue({
+				el: '#register-body',
+				data: {
+					privaceFlag: 0,
+					curPage: {},
+					uaccount: '', //用户账号
+					upassword: '', //用户密码
+					confirmpassword: '', //确认密码
+					yanZMTime: 600,
+					tempStr: '',
+				},
+				methods: {
+					refresh:function(){
+						mui.fire(plus.webview.currentWebview().opener(), 'refreshRegister', {});
+						mui.back();
+					},
+					clickPrivace: function() {
+						console.log('clickPrivace')
+						utils.mOpenWithData("../../html/login/privace.html", {});
+					},
+					clickFlag: function(flag) {
+						if (flag == 0) {
+							register.privaceFlag = 1;
+						} else {
+							register.privaceFlag = 0;
+						}
+					},
+					countDown: function() {
+						if (register.yanZMTime > 0) {
+							register.yanZMTime = register.yanZMTime - 1;
+							setTimeout(function() {
+								register.countDown()
+							}, 1000);
+						}
+					},
+					submit: function() { //提交数据
+						console.log(register.utype_value)
+						if (register.uaccount == '') {
+							mui.toast('请输入用户账号');
+						} else if (escape(register.uaccount).indexOf("%u") >= 0) {
+							mui.toast('用户账号不能输入汉字');
+						} else if (register.uaccount.length > 18 || register.uaccount.length < 4) {
+							mui.toast('字符长度不能超过18位');
+						} else if (register.upassword == '') {
+							mui.toast('请输入用户密码');
+						} else if (register.confirmpassword == '') {
+							mui.toast('请确认密码');
+						} else if (!(register.upassword === register.confirmpassword)) {
+							mui.toast('两次输入的密码不一致');
+						} else if (!checkPass(register.confirmpassword)) {
+							mui.toast('密码需为数字和字母的组合');
+						} else if (register.confirmpassword.length > 18 || register.confirmpassword.length < 6) {
+							mui.toast('密码需为6到18位数字和字母的组合');
+						} else {
+							if (register.curPage.status ==0&&register.privaceFlag == 0) {
+								mui.toast('请先同意隐私政策');
+							} else {
+								//
+								var enData0 = {};
+								//不需要加密的数据
+								var comData0 = {
+									platform_code: window.storageKeyName.PLATFORMCODE, //平台代码
+									app_code: window.storageKeyName.APPCODE, //应用系统代码
+									// unit_code: register.curPage.unit_code, //学校代码
+									index_code: 'index', //页面权限符
+									user_code: register.curPage.user_code, //用户代码
+									// user_type: register.curPage.user_type, //用户类型
+									user_name: register.curPage.user_name, //姓名
+									phone: register.curPage.phone, //电话
+									// login_name: register.uaccount, //登录名
+									password: hex_md5(window.storageKeyName.PWD_ENCRYPTION + register.confirmpassword), //密码,秘钥+密码再MD5加密
+									msg_token:register.curPage.msg_token,
+									msg:register.curPage.msg,
+								};
+								if(window.storageKeyName.APPFLAG == 0){
+									comData0.user_type = register.curPage.user_type;
+								}
+								console.log('comData0:' + JSON.stringify(comData0));
+								events.showWaiting();
+								var tempUrl = 'register';
+								if(register.curPage.status == 1){
+									tempUrl = 'register/resetPwd';
+								}else{
+									comData0.unit_code = register.curPage.unit_code;
+									comData0.login_name = register.uaccount;
+								}
+								//发送网络请求，data为网络返回值
+								postDataEncry(window.storageKeyName.INTERFACE_HR_SKIN + tempUrl, {}, comData0, 0, function(data) {
+									console.log('register:' + JSON.stringify(data));
+									events.closeWaiting();
+									if (data.code == 0) {
+										mui.toast(data.msg);
+										register.refresh();
+									} else {
+										mui.toast(data.msg);
+									}
+								});
+							}
+						}
+					}
+				}
+			});
+
+			//判断字符串是否为数字和字母组合
+			function checkPass(password) {
+				var re = /^(?!([a-zA-Z]+|\d+)$)[a-zA-Z\d]{6,20}$/g;
+				if (!re.test(password)) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		</script>
+	</body>
+
+</html>

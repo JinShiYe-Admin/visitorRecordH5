@@ -1,0 +1,333 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../js/swiper/swiper-bundle.min.css">
+		<link rel="stylesheet" href="../../css/utils/preview.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+
+			.circular-square {
+				border-radius: 10%;
+				width: 30px;
+				height: 30px;
+			}
+
+			.divd {
+				padding-left: 10px;
+				width: 80%;
+				display: -webkit-box;
+				-webkit-box-orient: vertical;
+				-webkit-line-clamp: 2;
+				overflow: hidden;
+				/* background: #7FFFD4; */
+			}
+
+			.mui-grid-view.mui-grid-9 {
+				margin: 0;
+				padding: 0;
+				border-top: 0px solid #eee;
+				border-left: 0px solid #eee;
+				background-color: white;
+			}
+
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell {
+				background: white;
+				margin: 0;
+				padding: 11px 15px;
+				vertical-align: top;
+				border-right: 0px solid #eee;
+				border-bottom: 0px solid #eee;
+			}
+
+			.chart {
+				height: 200px;
+				margin: 10px;
+				padding: 0px;
+			}
+
+			.mui-grid-view.mui-grid-9.table {
+				border-top: 1px solid #eee !important;
+				border-left: 1px solid #eee !important;
+			}
+
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell.table {
+				text-align: left;
+				padding: 0 7px;
+				border-right: 1px solid #eee !important;
+				border-bottom: 1px solid #eee !important;
+			}
+
+			.mui-table-view-cell.beauline:after {
+				left: 0 !important;
+				height: 0 !important;
+			}
+
+			.bg-gray {
+				background: #eaeaea !important;
+			}
+
+			.swiper-container {
+				margin-top: 10px;
+				margin-bottom: 15px;
+				width: 100%;
+				height: 100%;
+			}
+
+			.swiper-slide {
+				text-align: center;
+				font-size: 18px;
+				/* background: #fff; */
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+			}
+
+			.swiper-button-next:after,
+			.swiper-button-prev:after {
+				font-size: 15px;
+				font-weight: bold;
+				color: #00CFBD;
+			}
+
+			.swiper-button-prev {
+				width: 50px;
+				background: #FFFFFF;
+				left: 0 !important;
+			}
+
+			.swiper-button-next {
+				width: 50px;
+				background: #FFFFFF;
+				right: 0 !important;
+			}
+
+			.swiper-slide {
+				width: 50px;
+			}
+		</style>
+	</head>
+
+	<body style="background: white;">
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background: white;" id="contentData">
+			<div class="mui-row">
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" v-for="item in stList">
+							<p v-if="item.question_number == stItem.question_number" style="margin: 5px;padding-top: 5px;text-align:center;width: 30px;height: 30px;border-radius: 50%;background: #FF8D1A;color: #FFFFFF;">{{item.question_number}}</p>
+							<p v-if="item.question_number != stItem.question_number" style="margin: 5px;padding-top: 5px;text-align:center;width: 30px;height: 30px;border-radius: 50%;background: darkgray;color: #FFFFFF;">{{item.question_number}}</p>
+						</div>
+					</div>
+					<!-- Add Arrows -->
+					<div class="swiper-button-next"></div>
+					<div class="swiper-button-prev"></div>
+				</div>
+			</div>
+			<div class="mui-row">
+				<h5 style="text-align: center;padding-top: 10px;padding-bottom: 10px;background: #7FFFD4;">题号：{{stItem.question_number}}</h4>
+			</div>
+			<div class="mui-row" style="padding: 0 10px;">
+				<div style="margin-top: 15px;">
+					<p>当前题目的得分信息：</p>
+					<div class="mui-row">
+						<div class="mui-col-xs-6" style="padding: 0 0 0 20px;">
+							<p>分值：{{stItem.question_score}}分</p>
+						</div>
+						<div class="mui-col-xs-6" style="padding: 0 0 0 20px;">
+							<p>我的得分：{{stItem.score}}分</p>
+						</div>
+						<div class="mui-col-xs-6" style="padding: 0 0 0 20px;">
+							<p>年级满分人数：{{stItem.full_score_stuc}}人</p>
+						</div>
+						<div class="mui-col-xs-6" style="padding: 0 0 0 20px;">
+							<p>年级均分：{{stItem.grd_avg_score}}分</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mui-row" style="padding: 0 10px;">
+				<h5 style="text-align: center;padding-top: 10px;padding-bottom: 10px;background: #7FFFD4;width: 80px;">题目：</h4>
+					<p v-if="content.length==0&&option.length==0" class="noData">暂无数据</p>
+					<p v-if="content.length>0" style="font-size: 14px;color: #666;" v-html=content></p>
+					<template v-for="(item,index) in option">
+						<p style="font-size: 14px;color: #666;margin-left: 15px;">{{item}}</p>
+					</template>
+					
+			</div>
+			<div class="mui-row" style="padding: 0 10px;">
+				<h5 style="text-align: center;padding-top: 10px;padding-bottom: 10px;background: #7FFFD4;width: 80px;">我的答案：</h4>
+					<p v-if="stu_answer.length==0&&stu_answer_img_url.length==0" class="noData" style="margin-top: 15px;">暂无数据</p>
+					<template v-for="(item,index) in stu_answer">
+						<p style="font-size: 14px;color: #666;margin-left: 15px;">{{item}}</p>
+					</template>
+					<img v-if="stu_answer_img_url.length>0" :data-preview-src="stu_answer_img_url" :src=stu_answer_img_url width="100%">
+			</div>
+			<div class="mui-row" style="padding: 0 10px;">
+				<h5 style="text-align: center;padding-top: 10px;padding-bottom: 10px;background: #7FFFD4;width: 80px;">标准答案：</h4>
+					<p v-if="answer.length==0" class="noData">暂无数据</p>
+					<template v-for="(item1,index) in answer">
+						<template v-for="(item2,index) in item1">
+							<p style="font-size: 14px;color: #666;margin-left: 15px;" v-html=item2></p>
+						</template>
+					</template>
+			</div>
+		</div>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/mui.zoom.js"></script>
+		<script src="../../js/utils/mui.previewimage.js"></script>
+		<script src="../../js/swiper/swiper-bundle.min.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			mui.init();
+			mui.previewImage();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					showBack: 1,
+					headTitle: ''
+				}
+			});
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					examId: 0, //试卷id
+					access:'',
+					stList: [],
+					stItem: {},
+					content:'',//题目
+					option:[],//题目
+					stu_answer:[],//我的答案
+					stu_answer_img_url:'',//我的答案
+					answer:[],//标准答案
+				},
+				methods: {},
+			});
+
+			mui.plusReady(function() {
+				let curPage = utils.getDataFromUrl(window.location.href);
+				let currStIndex = 0
+				contentData.stList = curPage[0]
+				contentData.stItem = curPage[1]
+				contentData.examId = curPage[2]
+				contentData.access = curPage[3]
+				tempHead.headTitle = curPage[4]
+				// 1.7.单科题目详情
+				getQueDetail();
+				contentData.stList.map((item, index) => {
+					if (item.question_number == contentData.stItem.question_number) {
+						currStIndex = index
+					}
+				})
+				setTimeout(function() {
+					var swiper = new Swiper('.swiper-container', {
+						slidesPerView: 'auto',
+						direction: 'horizontal',
+						initialSlide: currStIndex,
+						slideToClickedSlide: true,
+						centeredSlides: true,
+						slidesOffsetAfter: 50,
+						navigation: {
+							nextEl: '.swiper-button-next',
+							prevEl: '.swiper-button-prev',
+						},
+						on: {
+							slideChangeTransitionEnd: function() {
+								setTimeout(() => { //去掉就报错
+									console.log('slideChangeTransitionEnd:' + swiper.activeIndex);
+									contentData.stItem = contentData.stList[swiper.activeIndex]
+									// 1.7.单科题目详情
+									getQueDetail();
+								}, 10)
+							},
+						},
+					});
+				}, 100)
+			});
+
+			// 1.7.单科题目详情
+			var getQueDetail = function() {
+				comData = {
+					user_code: personal.user_code,
+					id: contentData.examId, //试卷id
+					que_numbers: contentData.stItem.question_number, //题号
+					index_code: contentData.access,
+				}
+				events.showWaiting();
+				postDataEncry(window.storageKeyName.INTERFACE_STUSCORE + 'singleSub/queDetail', {}, comData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						var tempD = data.data.list[0];
+						if(tempD.content){
+							contentData.content = tempD.content;
+						}else{
+							contentData.content = '';
+						}
+						if(tempD.answer){
+							contentData.answer = tempD.answer;
+						}else{
+							contentData.answer = [];
+						}
+						if(tempD.stu_answer_img_url){
+							contentData.stu_answer_img_url = tempD.stu_answer_img_url;
+						}else{
+							contentData.stu_answer_img_url = [];
+						}
+						if(tempD.option){
+							contentData.option = tempD.option;
+						}else{
+							contentData.option = [];
+						}
+						if(tempD.stu_answer){
+							contentData.stu_answer = tempD.stu_answer;
+						}else{
+							contentData.stu_answer = [];
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+		</script>
+		</script>
+	</body>
+
+</html>

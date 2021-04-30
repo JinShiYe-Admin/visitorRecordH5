@@ -1,0 +1,487 @@
+<!doctype html>
+<html>
+	<!--测试、查看测试结果-->
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/btlearn/common.css"/>
+		<style type="text/css">
+			.mui-bar {
+				/* background-color: #FFFFFF; */
+			}
+			.mui-action-back {
+				/* color: #222222; */
+			}
+			.question-header {
+				padding: .45rem .2rem .3rem;
+				display: flex;
+				justify-content: space-between;
+			}
+			.question-header .p-title {
+				max-width: 82%;
+				font-size: 0.3rem;
+				line-height: 1.2;
+			}
+			.question-header .progress {
+				color: #666666;
+				font-size: 0.26rem;
+			}
+			.question-box {
+				padding: 0.7rem 0.46rem 0.2rem;
+			}
+			.tested .question-box {
+				padding-top: 0.3rem;
+			}
+			.tested .question-box:after {
+				display: block;
+				content: "";
+				border-bottom: 1px solid #DDDDDD;
+			}
+			.time {
+				/* color: #666666; */
+			}
+			.question-box {
+				font-size: 0.28rem;
+				color: #222222;
+			}
+			.question {
+				line-height: 1.8;
+				margin-bottom: 0.8rem;
+				word-break: break-word;
+			}
+			.option-item {
+				margin-bottom: 0.55rem;
+			}
+			.option-item .option-label {
+				margin-right: 0.15rem;
+			}
+			.option-item .option-label + span {
+				display: inline-block;
+			    max-width: 85%;
+			    vertical-align: middle;
+			    line-height: 1.5;
+			}
+			.answer-box {
+				padding: 0 0.2rem;
+			}
+			.answer-box .answer-key {
+				color: #141414;
+				font-size: 0.26rem;
+			}
+			.answer-box .answer-detail {
+				padding: 0.35rem;
+			}
+			.question-box img {
+				max-width: 100%;
+				/* background: url(../../img/zhiXueKeTang/loading.svg) center/contain no-repeat; */
+				background: #F6F6F6;
+			}
+			.answer-detail {
+				color: #222222;
+				line-height: 1.6;
+				word-break: break-word;
+			}
+			#testing {
+				height: 100%;
+			}
+			.mui-scroll-wrapper {
+				/* top: 1.24rem; */
+				top: 44px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="testing" v-cloak :class="{tested: isTested}">
+			<header class="mui-bar mui-bar-nav theme">
+				<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+				<span class="mui-icon mui-pull-right time" v-if="isTested">用时：{{time}}</span>
+				<span class="mui-icon mui-pull-right time" v-else>{{timeStr}}</span>
+				<h1 class="mui-title">{{headerTitle}}</h1>
+			</header>
+			
+			<div class="mui-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						
+						<div class="question-header">
+							<span class="p-title mui-ellipsis">{{paperName}}</span>
+							<span class="progress">{{progress}}</span>
+						</div>
+						
+						<div class="question-box" v-if="questions[index]">
+							<div class="question">{{ (index+1)+".(单选题) " }}<span v-html="questions[index].content"></span></div>
+							<div class="option-box">
+								<div class="option-item" v-for="(item, k) in transOption" :key="k" @tap="selectOption(k)">
+									<span class="option-label" v-if="!isTested" :class="{selected: questions[index].stu_answer==k}">{{k}}</span>
+									<span class="option-label" v-else :class="answerJudge(k)">{{k}}</span>
+									<span v-html="item"></span>
+								</div>
+							</div>
+						</div>
+						
+						<div class="answer-box" v-if="isTested">
+							<div class="answer-key">
+								正确答案：<span style="color: #2CA97F; margin-right: 0.35rem;"> {{getAnswerName(questions[index].answer)}}</span> 
+								你选的：<span style="color: #FF7C6F;"> {{getAnswerName(questions[index].stu_answer)}}</span>
+							</div>
+							<div class="answer-detail">
+								答案解析：<br /> 
+								<div v-html="questions[index].solve"></div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				
+				
+				
+			</div>
+			
+		</div>
+		
+		<div id="beforeLeaveDialog" class="cfm-dialog">
+			<div class="title">确认退出练习？</div>
+			<p class="dialog-content">退出后不保存本次练习记录</p>
+		</div>
+		
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<!-- <script src="../../js/utils/mui.pullToRefresh.js"></script> -->
+		<!-- <script src="../../js/utils/mui.pullToRefresh.material.js"></script> -->
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/layer/layer.js"></script>
+		<!-- <script src='../../js/utils/big.min.js'></script> -->
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		
+		<script type="text/javascript" src="../../js/btlearn/common.js" ></script>
+		<script type="text/javascript">
+			var self, isImmer;
+			mui.init({
+				beforeback: function() {
+					if(testing.isAnswered&&!testing.isTested){
+						beforeLeaveDialog(function(){
+							testing.isAnswered = false;
+							mui.back();
+						});
+						return false;
+					}else{
+						if(self.isTested){
+							// isImmer&&plus.navigator.setStatusBarStyle('light');
+						}else{
+							// isImmer&&plus.navigator.setStatusBarStyle('light');
+							self.close(); //返回时,关闭页面
+							return false;
+						}
+					}
+				}
+			});
+			
+			mui.plusReady(function(){
+				
+				self = plus.webview.currentWebview();
+				// isImmer = plus.navigator.isImmersedStatusbar();
+				
+				//状态栏样式
+				// if(isImmer){
+				// 	self.addEventListener("show", function(e){
+				// 		plus.navigator.setStatusBarStyle('dark');
+				// 	});
+				// }
+				
+				
+				// 获取题目
+				testing.isTested = self.isTested;
+				testing.headerTitle = self.title; //知识点名
+				if(self.isTested) { 
+					//测试结果
+					// console.log("题目答案: "+JSON.stringify(self.detailInfo));
+					testing.paperName = self.paperName;
+					testing.questions = self.detailInfo;
+					testing.time = self.used_time;
+				}else{ 
+					// 排除题目异常
+					var isWrongOpt=false;
+					for(var i=0;i<self.data.questions.length;i++) {
+						var ques = self.data.questions[i];
+						try{
+							var ques_ops = JSON.parse(ques.option);
+							ques_ops = ques_ops.map(function(v){
+								if(v.indexOf("<span>")==0) { //提取<span>开头的
+									return v.slice(6,-7);
+								}else{
+									return v;
+								}
+							});
+							ques_ops.forEach(function(v,i){
+								if(!/^[a-zA-Z]/.test(v)){ //开头不是字符
+									isWrongOpt = true;
+								}
+							});
+						}catch(e){
+							isWrongOpt = true;
+						}
+						if(isWrongOpt) {
+							console.log("异常题："+JSON.stringify(ques));
+							break;
+						}else{
+							ques.option = JSON.stringify(ques_ops);
+						}
+					}
+					if(isWrongOpt){
+						self.close();
+						plus.nativeUI.toast("题目异常，请重新做题或换个知识点");
+					}
+					//新测试
+					testing.paperName = self.data.paper_name;
+					testing.questions = self.data.questions;
+					testing.diskey = self.data.diskey;
+					//计时
+					testing.timer();
+				}
+				
+				// 滚动区域
+				mui('.mui-scroll-wrapper').scroll({
+					indicators: false
+				});
+				
+			});
+			
+			//设置测试结果
+			window.addEventListener("setTested", function(e){
+				// console.log("测试结果: "+JSON.stringify(e.detail.detailInfo));
+				testing.isTested = true;
+				testing.headerTitle = self.title;
+				testing.paperName = e.detail.paperName;
+				testing.questions = e.detail.detailInfo;
+				testing.time = e.detail.used_time;
+			});
+			
+			//返回查看
+			window.addEventListener("getBack", function(e){
+				testing.index = e.detail.index||0;
+				if(!testing.isTested) {
+					testing.timer();
+				}
+			});
+			
+			var timer;
+			var testing = new Vue({
+				el: "#testing",
+				data: {
+					headerTitle: "",
+					paperName: "",
+					time: 0,
+					index: 0,
+					questions: [],
+					isTested: false,
+					isSelecting: false,
+					diskey: "",
+					isAnswered: false
+				},
+				computed: {
+					//时间显示
+					timeStr: function() {
+						var m = Math.floor(this.time/60);
+						var s = this.time-m*60;
+						m = m>=10 ? m : "0"+m;
+						s = s>=10 ? s : "0"+s;
+						return m+":"+s;
+					},
+					progress: function() {
+						var tt = this.questions.length;
+						if(tt) {
+							var cur = this.index+1;
+							if(this.index+1<10) {
+								var o = 0;
+								while(o<Math.floor(tt/10)) {
+									cur = "0"+cur;
+									o++;
+								}
+							}
+							return cur+"/"+tt;
+						}else{
+							return "0/0"
+						}
+					},
+					//选项
+					transOption: function() {
+						var cur_qes = this.questions[this.index];
+						if(cur_qes&&cur_qes.option) {
+							var op = JSON.parse(cur_qes.option);
+							var new_op = {}
+							op.forEach(function(v){
+								new_op[v.substr(0,1)] = v.split(/^[a-zA-Z]\W/, 2).pop();
+							});
+							return new_op;
+						}else{
+							return [];
+						}
+					}
+				},
+				mounted: function() {
+					var _this = this;
+					//左右划
+					mui(".mui-content").on("swipeleft", ".question-box", function(){
+						!_this.isSelecting&&_this.changeIndex(1);
+					});
+					mui(".mui-content").on("swiperight", ".question-box", function(){
+						!_this.isSelecting&&_this.changeIndex(-1);
+					});
+				},
+				methods: {
+					//计时
+					timer: function() {
+						var _this = this;
+						timer = setInterval(function(){
+							_this.time++;
+						}, 1000);
+					},
+					//切换题目
+					changeIndex: function(d){
+						var des = this.index+d;
+						if(des>=this.questions.length){
+							if(this.isTested) return false;
+							//停止计时
+							clearInterval(timer);
+							//测试数据
+							var _this = this;
+							var ans = [];
+							this.questions.forEach(function(v, i){
+								ans.push({
+									index: i,
+									question_id: v.question_id,
+									stu_answer: v.stu_answer||[]
+								});
+							});
+							//进入提交页
+							mui.openWindow({
+								url: "zujuancs_submit.html",
+								id: "bl-test-submit",
+								extras: {
+									submitData: {
+										title: _this.headerTitle,
+										diskey: _this.diskey,
+										catalogId: self.catalogId,
+										name: _this.paperName,
+										usedTime: _this.timeStr,
+										answerArray: ans
+									}
+								}
+							});
+						}else if(des<0){
+							return false;
+						}else{
+							this.index = des;
+							mui('.mui-scroll-wrapper').scroll().scrollTo(0,0);//滚动到顶
+						}
+					},
+					//选择
+					selectOption: function(k) {
+						if(!this.isTested) {
+							this.isSelecting = true;
+							var cur = this.questions[this.index];
+							var _this = this;
+							if(cur.stu_answer) {
+								cur.stu_answer = [k];
+							}else{
+								this.$set(cur, "stu_answer", [k]);
+							}
+							setTimeout(function(){
+								_this.isSelecting = false;
+								_this.changeIndex(1);
+							}, 500);
+							if(!_this.isAnswered) {
+								_this.isAnswered=true;
+							}
+						}
+					},
+					// 判断答案是正确、错误或没选
+					answerJudge: function(key) {
+						var answer = this.questions[this.index].answer;
+						var stu_answer = this.questions[this.index].stu_answer;
+						if(!answer||!stu_answer) return "";
+						if(answer.indexOf(key)!=-1&&stu_answer.indexOf(key)!=-1) {
+							return "selected";
+						}else if(stu_answer.indexOf(key)!=-1){
+							return "err";
+						}else if(answer.indexOf(key)!=-1) {
+							return "selected";
+						}else{
+							return "";
+						}
+					},
+					getAnswerName: function(answer) {
+						var asr = "";
+						if(answer){
+							var an1 = answer.match(/[a-zA-Z]/);
+							if(an1){
+								asr = an1[0];
+							}
+						}
+						return asr;
+					}
+				}
+			});
+			
+			//离开前对话框
+			function beforeLeaveDialog(yesCallback){
+				layer.closeAll();
+				layer.open({
+				  type: 1,
+				  title: false,
+				  closeBtn: 0,
+				  resize: false,
+				  skin: "beforeLeaveDialog",
+				  area: "6rem",
+				  btn: ["确认", "取消"],
+				  btnAlign: 'c',
+				  shadeClose: false,
+				  isOutAnim: false,
+				  content: $('#beforeLeaveDialog'),
+				  yes: function(index, layero){
+				  	layer.close(index);
+				  	yesCallback();
+				  },
+				  btn2: function(index, layero){
+				   	layer.close(index);
+				  }
+				});
+			}
+			
+			// testing.paperName = data.paperName;
+			// testing.questions = [
+			// 	{"option":"[\"A．以<br/>人<br/>的<br/>血<br/>液<br/>为<br/>食\",\"B．有<br/>口<br/>无<br/>肛<br/>门\",\"C．寄<br/>生<br/>在<br/>人<br/>体<br/>的<br/>肝<br/>脏内\",\"D．分<br/>为<br/>雌<br/>虫<br/>和<br/>雄<br/>虫，<br/>为<br/>雌<br/>雄<br/>异<br/>体<br/><br/><br/><br/><br/><br/>\"]","content":"（2016·江汉区模拟）下列关于蛔虫的叙述，正确的是（　　） ","difficulty_level_id":1,"book_catalog_id":6149,"question_id":1890939},
+			// 	{"option":"[\"A．钉螺\",\"B．水中\",\"C．水螅\",\"D．涡虫\"]","content":"（2015·宜昌模拟）血吸虫病长期危害我国人民的健康，湖北省尤其是血吸虫的高发地区，因为我省是千湖之省，水资源丰富．这是因为血吸虫的幼虫先在哪里繁殖，并进一步发育，最终在人体发育为成虫？（　　） ","difficulty_level_id":1,"book_catalog_id":6149,"question_id":1890940},
+			// 	{"option":"[\"A．生殖器官发达\",\"B．体细如线呈圆柱形\",\"C．体表有角质层\",\"D．消化管结构简单\"]","content":"（2016秋·松滋市期末）下列与蛔虫营寄生生活无关的是（　　） ","difficulty_level_id":1,"book_catalog_id":6149,"question_id":1890956},
+			// 	{"option":"[\"A．早晚刷牙、洗脸\",\"B．不吃不干净的瓜果蔬菜\",\"C．不喝生水，饭前便后洗手\",\"D．不随地大便\"]","content":"（2016秋·安顺期末）下列与预防蛔虫病无关的卫生习惯是（　　） ","difficulty_level_id":1,"book_catalog_id":6149,"question_id":1890958},
+			// 	{"option":"[\"A．胃\",\"B．肺\",\"C．小肠\",\"D．大肠\"]","content":"（2015秋·綦江区期末）医生在有的胃肠病患者体内发现了近千条蛔虫．请问蛔虫的成虫寄生在人体的里（　　） ","difficulty_level_id":1,"book_catalog_id":6149,"question_id":1890981},
+			// 	{"option":"[\"A．饭前便后要洗手\",\"B．严格管理好粪便\",\"C．不喝不清洁的生水\",\"D．不与患蛔虫病的人接触\"]","content":"（2017秋·龙岗区期中）蛔虫是世界性分布种类，是人体内最常见的寄生虫，感染率可达70%以上，成年人受蛔虫感染后，出现不同程度的发热、咳嗽、食欲不振或善饥、脐周隐痛等症状，可在大便中直接看到虫体，下列不是预防蛔虫病措施的是（　　） ","difficulty_level_id":1,"book_catalog_id":6149,"question_id":1890996},
+			// 	{"option":"[\"A．蔬菜上\",\"B．土壤里\",\"C．猪肉里\",\"D．人的小肠里\"]","content":"（2017秋·龙岗区期中）蛔虫卵不可能存在的部位是（　　） ","difficulty_level_id":1,"book_catalog_id":6149,"question_id":1890997},
+			// 	{"option":"[\"A．喝了被生活垃圾污染的生水\",\"B．用脏手去拿食物吃\",\"C．生吃了未洗净得蔬菜\",\"D．吸进了被污染的空气\"]","content":"（2017秋·太原期中）人的下列各种行为中，不可能导致人患蛔虫病的是（　　） ","difficulty_level_id":1,"book_catalog_id":6149,"question_id":1891008},
+			// 	{"option":"[\"A．小肠\",\"B．大肠\",\"C．血液\",\"D．胆管\"]","content":"（2016秋·朝阳区期中）蛔虫寄生在人的部位是（　　） ","difficulty_level_id":1,"book_catalog_id":6149,"question_id":1891023},
+			// 	{"option":"[\"A．不吃没有洗干净的瓜果、蔬菜\",\"B．早晚刷牙、洗脸\",\"C．不喝生水，饭前便后洗手\",\"D．不随地大便\"]","content":"（2015秋·平南县期中）下列与预防蛔虫病无关的卫生习惯是（　　） ","difficulty_level_id":1,"book_catalog_id":6149,"question_id":1891039}
+			// ];
+			// testing.isTested = true;
+			
+		</script>
+	</body>
+
+</html>

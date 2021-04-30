@@ -1,0 +1,472 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../fonts/iconfont1.css" />
+		<link rel="stylesheet" href="../../css/utils/MultiMedia.css" />
+		<link rel="stylesheet" href="../../css/utils/preview.css" />
+		<link rel="stylesheet" href="../../css/utils/audiopopover.css" />
+		<style type="text/css">
+			.contentCSS {
+				margin-left: 15px;
+				margin-right: 15px;
+				font-size: 14px;
+				color: #666;
+			}
+
+			.titleCSS {
+				font-size: 18px;
+				color: #000;
+			}
+
+			.name-timeCSS {
+				font-size: 12px;
+				color: #999;
+			}
+
+			.encName {
+				margin-left: 15px;
+				margin-right: 15px;
+				font-size: 14px;
+				color: #333;
+			}
+
+			.encTitle {
+				font-size: 12px;
+				color: #999;
+			}
+
+			.encSize {
+				font-size: 12px;
+				color: #3c9bfe;
+			}
+
+			.readPeople {
+				font-size: 14px;
+				color: #666;
+			}
+
+			.clickButton {
+				margin-left: 5px;
+				height: 18px;
+				width: 40px;
+				padding: 0 5px 5px 5px;
+				font-size: 10px;
+			}
+
+			.display-inline {
+				padding: 20px;
+				display: inline-block;
+			}
+
+			.extral-file {
+				padding-right: 10px;
+			}
+
+			.color_primary {
+				color: #3c9bfe;
+			}
+
+			.prev-down {
+				padding-left: 20px;
+			}
+
+			.prev-btn,
+			.down-btn {
+				margin-left: 20px;
+			}
+
+			.mui-btn-primary {
+				border: 1px solid #3C9BFE;
+				background-color: #3C9BFE;
+			}
+
+			.mui-btn-outlined.mui-btn-primary {
+				color: #3C9BFE;
+				background-color: transparent;
+			}
+
+			.mui-content {
+				height: 100%;
+				padding: 44px 0px 50px 0px;
+				overflow: auto;
+				background-color: #eaeaea;
+			}
+
+			div {
+				word-break: break-all;
+			}
+
+			div p {
+				word-break;
+				: break-all;
+			}
+
+			.peopleImg {
+				width: 50px;
+				height: 40px;
+				border-radius: 50%;
+			}
+
+			.mui-table-view-cell:after {
+				height: 2px;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: white;">
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">工作流详情</h1>
+			<a v-if="moreFlag>0" @click="revoke()" class="mui-pull-right" style="font-size: 14px;margin-top: 0px;">{{moreName}}</a>
+		</header>
+		<div class="mui-content" v-show="flag>0" id="noticeDetailData" style="background-color: white;">
+			<div id="">
+				<template v-if="detailModel.ApproveStatus==2">
+					<input maxlength="10" type="text" v-model="tag" style="float: right;border: 1px solid gainsboro;margin-bottom: 0px;margin-top: 5px;margin-right: 10px;font-size: 14px;width: 150px;height: 35px;"
+					 placeholder="请输入我的标签" />
+				</template>
+				<template v-if="detailModel.ApproveStatus!=2">
+					<button v-on:click.stop="saveTag()" type="button" class="down-btn" style="float: right;margin-right: 10px;margin-top: 7px;background: #00CFBD;border-color: #00CFBD;color: white;">保存</button>
+					<input maxlength="10" type="text" v-model="tag" style="float: right;border: 1px solid gainsboro;margin-bottom: 0px;margin-top: 5px;margin-right: -10px;font-size: 14px;width: 150px;height: 35px;"
+					 placeholder="请输入我的标签" />
+				</template>
+				<p style="font-size: 14px;color: #666;float: right;margin-top: 15px;">我的标签：</p>
+			</div>
+			<br /><br />
+			<p align="center" class="titleCSS" style="font-size: 18px;color: #000;margin-top: 10px;">{{detailModel.ApplyTitle}}</p>
+			<p align="center" class="name-timeCSS" style="font-size: 13px;color: #999;">{{detailModel.ApplyManName}} |
+				{{detailModel.CreateTime}}</p>
+			<p v-html="detailModel.ApplyContent" class="contentCSS" style="font-size: 14px;color: #666;"></p>
+			<template v-for="(extraFile,index) in detailModel.ApplyEncName" v-show="detailModel.ApplyEncName.length==0">
+				<p class="encName" v-show="extraFile">附件:
+					<a class="" style="font-size: 13px;color: #3c9bfe;" v-on:click="checkEnc(detailModel.ApplyEncAddr[index])">附件{{index+1}}</a>
+				</p>
+			</template>
+			<template v-if="detailModel.ApproveStatus == 2">
+				<p class="" style="height: 10px;background-color: #f2f2f2;"></p>
+				<a style="color: black;size: 15px;margin-left: 15px;">批复</a>
+				<button v-on:click.stop="replyContent(2)" type="button" style="float: right;margin-right: 15px;background: #00CFBD;border-color: #00CFBD;color: white;margin-top: 0px;margin-bottom: 10px;">退回工作流</button>
+				<div style="padding-top: 5px;height: 180px;">
+					<textarea v-model="content" style="border: 1px solid gainsboro;margin-left: 10px;width: 95%;"
+					 placeholder="请输入要批复的内容" rows="4"></textarea>
+					<button v-on:click.stop="replyContent(1)" type="button" style="float: right;margin-right: 15px;background: #00CFBD;border-color: #00CFBD;color: white;margin-top: -10px;margin-bottom: 10px;">确定</button>
+				</div>
+			</template>
+			<p class="" style="height: 10px;background-color: #f2f2f2;"></p>
+			<p class="titleCSS" style="font-size: 14px;color: #333;margin-top: 10px;margin-left: 10px;">回复列表</p>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell" v-for="(replyModel,index) in detailModel.ApproveList">
+					<div>
+						<img class="mui-media-object mui-pull-left peopleImg" :src=replyModel.ApproveManPic>
+						<a class="" style="font-size: 14px;color: #666;">
+							{{replyModel.ApproveManName}}
+							<a style="font-size: 14px;color: #666;float: right;">{{replyModel.ApproveTime}}</a>
+							<div class="chat_content_left">
+								<p style="color: #666;font-size: 13px; white-space:pre-wrap;">{{replyModel.ApproveContent}}</p>
+							</div>
+						</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!--  -->
+		<script src="../../js/utils/moment.min.js"></script>
+		<script src="../../js/utils/SMS-Utils.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<!---->
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src='../../js/utils/md5.js'></script>
+		
+		<script src="../../js/utils/cryption.js"></script>
+		<script src="../../js/cloud/CloudFileUtil.js"></script>
+		<script type="text/javascript">
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var curPage = {
+				flag: 0
+			};
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				noticeDetailData.pageFlag = curPage.flag;
+				//获取详情
+				getNoticeByReceiveId_sendId_Detail(curPage.flag);
+				// 如果是接收的，需要发送短信
+				if(curPage.flag == 0&&curPage.SmsSync == 1){
+					SMSUtils.INDEX_CODE = curPage.access.split('#')[1];
+					SMSUtils.MSG_TYPE = window.storageKeyName.OA_MSG_SMS.WORKFLOW.MSG_TYPE;
+					SMSUtils.USER_TYPE = window.storageKeyName.OA_MSG_SMS.WORKFLOW.USER_TYPE;
+					SMSUtils.SMS_TYPE = window.storageKeyName.OA_MSG_SMS.SMS_TYPE;
+					SMSUtils.PERSONAL = store.get(window.storageKeyName.PERSONALINFO);
+					// 获取短信权限
+					SMSUtils.getConfig((msg) => {
+						if (msg.SMS) {
+							noticeDetailData.smsConfig = msg.CONFIG;
+							noticeDetailData.smsFlag = true;
+						}
+					});
+				}
+			});
+
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					moreFlag: 0, //右上角是否显示，0不显示，1撤销，2关闭
+					moreName: '' //右上角显示名称
+				},
+				methods: {
+					revoke: function() {
+						console.log('revoke');
+						var btnArray = ['取消', '确定'];
+						mui.confirm('确定撤销吗？', '提醒', btnArray, function(e) {
+							if (e.index == 1) {
+								events.showWaiting();
+								var comData = {
+									applyId: noticeDetailData.detailModel.ApplyId,
+									index_code: curPage.access.split('#')[1],
+									op_code: 'index'
+								}
+								postDataEncry(window.storageKeyName.INTERFACE_OA + 'approve/doSetAffairApplyUndo', {}, comData, 2,
+									function(data) {
+										events.closeWaiting();
+										if (data.code == 0 && data.data.Result == 1) {
+											mui.toast("成功");
+											tempVue.moreFlag = 0;
+										}
+									});
+							}
+						});
+					}
+				}
+			});
+			var noticeDetailData = new Vue({
+				el: "#noticeDetailData",
+				data: {
+					smsConfig:{},//短信配置
+					smsFlag:false,//批复时是否发送短信
+					tag: '', //我的标签
+					pageFlag: curPage.flag, //0接收 1我发送的
+					flag: 0,
+					detailModel: '',
+					content: ''
+				},
+				methods: {
+					checkEnc: function(tempUrl) {
+						var getDownToken = {
+							appId: window.storageKeyName.QN_APPID, //int 必填 项目id
+							appKey: window.storageKeyName.QN_APPKEY,
+							urls: [tempUrl] //array 必填 需要获取下载token文件的路径
+						}
+						var getDownTokenUrl = window.storageKeyName.QNGETDOWNTOKENFILE;
+						CloudFileUtil.getQNDownToken(getDownTokenUrl, getDownToken, function(data) {
+							console.log('七牛下载token ' + JSON.stringify(data));
+							var urlStr = encodeURI(data.Data[0].Value)
+							plus.runtime.openURL(urlStr);
+						}, function(xhr, type, errorThrown) {
+							mui.toast('获取文件失败 ' + type);
+						});
+					},
+					saveTag: function(showT) {
+						console.log('saveTag');
+						if (noticeDetailData.tag != noticeDetailData.detailModel.Tag) {
+							events.showWaiting();
+							//19.修改发送的申请标签
+							var comData = {
+								applyId: noticeDetailData.detailModel.ApplyId, //申请ID
+								tag: noticeDetailData.tag, //标签
+								index_code: curPage.access.split('#')[1],
+								op_code: 'index'
+							}
+							var url = '';
+							if (curPage.flag == 1) { //我发送的
+								url = window.storageKeyName.INTERFACE_OA + 'approve/doSetSendApplyTag';
+							} else { //接收的
+								comData.receiveManId = personal.user_code; //阅读人ID
+								url = window.storageKeyName.INTERFACE_OA + 'approve/doSetReceiveApplyTag';
+							}
+							//
+							postDataEncry(url, {}, comData, 2,
+								function(data) {
+									events.closeWaiting();
+									console.log('修改标签:' + JSON.stringify(data));
+									if (data.code == 0 && data.data.Result == 1) {
+										noticeDetailData.detailModel.Tag = noticeDetailData.tag;
+										mui.toast("保存成功");
+									}else{
+										mui.toast(data.msg);
+									}
+								});
+						}else{
+							if(showT!=1){
+								mui.toast('请勿重复保存标签');
+							}
+							
+						}
+					},
+					replyContent: function(flag) {
+						noticeDetailData.saveTag(1);
+						if (noticeDetailData.content.trim().length == 0) {
+							mui.toast("请输入批复内容", "cancel");
+							return;
+						}
+						if (noticeDetailData.content.length > 50) {
+							mui.toast("批复内容不能超过50字", "cancel");
+							return;
+						}
+						// var tempContent = '';
+						// if (noticeDetailData.content.length>0) {
+						// 	tempContent = noticeDetailData.content;
+						// } else if (flag == 1) {
+						// 	tempContent = '同意';
+						// } else if (flag == 2) {
+						// 	tempContent = '退回';
+						// }
+						events.showWaiting();
+						//18.审批事务及文件申请
+						var tempData1 = {
+							approveId: curPage.ApproveId, //审批ID
+							approveContent: noticeDetailData.content, //回复内容
+							approveResult: flag, //审批结果,1 同意2 退回
+							index_code: curPage.access.split('#')[1],
+							op_code: 'index'
+						}
+						//18.审批事务及文件申请
+						postDataEncry(window.storageKeyName.INTERFACE_OA + 'approve/doSetAffairApprove', {}, tempData1, 2, function(data) {
+							events.closeWaiting();
+							if (data.code == 0) {
+								if(flag==1&&noticeDetailData.smsFlag){
+									// 110.获取下一级审批人
+									var tempData2 = {
+										approveId: curPage.ApproveId, //审批ID
+										index_code: curPage.access.split('#')[1],
+									}
+									postDataEncry(window.storageKeyName.INTERFACE_OA + 'approve/getNextAffairApproveMan', {}, tempData2, 2, function(manData) {
+										events.closeWaiting();
+										if (manData.code == 0) {
+											if(manData.data.list&&manData.data.list.length>0){
+												// let selectData=message.selectPeople;
+												let touser=[];
+												// for (var i = 0; i < selectData.length; i++) {
+													let obj={
+														gen_type:SMSUtils.USER_TYPE,
+														dpt_code:manData.data.list[0].ManDeptId,
+														dpt_name:manData.data.list[0].ManDept,
+														grd_code:'',
+														grd_name:'',
+														cls_code:'',
+														cls_name:'',
+														stu_code:'',
+														stu_name:'',
+														gen_code:manData.data.list[0].ManId,
+														gen_name:manData.data.list[0].ManName,
+													}
+													touser.push(obj);
+												// }
+												var tempContent = '';
+												if(noticeDetailData.smsConfig.content_type == 't'){
+													tempContent = noticeDetailData.detailModel.ApplyTitle;
+												}else if(noticeDetailData.smsConfig.content_type == 'c'){
+													tempContent = noticeDetailData.detailModel.ApplyContent;
+												}else if(noticeDetailData.smsConfig.content_type == 'tc'){
+													tempContent = '【'+noticeDetailData.detailModel.ApplyTitle+'】'+noticeDetailData.detailModel.ApplyContent;
+												}
+												tempContent = tempContent.replace(/\n/g,'');
+												tempContent = tempContent.replace(' ','');
+												SMSUtils.sendSMS((msg)=>{
+													noticeDetailData.content = '';
+													mui.toast('成功');
+													getNoticeByReceiveId_sendId_Detail(curPage.flag);
+												},0,moment().format('YYYY-MM-DD HH:mm:ss'),tempContent,noticeDetailData.smsConfig.serviced,0,touser,noticeDetailData.detailModel.ApplyManId,noticeDetailData.detailModel.ApplyManName);
+											}
+										} else {
+											mui.toast(data.msg);
+										}
+									});
+								}else{
+									noticeDetailData.content = '';
+									mui.toast('成功');
+									getNoticeByReceiveId_sendId_Detail(curPage.flag);
+								}
+							} else {
+								mui.toast(data.msg);
+							}
+						});
+					}
+				}
+			});
+
+			//获取详情
+			var getNoticeByReceiveId_sendId_Detail = function(flag) {
+				events.showWaiting();
+				var comData0 = {};
+				var url;
+				if (flag == 0) { //24.通过审批ID获取事务及文件申请及审批
+					comData0 = {
+						approveId: curPage.ApproveId, //审批ID
+						index_code: curPage.access.split('#')[1],
+						op_code: 'index'
+					}
+					url = window.storageKeyName.INTERFACE_OA + 'approve/getAffairApproveById';
+				} else { //23.通过申请ID获取事务及文件申请
+					comData0 = {
+						applyId: curPage.ApplyId, //申请ID
+						index_code: curPage.access.split('#')[1],
+						op_code: 'index'
+					}
+					url = window.storageKeyName.INTERFACE_OA + 'approve/getAffairApplyById';
+				}
+				// 获取收到的协同事务列表（接收人为单人）
+				postDataEncry(url, {}, comData0, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						if (data.data.ApplyEncName) {
+							data.data.ApplyEncName = data.data.ApplyEncName.split("|");
+							data.data.ApplyEncAddr = data.data.ApplyEncAddr.split("|");
+						}
+						noticeDetailData.flag = 1;
+						getUserInfo(data.data.ApproveList, curPage.access.split('#')[1], 'ApproveManId','ApproveManPic', function(callData) {
+							//如果是接收的，判断是否右上角有功能
+							if (flag == 1) {
+								console.log('11111');
+								// 进程处于“新建”且 状态处于“发出”时 显示撤销按钮
+								if (data.data.Progress == 1 && data.data.Status == 1) {
+									console.log('222222');
+									tempVue.moreFlag = 1;
+									tempVue.moreName = '撤销';
+								}
+							}
+							noticeDetailData.tag = data.data.Tag;
+							noticeDetailData.detailModel = data.data;
+							console.log('noticeDetailData.detailModel:' + JSON.stringify(noticeDetailData.detailModel));
+						});
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

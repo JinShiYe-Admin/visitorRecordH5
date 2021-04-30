@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			[v-cloak] {
+				display: none !important;
+			}
+
+			.circular-square {
+				border-radius: 10%;
+				width: 30px;
+				height: 30px;
+			}
+
+			.mui-badge {
+				font-size: 10px;
+				line-height: 1;
+				display: inline-block;
+				padding: 3px 5px;
+				color: white;
+				border-radius: 100px;
+				background-color: red;
+				border-width: 0px;
+				margin-top: -27px;
+				margin-right: -5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<a v-cloak v-if="showBack==2" @click="clickLeftImg" class="mui-icon mui-pull-left">
+				<img v-cloak :src=headImg style="width: 26px;height: 26px;border-radius: 50%;" />
+			</a>
+			<a v-cloak v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{headTitle}}</h1>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;" id="contentData">
+			<ul class="mui-table-view mui-grid-view mui-grid-9" style="background-color: white;padding-left: 7px;margin-top: 0px;">
+				<li v-for="model in showArray" class="mui-table-view-cell mui-media mui-col-sm-3 mui-col-xs-3" style="border: 0px;padding:10px 5px">
+					<a href="#" @click="clickFunction(model)">
+						<img class="circular-square" :src=model.icon />
+						<!-- <span class="mui-badge mui-btn-red">{{model.NoReadCnt}}</span> -->
+						<span v-if="model.NoReadCnt>0" class="mui-badge mui-btn-red">{{model.NoReadCnt}}</span>
+						<span v-else="" class="mui-badge mui-btn-red" style="display: none;"></span>
+						<div class="mui-media-body divNameCss">{{model.name}}</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+
+		<script type="text/javascript">
+			var getUnReadCntFun;
+			function getNoReadCnt(){
+				console.log("b啊啊啊啊啊啊：收到一条推送")
+				try{
+					getUnReadCntFun();
+				}catch(e){
+					console.log(e)
+				}						
+			}
+			mui.plusReady(function() {
+				mui.init({
+					statusBarBackground: '#00CFBD',
+					swipeBack: false,
+				});
+
+				//获取个人信息
+				var personal = store.get(window.storageKeyName.PERSONALINFO);
+				console.log('personal:' + JSON.stringify(personal));
+				// 获取未读数
+				getUnReadCntFun = function() {
+					for (var a = 0; a < contentData.showArray.length; a++) {
+						var tempM0 = contentData.showArray[a];
+						if (tempM0.redspot_url != null && tempM0.redspot_url.length > 0) {
+							// 获取未读数
+							getUnReadCut(tempM0.access, tempM0.redspot_url, function(data) {
+								console.log('getUnReadCut:' + JSON.stringify(data));
+								if (data.code == 0) {
+									var tempNoRead = 0;
+									for (var b = 0; b < contentData.showArray.length; b++) {
+										var tempM1 = contentData.showArray[b];
+										if (tempM1.access == data.data.list[0].access) {
+											tempM1.NoReadCnt = data.data.list[0].dotnum;
+										}
+										tempNoRead = tempNoRead + tempM1.NoReadCnt;
+									}
+									console.log('tempNoRead:' + tempNoRead);
+									
+									var badgeNum = store.get(window.storageKeyName.BADGENUMBER) * 1 -contentData.noReadCut + tempNoRead;
+									console.log('badgeNum:' + badgeNum);
+									contentData.noReadCut = badgeNum;
+									mui.fire(plus.webview.currentWebview().opener(), 'showNoReadCnt', {
+										showNoReadCnt: badgeNum,
+										url: contentData.pageUrl
+									});
+									store.set(window.storageKeyName.BADGENUMBER, badgeNum);
+									//设置app角标,flag=0直接设置角标数字，flag=1角标减1,falg=2角标加1
+									utils.setBadgeNumber(0, badgeNum);
+								}
+							});
+						}
+					}
+				}
+
+				window.addEventListener('home_setHeadImg', function(data) {
+					tempHead.headImg = data.detail.img_url;
+				});
+				//获取未读数
+				window.addEventListener('getNoticeNoReadCnt', function(data) {
+					//获取未读数
+					getUnReadCntFun();
+				});
+
+				var tempHead = new Vue({
+					el: "#tempHead",
+					data: {
+						headTitle: '',
+						headImg: setImg(personal.img_url),
+						showBack: 0,
+					},
+					methods: {
+						clickLeftImg: function() {
+							appPay.openMenu();
+						}
+					}
+				});
+				console.log('1111111');
+				//vue数据
+				var contentData = new Vue({
+					el: "#contentData",
+					data: {
+						pageUrl: '',
+						noReadCut:0,
+						showArray: [],
+					},
+					methods: {
+						clickFunction: function(model) {
+							console.log('model:' + JSON.stringify(model));
+							utils.mOpenWithData(model.href, model);
+						}
+					},
+				});
+				// mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				tempHead.headTitle = curPage.name;
+				if (curPage && JSON.stringify(curPage) == '{}') { //前四个页面时，不显示返回按钮
+					var ws = plus.webview.currentWebview();
+					if (ws.preload) {
+						tempHead.headTitle = ws.preload.name;
+						contentData.showArray = ws.preload.childList;
+						contentData.pageUrl = ws.preload.url;
+						//获取未读数
+						getUnReadCntFun();
+					}
+					if (ws.preload.index == 0) {
+						tempHead.showBack = 2;
+					}
+				} else {
+					tempHead.showBack = 1; //更多页面打开时，显示返回按钮
+				}
+
+				//安卓的连续点击两次退出程序
+				var backButtonPress = 0;
+				//重写返回键
+				mui.back = function(event) {
+					backButtonPress++;
+					if (backButtonPress > 1) {
+						plus.runtime.quit();
+					} else {
+						plus.nativeUI.toast('再按一次退出应用');
+					}
+					setTimeout(function() {
+						backButtonPress = 0;
+					}, 1000);
+					return false;
+				};
+				main = plus.webview.currentWebview();
+				//doSetTimeout的目的是等待窗体动画结束后，再执行create webview操作，避免资源竞争，导致窗口动画不流畅；
+				setTimeout(function() {
+					//侧滑菜单默认隐藏，这样可以节省内存；
+					menu = mui.preload({
+						id: '../../html/mine/mine.html',
+						url: '../../html/mine/mine.html',
+						styles: {
+							left: 0,
+							width: '70%',
+							zindex: 9997
+						}
+					});
+				}, 1);
+			});
+		</script>
+	</body>
+
+</html>

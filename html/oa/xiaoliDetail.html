@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style>
+			div {
+				word-break: break-all;
+			}
+			
+			div p {
+				word-break;
+				: break-all;
+			}
+			.contentCSS {
+				margin-left: 15px;
+				margin-right: 15px;
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.titleCSS {
+				margin-left: 15px;
+				margin-right: 15px;
+				font-size: 18px;
+				color: #000;
+			}
+			
+			.name-timeCSS {
+				font-size: 12px;
+				color: #999;
+			}
+			
+			.encName {
+				margin-left: 15px;
+				margin-right: 15px;
+				font-size: 14px;
+				color: #333;
+			}
+			
+			.encTitle {
+				font-size: 12px;
+				color: #999;
+			}
+			
+			.encSize {
+				font-size: 12px;
+				color: #3c9bfe;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" style="background-color:#00CFBD;" id="tempHead">
+			<a class="mui-icon mui-icon-left-nav mui-pull-left mui-action-back" style="color: white;"></a>
+			<h1 class="mui-title" style="color: white;">校历详情</h1>
+		</header>
+		<div class="mui-content" id="contentData" style="background: #fff;">
+			<template>
+				<p align="center" class="titleCSS" style="font-size: 18px;color: #000;margin-top: 10px;">{{pageModel.Title}}</p>
+				<p align="center" class="name-timeCSS" style="font-size: 13px;color: #999;">{{pageModel.SendManName}} |
+					{{pageModel.SendTime}}</p>
+				<p class="contentCSS" style="font-size: 14px;color: #666;">{{pageModel.AnnouncementContent}}</p>
+				<template v-for="(extraFile,index) in pageModel.CalendarAddr" v-show="pageModel.CalendarAddr.length==0">
+					<p class="encName" v-show="extraFile">附件:
+						<a class="" style="font-size: 13px;color: #3c9bfe;" v-on:click="checkEnc(pageModel.CalendarAddr[index])">校历附件</a>
+					</p>
+				</template>
+			</template>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			mui.init();
+			var curPage = {};
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					
+				}
+			});
+			
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					pageModel:{}
+				},
+				methods:{
+					checkEnc: function(tempUrl) {
+						console.log('tempUrl:' + tempUrl);
+						var urlStr = encodeURI(tempUrl)
+						plus.runtime.openURL(urlStr);
+					}
+				}
+			});
+
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				events.showWaiting();
+				var tempData = {
+					schoolCalendarId: curPage.AnnouncementId, //公告ID
+					index_code:curPage.access.split('#')[1],
+					op_code: 'index'
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_OA + 'announcement/getCalendarById', {}, tempData, 2,function(data) {
+					events.closeWaiting();
+					if(data.code == 0) {
+						if (data.data.CalendarAddr) {
+							data.data.CalendarAddr = data.data.CalendarAddr.split("|");
+						}
+						contentData.pageModel = data.data;
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>

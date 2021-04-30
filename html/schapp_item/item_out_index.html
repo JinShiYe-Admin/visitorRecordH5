@@ -1,0 +1,643 @@
+<!doctype html>
+<html>
+	<!-- 考勤模块  课堂考勤记录 
+	列表页
+	-->
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<style>
+			[v-cloak] {
+				visibility: hidden;
+				display:none !important;
+			}
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+			
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			
+			.mui-pull-top-tips .mui-pull-loading {
+				margin: 0;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			}
+			.peopleImg {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+			}
+			.time {
+				font-size: 14px;
+				float: right;
+				color: gray;
+			}
+			
+			.biaoti {
+				color: #000000;
+				width: 80%;
+				font-size: 1.0625rem;
+				white-space:normal;
+			}
+			
+			.tempCss {
+				font-size: 14px;
+				color: gray;
+			}
+			
+			.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
+			    margin-top: 0;
+			}
+			.mui-table h4{
+			    line-height: 21px;
+			    font-weight: 500;
+			}
+					
+			.mui-table .oa-icon{
+			    position: absolute;
+			    right:0;
+			    bottom: 0;
+			}
+			.mui-table .oa-icon-star-filled{
+			    color:#f14e41;
+			}
+			
+			.mui-table-cell-1{
+				margin-top: 1.25rem;
+			}
+			
+			.line{
+				background-color: #00CFBD;
+				margin-bottom: 0.3125rem;
+				height: 0.125rem;
+			}
+			.selectDiv{
+				background-color: #eaeaea;
+			}
+			.selectBtn{
+				border: 0rem;
+				border-radius: 0rem;
+				background-color: #FFFFFF;
+				height: 3rem;
+			}
+			
+			.ant-avatar{
+				-webkit-box-sizing: border-box;
+				    box-sizing: border-box;
+				    margin: 0;
+				    padding: 0;
+				    color: rgba(0, 0, 0, 0.65);
+				    font-size: 14px;
+				    font-variant: tabular-nums;
+				    line-height: 1.5;
+				    list-style: none;
+				    -webkit-font-feature-settings: 'tnum';
+				    font-feature-settings: 'tnum';
+				    position: relative;
+				    display: inline-block;
+				    overflow: hidden;
+				    color: #fff;
+				    white-space: nowrap;
+				    text-align: center;
+				    vertical-align: middle;
+				    background: #ccc;
+				    width: 32px;
+				    height: 32px;
+				    line-height: 32px;
+				    border-radius: 50%;
+			}
+			
+			.ant-avatar-lg {
+			    width: 40px;
+			    height: 40px;
+			    line-height: 40px;
+			    border-radius: 50%;
+			}
+			
+			.mui-segmented-control {
+				border: 0px;
+				background: #F0F0F0;
+			}
+			
+			.mui-segmented-control .mui-control-item {
+				border: 0px;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.mui-segmented-control .mui-control-item.mui-active {
+				background-color: transparent;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.mui-segmented-control .mui-control-item span {
+				font-size: 14px;
+				padding: 0 0 0 5px;
+				color: #666;
+			}
+			
+			.mui-dtpicker-header button:last-child {
+			    background-color: #00CFBD;
+				border: #00CFBD;
+			}
+			
+			.hcd{
+				margin:0 0 0  3px;
+				background-color: red;
+				border-radius: 0.9375rem;
+				color: #FFFFFF;
+				padding: 0.3125rem;
+				font-size: 0.75rem;
+			}
+			
+			.green{
+				margin:0 0 0  3px;
+				background-color: #00CFBD;
+				border-radius: 0.9375rem;
+				color: #FFFFFF;
+				padding: 0.3125rem;
+				font-size: 0.75rem;
+			}
+			
+			.mui-dtpicker-header button:last-child {
+			    background-color: #00CFBD;
+				border: #00CFBD;
+			}
+			
+			
+			.mui-card .mui-control-content {
+				padding: 10px;
+			}
+			
+			.mui-control-content {
+				height: 0px;
+			}
+			
+			.line2 {
+				right: 0;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				content: '';
+				-webkit-transform: scaleY(.5);
+				transform: scaleY(.5);
+				background-color: #e4e4e4;
+			}
+			
+			.tab-line{
+				border-bottom: 2px solid #00CFBD !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{titleName}}</h1>
+			<a v-if="showAdd" @click="add()" class="mui-pull-right" style="font-size: 1.5625rem;margin-top: 0px;">+</a>
+		</header>
+		<div v-cloak id="datasource" class="mui-content mui-fullscreen" style="z-index:0">
+			<div class="tab-list" style="padding: 5px 0 0;z-index: 3;background-color: #FFFFFF;">
+				<div id="segmentedControl" class="mui-segmented-control" style="background-color: #FFFFFF;">
+					<a id="cgck" class="mui-control-item mui-active tab-line" href="#item1">手工出库</a>
+					<a id="lyck" class="mui-control-item" href="#item2">领用出库</a>
+				</div>
+			</div>
+			<div class="line2"></div>
+			<div v-cloak id="item1" class="mui-scroll-wrapper mui-control-content mui-active" style="margin-top: 1px;">
+				<div v-cloak class="mui-scroll">
+					<template v-cloak v-if="sgckList.length>0">
+						<ul v-cloak class="mui-table-view">
+							<li v-cloak v-for="model in sgckList" class="mui-table-view-cell" @tap="clickLi(model)">
+								<a class="mui-navigate-right"> <!-- mui-navigate-right -->
+									<div class="mui-table">
+									    <div class="mui-table-cell mui-col-xs-10">
+									        <div class="mui-ellipsis" style="height: 1.8125rem;">单号:{{model.outCode}}<span v-if="model.isRed==1" class="hcd">红冲单</span></div>
+											<div class="mui-row" style="text-align: left;">
+														<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-6">
+															<p class="mui-h5 mui-ellipsis">名称:{{model.itemName}}</p>
+														</div>
+														<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-6">
+															<p class="mui-h5 mui-ellipsis">型号:{{model.itemModel}}</p>
+														</div>
+														<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-6">
+															<p class="mui-h5 mui-ellipsis">领用人:{{model.receiveManName}}</p>
+														</div>
+														<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-6">
+															<p class="mui-h5 mui-ellipsis">数量:{{model.outNum}}</p>
+														</div>
+											</div>
+									    </div>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</template> 
+					<template v-else>
+						<div></div>
+					</template>
+				</div>
+			</div>
+			<div v-cloak id="item2" class="mui-scroll-wrapper mui-control-content" style="margin-top: 1px;">
+				<div v-cloak class="mui-scroll">
+					 <template v-cloak v-if="lyckList.length>0">
+					 	<ul v-cloak class="mui-table-view">
+					 		<li v-cloak v-for="model in lyckList" class="mui-table-view-cell" @tap="clickLi(model)">
+					 			<a class="mui-navigate-right"> <!-- mui-navigate-right -->
+					 				<div class="mui-table">
+					 				    <div class="mui-table-cell mui-col-xs-10">
+					 				        <div class="mui-ellipsis" style="height: 1.8125rem;">单号:{{model.outCode?model.outCode:'暂无'}}<span v-if="model.isOut==1" class="green">已出库</span><span v-if="model.isOut==2" class="hcd">未出库</span></div>
+					 						<div class="mui-row" style="text-align: left;">
+												<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-6">
+													<p class="mui-h5 mui-ellipsis">名称:{{model.itemName}}</p>
+												</div>
+												<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-6">
+													<p class="mui-h5 mui-ellipsis">型号:{{model.itemModel}}</p>
+												</div>
+												<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-6">
+													<p class="mui-h5 mui-ellipsis">领用人:{{model.receiveManName}}</p>
+												</div>
+												<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-6">
+													<p class="mui-h5 mui-ellipsis">数量:{{model.applyNum}}</p>
+												</div>
+					 						</div>
+					 				    </div>
+					 				</div>
+					 			</a>
+					 		</li>
+					 	</ul>
+					 </template> 
+					 <template v-else>
+					 	<div></div>
+					 </template>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<!-- <script src="../../js/utils/vconsole.min.js"></script> -->
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/mui.picker.min.js"></script>
+		<script src="../../js/utils/mui.poppicker.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src="../../js/libs/crypto-js/require.js"></script>
+		<script src="../../js/libs/encryption/signHmacSHA1.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/libs/encryption/sortSign.js"></script>
+		<script type="text/javascript">
+			var $M = mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var curPage = {};
+			var pageIndex = 1; //请求数据页面
+			var totalPageCount; //总页码
+			
+			var lyck_pageIndex = 1; //领用出库请求数据页面
+			var lyck_totalPageCount; //领用出库总页码
+			
+			var flagRef = 0; //是刷新0，还是加载更多1
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					titleName: '',
+					showAdd:false
+				},
+				methods:{
+					add:function(){
+							let model={};
+							let index_code = curPage.access.split('#')[1]
+							model.index_code = index_code;
+							if(datasource.ckType==1){
+								model.title_name = '新建手工出库';
+								utils.mOpenWithData("../../html/schapp_item/item_out_add.html", model);
+							// }else if(datasource.ckType==2){
+							// 	model.title_name = '新建领用出库';
+								// utils.mOpenWithData("../../html/schapp_item/item_in_add.html", model);
+							}
+					}
+				}
+			});
+			var datasource = new Vue({
+				el: "#datasource",
+				data: {
+					sgckList: [], //手工出库数组
+					lyckList:[],//领用出库数组
+					ckType:1,//入库类型 1手工出库 2领用出库
+					canGetData:true,//是否允许获取数据，第一次点击其他tab栏允许，再次点击不允许
+				},
+				methods: {
+					clickLi: function(model) {
+						
+						console.log(JSON.stringify(model))
+						let index_code = curPage.access.split('#')[1]
+						model.index_code = index_code;
+						if(datasource.ckType==1){
+							utils.mOpenWithData("../../html/schapp_item/item_out_detail.html", model);
+						}else if(datasource.ckType==2){
+							utils.mOpenWithData("../../html/schapp_item/item_out_lyck_detail.html", model);
+						}
+					},
+				}
+			});
+
+			mui.plusReady(function() {
+				setTimeout(function(){
+					//获取手机高度
+					var height = document.documentElement.clientHeight || document.body.clientHeight;
+					var tab =  $(".tab-list").height();
+					//获取标题栏高度
+					var nav = $(".mui-bar-nav").height();
+					//获取导航栏高度
+					var content = $(".mui-content").height();
+					$("#item1").height(height-nav-tab-5);
+					$("#item2").height(height-nav-tab-5);
+				},500)
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				tempVue.titleName = curPage.name;
+
+				//阻尼系数、初始化刷新加载更多
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: false, //是否显示滚动条
+					deceleration: deceleration
+				});
+				
+				window.addEventListener('refreshList', function(data) {
+					events.showWaiting();
+					pageIndex = 1;
+					flagRef = 0;
+					datasource.sgckList = [];
+					getPageDataArray();
+					// mui('#item1').scroll().scrollTo(0,0,500);
+				});
+				
+				window.addEventListener('refreshListLyck', function(data) {
+					events.showWaiting();
+					flagRef = 0;
+					lyck_pageIndex = 1;
+					datasource.lyckList = [];
+					getLyckPageDataArray();
+					// mui('#item2').scroll().scrollTo(0,0,500);
+				});
+				
+				mui(".mui-segmented-control").on('tap', '.mui-control-item', function() {
+					var id = this.getAttribute("id");
+					$('#cgck').removeClass("tab-line")
+					$('#lyck').removeClass("tab-line")
+					$('#'+id).addClass("tab-line")
+					if(id=='cgck'){
+						datasource.ckType=1
+						tempVue.showAdd = true
+					}else if(id=='lyck'){
+						datasource.ckType=2
+						tempVue.showAdd = false
+						if(datasource.canGetData){
+							datasource.canGetData=false
+							events.showWaiting();
+							getLyckPageDataArray();
+						}
+					}
+				}) 
+
+				//上拉下拉注册
+				mui(".mui-scroll-wrapper .mui-scroll").pullToRefresh({
+					down: {
+						callback: function() {
+							//清除节点
+							// document.getElementById('list-container').innerHTML = "";
+							var self = this;
+							//console.log("下拉刷新");
+							flagRef = 0;
+							events.showWaiting();
+							if(datasource.ckType==1){
+								pageIndex = 1;
+								totalPageCount = 1;
+								datasource.sgckList = [];
+								getPageDataArray();	
+							}else if(datasource.ckType==2){
+								lyck_pageIndex = 1;
+								lyck_totalPageCount = 1;
+								datasource.lyckList = [];
+								getLyckPageDataArray();
+							}
+							setTimeout(function() {
+								//结束下拉刷新
+								self.endPullDownToRefresh();
+							}, 1000);
+						}
+					},
+					up: {
+						callback: function() {
+							var self = this;
+							//console.log("上拉加载更多");
+							flagRef = 1;
+							if (pageIndex <= totalPageCount) {
+								events.showWaiting();
+								if(datasource.ckType==1){
+									getPageDataArray();	
+								}else if(datasource.ckType==2){
+									getLyckPageDataArray();
+								}
+								setTimeout(function() {
+									//结束下拉刷新
+									self.endPullUpToRefresh();
+									if (mui(".mui-table-view-cell").length < 10) {
+										mui(".mui-pull-loading")[0].innerHTML = "";
+									}
+								}, 1000);
+							} else {
+								//结束下拉刷新
+								self.endPullUpToRefresh();
+								mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+							}
+						}
+					}
+				});
+
+				events.showWaiting();
+				// 获取权限
+				getPermissionByPosition('add', curPage.access, function(data) {
+					console.log('getPermissionByPosition:' + JSON.stringify(data));
+					if (data.code == 0 && data.data.result == 1) {
+						tempVue.showAdd = true;
+					}
+				});
+				// 获取数据
+				getPageDataArray();
+			});
+
+
+			function getPageDataArray() {
+					comData = {
+						outCode:'',
+						receiveManName:'',
+						outManCode:personal.user_code,
+						outManName:'',
+						beginTime:'19700101',
+						endTime:'20501231',
+						page_number: pageIndex, //当前页数
+						page_size: 10, //每页记录数
+						op_code:'index',
+						index_code: curPage.access.split('#')[1],
+					} 
+					postDataEncry(window.storageKeyName.INTERFACE_ITEM + 'handOut/getHandOuts', {}, comData, 2, function(data) {
+						events.closeWaiting();
+						console.log(JSON.stringify(data))
+						if (data.code == 0) {
+							totalPageCount = data.data.total_page;
+							pageIndex++;
+							if (flagRef == 0) { //刷新
+								datasource.sgckList = data.data.list
+								if (data.data.list.length == 0) {
+									mui.toast('暂无数据');
+								}
+							} else { //加载更多
+								//合并数组
+								datasource.sgckList = datasource.sgckList.concat(data.data.list);
+								if (data.data.list.length == 0) {
+									mui.toast('已加载全部');
+								}
+							}
+							if (mui(".mui-table-view-cell").length < 10 && mui(".mui-pull-loading")[0]) {
+								mui(".mui-pull-loading")[0].innerHTML = "";
+							}
+						} else {
+							mui.toast(data.msg);
+						}
+					});
+			};
+			
+			function getLyckPageDataArray() {
+					comData = {
+						outCode:'',
+						receiveApplyCode:'',
+						receiveManName:'',
+						outManCode:personal.user_code,
+						outManName:'',
+						isOut:0,
+						beginTime:'19700101',
+						endTime:'20501231',
+						page_number: lyck_pageIndex, //当前页数
+						page_size: 10, //每页记录数
+						op_code:'index',
+						index_code: curPage.access.split('#')[1],
+					} 
+					postDataEncry(window.storageKeyName.INTERFACE_ITEM + 'receiveOut/getReceiveOuts', {}, comData, 2, function(data) {
+						events.closeWaiting();
+						console.log(JSON.stringify(data))
+						if (data.code == 0) {
+							totalPageCount = data.data.total_page;
+							lyck_pageIndex++;
+							if (flagRef == 0) { //刷新
+								datasource.lyckList = data.data.list
+								if (data.data.list.length == 0) {
+									mui.toast('暂无数据');
+								}
+							} else { //加载更多
+								//合并数组
+								datasource.lyckList = datasource.lyckList.concat(data.data.list);
+								if (data.data.list.length == 0) {
+									mui.toast('已加载全部');
+								}
+							}
+							if (mui(".mui-table-view-cell").length < 10 && mui(".mui-pull-loading")[0]) {
+								mui(".mui-pull-loading")[0].innerHTML = "";
+							}
+						} else {
+							mui.toast(data.msg);
+						}
+					});
+			};
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,356 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/kouYuCePing/common.css" />
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav orals-header">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title"></h1>
+		</header>
+		
+		<div id="result" class="mui-content" v-cloak>
+		    <ul class="result-list mui-table-view" v-for="(item,index) in model" :key="index" v-if="item.list.length">
+		    	<li class="mui-table-view-cell" v-for="(v, i) in item.list" 
+		    		:class="{'word-cell': v.category=='read_word'}"
+		    		@tap.stop="toggleOpen(index,i)">
+		    		<div :class="{'word-box': v.category=='read_word', 'sentence-box': v.category=='read_sentence'}">
+		    			<h4 v-if="v.category=='read_word'">{{v.words}}
+		    				<span class="symbol" v-if="v.symbol">[{{v.symbol}}]</span>
+		    				<span class="score" v-if="v.total_score!=null">{{setScore(v.total_score)}}</span>
+		    			</h4>
+		    			<h4 v-else>{{v.words}}
+		    				<span class="score" v-if="v.total_score!=null">{{setScore(v.total_score)}}</span>
+		    			</h4>
+		    			<div class="btns" v-if="openLi.index==index&&openLi.i==i">
+		    				<a class="btn-voice" @touchstart.stop="playAudio(v.audio_url, $event)">
+								<svg class="icon" aria-hidden="true">
+								  <use xlink:href="#icon-icon-voice"></use>
+								</svg>
+								<!--<svg class="icon active" aria-hidden="true">
+								  <use xlink:href="#icon-icon-voice-active"></use>
+								</svg>-->
+								<span class="icon active img-icon"></span>
+								<!--<img class="icon active" src="../../css/orals/icon-voice.gif"/>-->
+							</a>
+							<a class="btn-record" @touchstart.stop="record(v, $event)" @touchmove.stop="touchMove($event)" @touchend.stop="stopRecord($event)">
+								<svg class="icon" aria-hidden="true">
+								  <use xlink:href="#icon-icon-record"></use>
+								</svg>
+								<div class="btn-record-bg">
+									<div class="btn-record-bg-active"></div>
+								</div>
+							</a>
+							<a class="btn-play" @touchstart.stop="playAudio(v.record_url, $event)">
+								<svg class="icon" aria-hidden="true">
+								  <use xlink:href="#icon-icon-play"></use>
+								</svg>
+								<svg class="icon active" aria-hidden="true">
+								  <use xlink:href="#icon-icon-pause"></use>
+								</svg>
+							</a>
+		    			</div>
+		    		</div>
+		    		<div class="result-bar" v-if="v.category=='read_sentence'&&v.total_score!=null">
+		    			<div class="score-item">
+		    				准确度：{{v.accuracy_score}}
+		    			</div>
+		    			<div class="score-item">
+		    				完整度：{{v.integrity_score}}
+		    			</div>
+		    			<div class="score-item">
+		    				流利度：{{v.fluency_score}}
+		    			</div>
+		    		</div>
+		    	</li>
+		    </ul>
+		   	<div class="list-end" v-show="model.length">没有更多了~</div>
+		</div>
+		
+		<audio id="audio" class="mui-hidden"></audio>
+		
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!---->
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		
+		<script src="../../js/utils/cryption.js"></script>
+		<script src="../../js/cloud/CloudFileUtil.js"></script>
+		<script src='../../js/kouYuCePing/common.js'></script>
+		<script src='../../js/kouYuCePing/icons.js'></script>
+		<script type="text/javascript">
+			var userInfo = store.get(window.storageKeyName.PERSONALINFO) || {};
+			var index_code = store.get('kycp_index_code');
+			
+			mui.init({
+				beforeback: function() {
+					resultVue.audioStop();
+					if(self) {
+						if(detail_progress&&self.opener().id=="orals_record"){
+							mui.fire(self.opener(), 'refresh');
+						}
+						self.close();
+						return true;
+					}
+				}
+			});
+			
+			var detail_progress = false;
+			var self;
+			var r=null, files=[], gentry, recorderTimer;
+			
+			mui.plusReady(function() {
+				plus.nativeUI.showWaiting();
+				self = plus.webview.currentWebview();
+				self.setStyle({'popGesture':'none'});
+				document.querySelector('.mui-bar .mui-title').innerHTML = self.title;
+				
+				//获取内容
+				postDataEncry(window.storageKeyName.INTERFACE_KYCP + '/orals', {}, {
+					category: self.cate, bookCatalogId: self.catalog_id
+				}, 2, function(res) {
+					if(res.state=="ok") {
+						resultVue.key = res.data.key;
+						resultVue.model.push({
+							list: res.data.list
+						});
+						plus.nativeUI.closeWaiting();
+					}else{
+						if(res.code!=404) mui.toast(res.msg);
+					}
+				});
+				
+				// 获取音频目录对象
+				plus.io.resolveLocalFileSystemURL('_doc/', function(entry){
+					entry.getDirectory('audio', {create:true}, function(dir){
+						gentry = dir;
+					}, function(e){
+						outSet('Get directory "audio" failed: '+e.message);
+					});
+				}, function(e){
+					outSet('Resolve "_doc/" failed: '+e.message);
+				} );
+				
+			});
+			
+			//audio元素
+			var audioEle = document.getElementById('audio');
+			var currentAudioUrl = '';
+			var audioPlayCounter = 0;
+			audioEle.onpause = function() {
+				resultVue.audioStop();
+			}
+			audioEle.onended = function() {
+				resultVue.audioStop();
+			}
+			audioEle.onerror = function() {
+				if(audioPlayCounter) { 
+					mui.toast("找不到音频", {type: 'div'});
+					resultVue.audioStop();
+				} else {
+					audioPlayCounter++;
+					const urls = currentAudioUrl.split('?');
+					CloudFileUtil.getQNDownToken(window.storageKeyName.QNGETDOWNTOKENFILE, {
+						appId: window.storageKeyName.QN_APPID, 
+						appKey: window.storageKeyName.QN_APPKEY,
+						urls: [urls[1] ? urls[0] : currentAudioUrl] 
+					}, function(data) {
+						var urlStr = encodeURI(data.Data[0].Value);
+						audioEle.src = urlStr;
+						audioEle.play();
+					}, function(xhr, type, errorThrown) {
+						mui.toast('获取音频失败 ' + type);
+					});
+				}
+			}
+			
+			//按住录音按钮时的滑动距离
+			var startX = startY = endX =endY =0;
+			function touchStart(touch) {
+				startX = touch.pageX;
+				startY = touch.pageY;
+			}
+			function touchEnd(touch, callback) {
+				endX = touch.pageX;
+        		endY = touch.pageY;
+        		if(Math.abs(endX-startX)>30 || Math.abs(endY-startY)>30) {
+					callback();
+				}
+			}
+			
+			var resultVue = new Vue({
+				el: "#result",
+				data: {
+					model: [],
+					isRecording: false,
+					valid_touch: false,
+					openLi: {index: -1, i: -1},
+					key: "",
+					isPlaying: false
+				},
+				methods: {
+					setScore: setWordsScore,
+					toggleOpen: function(index, i) {
+						this.openLi.index = index;
+						this.openLi.i = i;
+					},
+					//播放录音
+					playAudio: function(url, e) {
+						if(!plus) return false;
+						if(!url) {
+							mui.toast('没有录音', { duration:'short', type:'div' });
+							return false;
+						}
+						if(this.isPlaying && currentAudioUrl == url) {
+							this.audioStop();
+							return;
+						}
+						
+						
+						var ele = e.currentTarget;
+						ele.classList.add('active');
+						this.isPlaying = true;
+						
+						currentAudioUrl = url;
+						if(mui.os.android) {
+							audioPlayCounter = 0;
+							audioEle.src = url;
+							audioEle.play();
+						}else{
+							audioPlayer(url, function() {
+								resultVue.audioStop();
+							});
+						}
+					},
+					audioStop: function() {
+						if(this.isPlaying) {
+							if(mui.os.android) {
+								!audioEle.ended && audioEle.pause();
+							} else {
+								plusAudioPlayer.close();
+							}
+							this.isPlaying = false;
+							var audioBtns = document.querySelectorAll('.btns .btn-voice, .btns .btn-play');
+							for(var i=0;i<audioBtns.length;i++) {
+								if(audioBtns[i].classList.contains('active')) audioBtns[i].classList.remove('active');
+							}
+						}
+					},
+					//点击录音
+					record: function(cur, e) {
+						var _this = this;
+						var ele = e.currentTarget;
+						if(!this.isRecording) {
+							checkPermissionRECORD(function () {
+								ele.classList.add('active');
+								_this.isRecording = true;
+								_this.startRecord(cur);
+								recorderTimer = setTimeout(function(){
+									_this.isRecording && _this.stopRecord();
+								}, cur.time_len?(cur.time_len+4)*1000:5000);
+								touchStart(e.targetTouches[0]);
+							});
+						}
+					},
+					//开始录音
+					startRecord: function(cur) {
+						var _this = this;
+						gentry.removeRecursively(function(){
+							console.log('已清除缓存！');
+						}, function(e){
+							console.log('操作失败：'+e.message);
+						});
+						r = setRecorder(_this.valid_touch, function(p){
+							files.push({name:"uploadkey",path:p});
+							cur['key'] = _this.key;
+							_this.uploadRecord(cur);
+						});
+					},
+					touchMove: function(event) {
+						var _this = this;
+						_this.isRecording && touchEnd(event.targetTouches[0], function(){
+							_this.stopRecord();
+						});
+					},
+					//停止录音
+					stopRecord: function(e) {
+						if(this.isRecording) {
+							var ele = e?e.currentTarget:false;
+							if(ele){
+								ele.classList.remove('active');
+							}else{
+								document.querySelector("a.btn-record.active").classList.remove('active');
+							}
+							r && r.stop();
+							this.isRecording = false;
+							clearTimeout(recorderTimer);
+						}
+					},
+					//上传录音
+					uploadRecord: function(record) {
+						if(files.length<=0){
+							plus.nativeUI.alert("没有添加上传文件！");
+							return;
+						}
+						var _this = this;
+						uploadRecordFile(record, files, {index_code}, function(res){
+							var cur_li = record;
+							cur_li.key = res.data.key;
+							cur_li.total_score = res.data.total_score;
+							cur_li.record_url = res.data.record_url;
+							if(cur_li.category=="read_sentence") {
+								cur_li.accuracy_score = res.data.accuracy_score;
+								cur_li.fluency_score = res.data.fluency_score;
+								cur_li.integrity_score = res.data.integrity_score;
+							}
+							_this.submit(cur_li);
+						});
+					},
+					//提交
+					submit: function(cur) {
+						var _this = this;
+						// oralsAjax("/orals/save", {data: JSON.stringify([cur])}, function(res){
+						// 	detail_progress = true;
+						// });
+						postDataEncry(window.storageKeyName.INTERFACE_KYCP + '/orals/save', {}, {
+							data:[cur],
+							index_code,
+							user_code: userInfo.user_code
+						}, 2, function(res) {
+							detail_progress = true;
+						})
+					}
+					
+				}
+			});
+			
+//			resultVue.model = [{"list":[{"symbol":"'welkəm","relative_id":0,"orals_id":15094,"integrity_score":0,"create_time":"2018-11-28 15:07:04","words":"welcome","relative_type":0,"content":null,"time_len":3,"fluency_score":0,"record_url":"http://qn-edures.jiaobaowang.net/zypt/kouyupingce/273b9efa75494ee59ef2dde8d02d3dd2.mp3?e=1544579795&token=SDtQBeriWyCnNor8FnDFuRYWuvlsZ1xbPYQkLFT0:G8vTZwEhEzMqHl4vEQbJkFYixgI=","school_id":100008,"user_id":7,"translations":"adj. 受欢迎的","accuracy_score":0,"audio_url":"http://qn-edures.jiaobaowang.net/zypt/kouyupingce/f0bbf55f5e284f5f821ed05803781be8.mp3?e=1544579795&token=SDtQBeriWyCnNor8FnDFuRYWuvlsZ1xbPYQkLFT0:LlCMHpo10J4F_ryMOF5psaFcCbI=","total_score":0,"id":15094,"orals_create_time":"2018-10-10 15:30:30","category":"read_word","book_catalog_id":29269},{"symbol":"help","relative_id":0,"orals_id":15093,"integrity_score":0,"create_time":"2018-11-28 15:07:04","words":"help","relative_type":0,"content":null,"time_len":3,"fluency_score":0,"record_url":"http://qn-edures.jiaobaowang.net/zypt/kouyupingce/86b308c34ae24e5cb3c26f68134858c6.mp3?e=1544579795&token=SDtQBeriWyCnNor8FnDFuRYWuvlsZ1xbPYQkLFT0:kQhi0FYw0pmckzwfUhgSbZpyxLo=","school_id":100008,"user_id":7,"translations":"v.&n. 帮助；援助","accuracy_score":0,"audio_url":""}]}];
+			
+		</script>
+	</body>
+
+</html>

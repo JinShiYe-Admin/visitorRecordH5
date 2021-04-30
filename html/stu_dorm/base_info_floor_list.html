@@ -1,0 +1,411 @@
+<!doctype html>
+<html>
+	<!-- 
+		基础信息 楼层列表页
+	-->
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../css/mui.picker.min.css" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<style>
+			[v-cloak] {
+				visibility: hidden;
+				display:none !important;
+			}
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+			
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+			
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+			
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+			
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+			
+			.mui-pull-top-tips .mui-pull-loading {
+				margin: 0;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+			
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+			
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+			
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+			
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+			
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			}
+			.peopleImg {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+			}
+			.time {
+				font-size: 14px;
+				float: right;
+				color: gray;
+			}
+			
+			.biaoti {
+				color: #000000;
+				width: 80%;
+				font-size: 1.0625rem;
+				white-space:normal;
+			}
+			
+			.tempCss {
+				font-size: 14px;
+				color: gray;
+			}
+			
+			.mui-table h4,.mui-table h5,.mui-table .mui-h5,.mui-table .mui-h6,.mui-table p{
+			    margin-top: 0;
+			}
+			.mui-table h4{
+			    line-height: 21px;
+			    font-weight: 500;
+			}
+					
+			.mui-table .oa-icon{
+			    position: absolute;
+			    right:0;
+			    bottom: 0;
+			}
+			.mui-table .oa-icon-star-filled{
+			    color:#f14e41;
+			}
+			
+			.mui-table-cell-1{
+				margin-top: 1.25rem;
+			}
+			
+			.line{
+				background-color: #00CFBD;
+				margin-bottom: 0.3125rem;
+				height: 0.125rem;
+			}
+			.selectDiv{
+				background-color: #eaeaea;
+			}
+			.selectBtn{
+				border: 0rem;
+				border-radius: 0rem;
+				background-color: #FFFFFF;
+				height: 3rem;
+			}
+			
+			.ant-avatar{
+				-webkit-box-sizing: border-box;
+				    box-sizing: border-box;
+				    margin: 0;
+				    padding: 0;
+				    color: rgba(0, 0, 0, 0.65);
+				    font-size: 14px;
+				    font-variant: tabular-nums;
+				    line-height: 1.5;
+				    list-style: none;
+				    -webkit-font-feature-settings: 'tnum';
+				    font-feature-settings: 'tnum';
+				    position: relative;
+				    display: inline-block;
+				    overflow: hidden;
+				    color: #fff;
+				    white-space: nowrap;
+				    text-align: center;
+				    vertical-align: middle;
+				    background: #ccc;
+				    width: 32px;
+				    height: 32px;
+				    line-height: 32px;
+				    border-radius: 50%;
+			}
+			
+			.ant-avatar-lg {
+			    width: 40px;
+			    height: 40px;
+			    line-height: 40px;
+			    border-radius: 50%;
+			}
+			
+			.mui-segmented-control {
+				border: 0px;
+				background: #F0F0F0;
+			}
+			
+			.mui-segmented-control .mui-control-item {
+				border: 0px;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.mui-segmented-control .mui-control-item.mui-active {
+				background-color: transparent;
+				color: #666;
+				font-size: 12px;
+			}
+			
+			.mui-segmented-control .mui-control-item span {
+				font-size: 12px;
+				padding: 0 0 0 5px;
+				color: #666;
+			}
+
+			.mui-dtpicker-header button:last-child {
+			    background-color: #00CFBD;
+				border: #00CFBD;
+			}
+			.mui-segmented-control .mui-control-item{
+				text-align: left;
+				padding-left: 15px;
+			}
+			
+			.select{
+				position: fixed;
+				z-index: 20;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 v-cloak class="mui-title">{{titleName}}</h1>
+		</header>
+		<div v-cloak id="datasource" class="mui-content mui-fullscreen" style="z-index:0;">
+			<div v-cloak class="mui-scroll-wrapper" style="margin-top: 44px;">
+				<div class="select">
+					<div class="mui-segmented-control" v-cloak>
+						<a v-cloak class="mui-control-item" v-cloak href="javascript:void(0)" @tap="showFloor()"><span>{{floorValue.text}}</span><span
+							 class="mui-icon mui-icon-arrowdown"></span></a>
+					</div>
+					<div class="line"></div>
+				</div>
+				<div v-cloak class="mui-scroll" style="padding-top: 35px">
+					<template v-cloak v-if="pageArray.length>0">
+						<ul v-cloak class="mui-table-view">
+							<li v-cloak v-for="(model,index) in pageArray" class="mui-table-view-cell" @click="clickLi(model)">
+								<a class="mui-navigate-right">
+									<div class="mui-row" style="text-align: left;">
+										<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-7">
+											<p class="mui-h5 mui-ellipsis">楼层名:{{model.floor_num}}层</p>
+										</div>
+										<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-5">
+											<p class="mui-h5 mui-ellipsis">居住性别:{{model.stu_sex_text}}</p>
+										</div>
+										<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-7">
+											<p class="mui-h5 mui-ellipsis">房间数:{{model.room_nums}}</p>
+										</div>
+										<div style="margin-top: 0.3125rem;" class="mui-table-cell-1 mui-col-xs-5">
+											<p class="mui-h5 mui-ellipsis">床位数:{{model.bed_nums}}</p>
+										</div>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</template>
+					<template v-else>
+						<div></div>
+					</template>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<!-- <script src="../../js/utils/vconsole.min.js"></script> -->
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/utils/mui.picker.min.js"></script>
+		<script src="../../js/utils/mui.poppicker.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<script type="text/javascript">
+			var $M = mui.init();
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			var curPage = {};
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					titleName: ''
+				}
+			});
+			var datasource = new Vue({
+				el: "#datasource",
+				data: {
+					pageArray: [], //界面总数组
+					floorList: [], //楼层数组
+					floorValue: {}, //楼层选择值
+				},
+				methods: {
+					clickLi: function(model) {
+						console.log(JSON.stringify(model))
+						model.index_code = curPage.index_code;
+						model.dorm_name=curPage.dorm_name;
+						model.floor_num=model.floor_num;
+						utils.mOpenWithData("../../html/stu_dorm/base_info_detail.html", model);
+					},
+					showFloor: function() {
+						var userPicker = new $M.PopPicker();
+						userPicker.setData(datasource.floorList);
+						setTimeout(function() {
+							userPicker.pickers[0].setSelectedValue(datasource.floorValue.value);
+						}, 100);
+						userPicker.show(function(items) {
+							console.log(JSON.stringify(items[0]))
+							if (JSON.stringify(items[0]) == '{}') {
+								mui.toast('未选择楼层')
+							} else {
+								datasource.floorValue = items[0]
+								events.showWaiting();
+								datasource.pageArray = [];
+								getPageDataArray();
+								userPicker.dispose();
+								userPicker = null;
+							}
+						});
+					}
+				}
+			});
+
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				tempVue.titleName = curPage.dorm_name;
+
+				//阻尼系数、初始化刷新加载更多
+				var deceleration = mui.os.ios ? 0.003 : 0.0009;
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: deceleration
+				});
+
+				events.showWaiting();
+				getFloorList();
+			});
+
+			function getFloorList() {
+				comData = {
+					dorm_name: curPage.dorm_name,
+					index_code: curPage.index_code,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_DORM + 'dorm/queryFloorByDorm', {}, comData, 2, function(data) {
+					console.log(JSON.stringify(data))
+					events.closeWaiting();
+					if (data.code == 0) {
+						let floors = data.data.list;
+						let floorList = [{
+							text:'全部楼层',
+							value:''
+						}].concat(floors);
+						datasource.floorList = floorList;
+						datasource.floorValue = floorList[0];
+						getPageDataArray();
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+
+			function getPageDataArray() {
+				let pageIndex=1;
+				comData = {
+					page_number: pageIndex, //当前页数
+					page_size: 10000, //每页记录数
+					dorm_name:curPage.dorm_name,
+					floor_num: datasource.floorValue.value,
+					index_code: curPage.index_code,
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_DORM + 'dorm/dormDetail', {}, comData, 2,
+					function(data) {
+						events.closeWaiting();
+						console.log(JSON.stringify(data))
+						if (data.code == 0) {
+							datasource.pageArray = [].concat(data.data.list);
+							if (data.data.list.length == 0) {
+								mui.toast('暂无数据');
+							}
+						} else {
+							mui.toast(data.msg);
+						}
+					});
+			};
+		</script>
+	</body>
+
+</html>

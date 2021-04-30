@@ -1,0 +1,747 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../fonts/iconfont1.css" />
+		<link rel="stylesheet" href="../../css/utils/MultiMedia.css" />
+		<link rel="stylesheet" href="../../css/utils/preview.css" />
+		<link rel="stylesheet" href="../../css/utils/audiopopover.css" />
+		<style type="text/css">
+			[v-cloak] {
+				visibility: hidden;
+				display:none !important;
+			}
+			.contentCSS {
+				margin-left: 15px;
+				margin-right: 15px;
+				font-size: 14px;
+				color: #666;
+			}
+
+			.titleCSS {
+				font-size: 18px;
+				color: #000;
+			}
+
+			.name-timeCSS {
+				font-size: 12px;
+				color: #999;
+			}
+
+			.encName {
+				margin-left: 15px;
+				margin-right: 15px;
+				font-size: 14px;
+				color: #333;
+			}
+
+			/* .encTitle {
+				font-size: 12px;
+				color: #999;
+			} */
+
+			/* .encSize {
+				font-size: 12px;
+				color: #3c9bfe;
+			} */
+
+			/* .readPeople {
+				font-size: 14px;
+				color: #666;
+			} */
+
+			/* .clickButton {
+				margin-left: 5px;
+				height: 18px;
+				width: 40px;
+				padding: 0 5px 5px 5px;
+				font-size: 10px;
+			} */
+
+			/* .display-inline {
+				padding: 20px;
+				display: inline-block;
+			} */
+
+			/* .extral-file {
+				padding-right: 10px;
+			} */
+
+			/* .color_primary {
+				color: #3c9bfe;
+			} */
+
+			/* .prev-down {
+				padding-left: 20px;
+			} */
+
+			.prev-btn,
+			.down-btn {
+				margin-left: 20px;
+			}
+
+			/* .mui-btn-primary {
+				border: 1px solid #3C9BFE;
+				background-color: #3C9BFE;
+			} */
+
+			/* .mui-btn-outlined.mui-btn-primary {
+				color: #3C9BFE;
+				background-color: transparent;
+			} */
+
+			/* .mui-content {
+				height: 100%;
+				padding: 44px 0px 50px 0px;
+				overflow: auto;
+				background-color: #eaeaea;
+			} */
+
+			div {
+				word-break: break-all;
+			}
+
+			div p {
+				word-break;
+				: break-all;
+			}
+
+			.peopleImg {
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+			}
+
+			/* .mui-table-view-cell:after {
+				height: 2px;
+			} */
+
+			.MultiMediaShow {
+				display: block;
+				margin-top: -50px;
+			}
+
+			.MultiMediaHidden {
+				display: none;
+			}
+
+			.closeUploadBtn {
+				float: right;
+				margin-top: 3px;
+				background: orangered;
+				border-color: orangered;
+				color: white;
+			}
+
+			.openUploadBtn {
+				float: right;
+				margin-top: 3px;
+				background: #00CFBD;
+				border-color: #00CFBD;
+				color: white;
+			}
+			.titleTemp{
+				color: black;
+				margin-left: 10px;
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+
+	<body style="background-color: white;">
+		<header class="mui-bar mui-bar-nav" id="tempVue">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">资料收集详情</h1>
+			<a v-if="moreFlag>0" @click="revoke()" class="mui-pull-right" style="font-size: 14px;margin-top: 0px;">{{moreName}}</a>
+		</header>
+		<div class="mui-content" v-show="flag>0" id="noticeDetailData" style="background-color: white;">
+			<template v-if="detailModel.InfoUploadCloseStatus == 1&&detailModel.InfoUploadStatus==1">
+				<input maxlength="10" type="text" v-model="tag" style="float: right;border: 1px solid gainsboro;margin-bottom: 0px;margin-top: 5px;margin-right: 10px;font-size: 14px;width: 150px;height: 35px;"
+				 placeholder="请输入我的标签" />
+			</template>
+			<template v-if="pageFlag==1||detailModel.InfoUploadCloseStatus == 2||detailModel.InfoUploadStatus==2">
+				<button v-on:click.stop="saveTag()" type="button" class="down-btn" style="float: right;margin-right: 10px;margin-top: 7px;background: #00CFBD;border-color: #00CFBD;color: white;">保存</button>
+				<input maxlength="10" type="text" v-model="tag" style="float: right;border: 1px solid gainsboro;margin-bottom: 0px;margin-top: 5px;margin-right: -10px;font-size: 14px;width: 150px;height: 35px;"
+				 placeholder="请输入我的标签" />
+			</template>
+			<p style="font-size: 14px;color: #666;float: right;margin-top: 15px;">我的标签：</p>
+			<br /><br />
+			<p align="center" class="titleCSS" style="font-size: 18px;color: #000;margin-top: 10px;">{{detailModel.InfoCollectTitle}}</p>
+			<p align="center" class="name-timeCSS" style="font-size: 13px;color: #999;">{{detailModel.SendManName}} |
+				截止时间：{{detailModel.SendTime}}</p>
+			<p v-html="detailModel.InfoCollectContent" class="contentCSS" style="font-size: 14px;color: #666;"></p>
+			<template v-for="(extraFile,index) in detailModel.InfoCollectEncName">
+				<p class="encName" v-show="extraFile">附件:
+					<a class="" style="font-size: 13px;color: #3c9bfe;" v-on:click="checkEnc(detailModel.InfoCollectEncAddr[index])">附件{{index+1}}</a>
+				</p>
+			</template>
+			<template v-if="pageFlag == 0||detailModel.InfoCollectStatus !=4">
+				<div v-if="detailModel.InfoUploadCloseStatus == 1">
+					<p class="" style="height: 10px;background-color: #f2f2f2;"></p>
+					<a v-if="detailModel.InfoUploadContent.length > 0" style="color: black;size: 15px;margin-left: 15px;">重新提交</a>
+					<a v-else-if="detailModel.InfoUploadContent == 0" style="color: black;size: 15px;margin-left: 15px;">提交</a>
+					<div style="padding-top: 5px;height: 170px;">
+						<textarea maxlength="50" v-model="content" style="border: 1px solid gainsboro;margin-left: 10px;width: 95%;"
+						 placeholder="请输入要提交的备注" rows="4"></textarea>
+						<button v-on:click.stop="replyContent()" type="button" class="down-btn" style="float: right;margin-right: 15px;margin-top: -10px;background: #00CFBD;border-color: #00CFBD;color: white;">确定</button>
+					</div>
+				</div>
+				<div v-else-if="detailModel.InfoUploadCloseStatus == 2">
+					<p class="" style="height: 10px;background-color: #f2f2f2;"></p>
+					<p class="contentCSS" style="font-size: 14px;color: #666;">提交备注：{{detailModel.InfoUploadContent}}</p>
+					<template v-for="(extraFile,index) in detailModel.UploadEncName">
+						<p class="encName" v-show="extraFile">附件:
+							<a class="" style="font-size: 13px;color: #3c9bfe;" v-on:click="checkEnc(detailModel.UploadEncAddr[index])">附件{{index+1}}</a>
+						</p>
+					</template>
+				</div>
+			</template>
+			<div id="MultiMedia" v-show="detailModel.InfoUploadCloseStatus == 1" :class="pageFlag==0?classA:classB">
+			</div>
+			<template v-if="detailModel.noUploadList&&detailModel.noUploadList.length>0">
+				<p class="" style="height: 10px;background-color: #f2f2f2;"></p>
+				<p class="titleCSS" style="font-size: 14px;color: #333;margin-top: 10px;margin-left: 10px;">未提交列表</p>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="(replyModel,index) in detailModel.noUploadList">
+						<div>
+							<img class="mui-media-object mui-pull-left peopleImg" :src=replyModel.ReceiveManPic>
+							<a class="" style="font-size: 14px;color: #666;">
+								{{replyModel.ReceiveManName}}
+							</a>
+							<button v-if="detailModel.InfoCollectStatus !=4" @click="openCloseUpload(replyModel)" type="button" :class="replyModel.InfoUploadCloseStatus==1?closeBtn:openBtn"
+							 class="mui-btn">{{replyModel.InfoUploadCloseStatusName}}</button>
+						</div>
+					</li>
+				</ul>
+			</template>
+			<template v-if="detailModel.uploadedList&&detailModel.uploadedList.length>0">
+				<p class="" style="height: 10px;background-color: #f2f2f2;"></p>
+				<p class="titleCSS" style="font-size: 14px;color: #333;margin-top: 10px;margin-left: 10px;">已提交列表</p>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell" v-for="(replyModel,index) in detailModel.uploadedList">
+						<div>
+							<img class="mui-media-object mui-pull-left peopleImg" :src=replyModel.ReceiveManPic>
+							<a class="" style="font-size: 14px;color: #666;">
+								{{replyModel.ReceiveManName}}
+								<a style="font-size: 14px;color: #666;float: right;">{{replyModel.UploadTime}}</a>
+								<div class="chat_content_left">
+									<p style="color: #666;font-size: 13px; white-space:pre-wrap;">{{replyModel.UploadContent}}</p>
+								</div>
+								<template v-for="(extraFile,indexEnc) in replyModel.UploadEncName">
+									<p style="font-size: 13px;color: #333;margin-top: 7px;" v-show="extraFile">附件:
+										<a class="" style="font-size: 13px;color: #3c9bfe;" v-on:click="checkEnc(replyModel.UploadEncAddr[indexEnc])">附件{{index+1}}</a>
+									</p>
+								</template>
+								<button v-if="detailModel.InfoCollectStatus !=4" @click="openCloseUpload(replyModel)" type="button" :class="replyModel.InfoUploadCloseStatus==1?closeBtn:openBtn"
+								 class="mui-btn">{{replyModel.InfoUploadCloseStatusName}}</button>
+								<button v-if="detailModel.InfoCollectStatus !=4&&replyModel.InfoUploadCloseStatus!=2" @click="backUpload(replyModel)" type="button" style="float: right;margin-top: 3px;background: orangered;border-color: orangered;color: white;margin-right: 10px;"
+								 class="mui-btn">退回</button>
+							</a>
+						</div>
+					</li>
+				</ul>
+			</template>
+			<div id="videoPopover" class="mui-popover">
+				<video id="video" style="position: absolute;z-index: 999;" controls="controls" webkit-playsinline playsinline>
+					您的浏览器不支持 video 标签。
+				</video>
+			</div>
+			<div id="audioPopover" class="mui-popover">
+				<div id="audio_show" class="audio-show-popover">
+					<span id="audio_icon" class="mui-icon mui-icon-mic audio-icon"></span>
+					<canvas id="audio_canvas" class="audio-canvas"></canvas>
+					<span id="audio_close" class="mui-icon iconfont icon-guanbi"></span>
+					<div id="audio_time" class="audio-time">00:00</div>
+					<div id="audio_control" class="audio-control">
+						<div id="audio_play" class="audio-control-background audio-control-play">
+							<div></div>
+						</div>
+						<div id="audio_pause" class="audio-control-background audio-control-pause">
+							<div></div>
+							<div></div>
+						</div>
+					</div>
+					<audio id="audio_audio" autoplay="autoplay" preload="auto"></audio>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<!--  -->
+		<script src="../../js/picVideoAudio/MultiMedia.js"></script>
+		<script src="../../js/cloud/AndroidFileSystem.js"></script>
+		<script src="../../js/qiniu/qiniu.js"></script>
+		<script src="../../js/utils/cryption.js"></script>
+		<script src="../../js/cloud/CloudFileUtil.js"></script>
+		<script src="../../js/cloud/qn_upload.js"></script>
+		<script src="../../js/utils/mui.zoom.js"></script>
+		<script src="../../js/utils/mui.previewimage.js"></script>
+		<script src="../../js/picVideoAudio/compress.js"></script>
+		<script src="../../js/picVideoAudio/recordvideoutil.js"></script>
+		<script src="../../js/picVideoAudio/playutil.js"></script>
+		<script src="../../js/picVideoAudio/showvideoutil.js"></script>
+		<script src="../../js/picVideoAudio/showaudio.js"></script>
+		<script src="../../js/picVideoAudio/gallerypick.js"></script>
+		<script src='../../js/picVideoAudio/compressVideo.js'></script>
+		<script src="../../js/qiniu/cloudutil.js"></script>
+		<!---->
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src='../../js/utils/md5.js'></script>
+		<script type="text/javascript">
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal))
+			var hideOption; //隐藏键盘的数据
+			var multiMedia; //多媒体控件
+			var sendFlag = 0; //0是未按确定按钮，1按确定按钮，防止多次触发
+			var curPage = {
+				flag: 0
+			};
+			mui.plusReady(function() {
+				curPage = utils.getDataFromUrl(window.location.href);
+				console.log('2222:' + JSON.stringify(curPage));
+				//				var curPage = {
+				//					"id": "17", //通知ID
+				//					"flag": 0//1我发送的，0发给我的
+				//				}
+				noticeDetailData.pageFlag = curPage.flag;
+				//获取详情
+				getNoticeByReceiveId_sendId_Detail(curPage.flag);
+				init(); //初始化控件
+			});
+
+			//多媒体控件
+			multiMedia = MultiMedia.multiMedia({
+				MultiMediaId: 'MultiMedia', //存放多媒体对象控件的id
+				Key: store.get(window.storageKeyName.PERSONALINFO).user_code, //
+				Picture: true, //是否显示图片图标
+				Audio: false, //是否显示音频图标
+				Video: false, //是否显示视频图标
+				TotalPicture: 1, //图片的个数
+				TotalAudio: 1, //音频的个数
+				TotalVideo: 1, //视频的个数
+			});
+
+			/*
+			 * 初始化控件
+			 */
+			function init() {
+				events.blurBack();
+
+				//图片查看控件
+				mui.previewImage();
+				multiMedia.initEvent();
+				//获取配置信息
+				hideOption = events.initHideKeyBoard();
+				// 初始化七牛上传参数
+				var tempM = {
+					qn_appId:window.storageKeyName.QN_APPID,
+					qn_appKey:window.storageKeyName.QN_APPKEY,
+					qn_mainSpace:window.storageKeyName.QN_PV_NAME,
+					qn_uploadSpace:window.storageKeyName.QN_OA_ZLSJ,
+					qn_multiMedia:multiMedia,
+				}
+				qn_upload.uploadInit(tempM);
+			}
+
+			var tempVue = new Vue({
+				el: "#tempVue",
+				data: {
+					moreFlag: 0, //右上角是否显示，0不显示，1撤销，2关闭
+					moreName: '' //右上角显示名称
+				},
+				methods: {
+					revoke: function() {
+						console.log('revoke');
+						var btnArray = ['取消', '确定'];
+						if (tempVue.moreFlag == 1) {
+							mui.confirm('确定撤销吗？', '提醒', btnArray, function(e) {
+								if (e.index == 1) {
+									var comData = {
+										infoCollectId: noticeDetailData.detailModel.InfoCollectId,
+										index_code: curPage.access.split('#')[1],
+										op_code: 'index'
+									}
+									postDataEncry(window.storageKeyName.INTERFACE_OA + 'infoCollect/doSetInfoCollectUndo', {}, comData, 2,
+										function(data) {
+											if (data.code == 0 && data.data.Result == 1) {
+												mui.toast("成功");
+												tempVue.moreFlag = 0;
+												//获取详情
+												getNoticeByReceiveId_sendId_Detail(curPage.flag);
+											}
+										});
+								}
+							});
+						} else {
+							mui.confirm('确定关闭吗？', '提醒', btnArray, function(e) {
+								if (e.index == 1) {
+									var comData = {
+										infoCollectId: noticeDetailData.detailModel.InfoCollectId,
+										isClose:'2',//关闭状态,1 打开2 关闭
+										index_code: curPage.access.split('#')[1],
+										op_code: 'index'
+									}
+									postDataEncry(window.storageKeyName.INTERFACE_OA + 'infoCollect/doSetInfoCollectClose', {}, comData, 2,
+										function(data) {
+											if (data.code == 0 && data.data.Result == 1) {
+												mui.toast("成功");
+												tempVue.moreFlag = 0;
+												//获取详情
+												getNoticeByReceiveId_sendId_Detail(curPage.flag);
+											}
+										});
+								}
+							});
+						}
+					}
+				}
+			});
+			var noticeDetailData = new Vue({
+				el: "#noticeDetailData",
+				data: {
+					tag: '', //我的标签
+					pageFlag: curPage.flag, //0接收 1我发送的
+					flag: 0,
+					classA: 'MultiMediaShow',
+					classB: 'MultiMediaHidden',
+					openBtn: 'openUploadBtn',
+					closeBtn: 'closeUploadBtn',
+					detailModel: {
+						uploadedList: [],
+						noUploadList: [],
+						InfoUploadContent:''
+					},
+					content: ''
+				},
+				methods: {
+					checkEnc: function(tempUrl) {
+						var getDownToken = {
+							appId: window.storageKeyName.QN_APPID, //int 必填 项目id
+							appKey: window.storageKeyName.QN_APPKEY,
+							urls: [tempUrl] //array 必填 需要获取下载token文件的路径
+						}
+						var getDownTokenUrl = window.storageKeyName.QNGETDOWNTOKENFILE;
+						CloudFileUtil.getQNDownToken(getDownTokenUrl, getDownToken, function(data) {
+							console.log('七牛下载token ' + JSON.stringify(data));
+							var urlStr = encodeURI(data.Data[0].Value)
+							plus.runtime.openURL(urlStr);
+						}, function(xhr, type, errorThrown) {
+							mui.toast('获取文件失败 ' + type);
+						});
+					},
+					saveTag: function() {
+						console.log('saveTag');
+						if (noticeDetailData.tag != noticeDetailData.detailModel.Tag) {
+							var comData = {
+								infoCollectId: noticeDetailData.detailModel.InfoCollectId, //信息收集ID
+								tag: noticeDetailData.tag, //标签
+								index_code: curPage.access.split('#')[1],
+								op_code: 'index'
+							}
+							var url = '';
+							if (curPage.flag == 1) { //我发送的
+								url = window.storageKeyName.INTERFACE_OA + 'infoCollect/doSetSendInfoCollectTag';
+							} else { //接收的
+								comData.receiveManId = personal.user_code; //阅读人ID
+								url = window.storageKeyName.INTERFACE_OA + 'infoCollect/doSetReceiveInfoCollectTag';
+							}
+							//67.修改发送的信息收集标签
+							postDataEncry(url, {}, comData, 2, function(data) {
+								console.log('修改信息收集标签:' + JSON.stringify(data));
+								if (data.code == 0 && data.data.Result == 1) {
+									mui.toast("保存成功");
+									noticeDetailData.detailModel.Tag = noticeDetailData.tag;
+								}else{
+									mui.toast(data.msg);
+								}
+							});
+						}else{
+							mui.toast('请勿重复保存标签');
+						}
+					},
+					replyContent: function() {
+						if (noticeDetailData.tag != noticeDetailData.detailModel.Tag) {
+							//68.修改接收的信息收集标签
+							var comData = {
+								infoCollectId: noticeDetailData.detailModel.InfoCollectId, //通知ID
+								receiveManId: personal.user_code, //阅读人ID
+								tag: noticeDetailData.tag, //标签
+								index_code: curPage.access.split('#')[1],
+								op_code: 'index'
+							}
+							//68.修改接收的信息收集标签
+							postDataEncry(window.storageKeyName.INTERFACE_OA + 'infoCollect/doSetReceiveInfoCollectTag', {}, comData, 2,
+								function(data) {
+									console.log('68.修改接收的信息收集标签:' + JSON.stringify(data));
+									if (data.code == 0 && data.data.Result == 1) {
+										noticeDetailData.detailModel.Tag = noticeDetailData.tag;
+									}
+								});
+						}
+						if (noticeDetailData.content.trim().length == 0) {
+							mui.toast("请输入备注", "cancel");
+							return;
+						}
+						if (noticeDetailData.content.length > 50) {
+							mui.toast("备注不能超过50字", "cancel");
+							return;
+						}
+						if (multiMedia.data.PictureArray.length == 0) {
+							mui.toast("请先选择附件", "cancel");
+							return;
+						}
+						var fj = [];
+						for(var i = 0; i < multiMedia.data.PictureArray.length; i++) {
+							if(multiMedia.data.PictureArray[i].path.indexOf('http://') != -1 || multiMedia.data.PictureArray[i].path.indexOf('https://') != -1) {
+								continue
+							}
+							fj.push('1');
+						}
+						if(fj.length == 0) {
+							var wd = events.showWaiting();
+							var tempUrl = multiMedia.data.PictureArray[0].path.split("?")[0];
+							var oriName = tempUrl.substring(tempUrl.lastIndexOf("/") + 1);
+							console.log('tempUrl:'+tempUrl);
+							console.log('oriName:'+oriName);
+							addNotice(wd, '3', tempUrl, '', 0, oriName);
+						} else {
+							var wd = events.showWaiting('上传中...');
+							//上传文件
+							qn_upload.uploadFile(wd,function(wd, type, encAddrStr, encImgrStr, encLen, encNameStr){
+								addNotice(wd, type, encAddrStr, encImgrStr, encLen, encNameStr);
+							});
+						}
+					},
+					openCloseUpload: function(model) {
+						var tempStr = '确认要打开上交吗？';
+						if (model.InfoUploadCloseStatus == 1) {
+							tempStr = '确认要关闭上交吗？';
+						}
+						var btnArray = ['否', '是'];
+						mui.confirm(tempStr, '确认', btnArray, function(e) {
+							if (e.index == 1) {
+								events.showWaiting();
+								var tempFlag = 1;
+								if (model.InfoUploadCloseStatus == 1) {
+									tempFlag = 2;
+								}
+								//66.打开/关闭某人信息收集
+								var tempData1 = {
+									infoCollectId: noticeDetailData.detailModel.InfoCollectId, //信息收集ID
+									receiveManId: model.ReceiveManId, //上交人ID
+									operType: tempFlag, //操作，1 打开2 被关闭
+									index_code: curPage.access.split('#')[1],
+									op_code: 'index'
+								}
+								//66.打开/关闭某人信息收集
+								postDataEncry(window.storageKeyName.INTERFACE_OA + 'infoCollect/doSetInfoCollectUploadOper', {}, tempData1,
+									2,
+									function(data) {
+										events.closeWaiting();
+										if (data.code == 0) {
+											mui.toast('成功');
+											getNoticeByReceiveId_sendId_Detail(curPage.flag);
+										} else {
+											mui.toast(data.msg);
+										}
+									});
+							}
+						})
+					},
+					backUpload: function(model) {
+						var btnArray = ['否', '是'];
+						mui.confirm('确认要退回吗？', '确认', btnArray, function(e) {
+							if (e.index == 1) {
+								events.showWaiting();
+								//65.退回信息上交
+								var tempData1 = {
+									infoCollectId: noticeDetailData.detailModel.InfoCollectId, //信息收集ID
+									receiveManId: model.ReceiveManId, //上交人ID
+									index_code: curPage.access.split('#')[1],
+									op_code: 'index'
+								}
+								//65.退回信息上交
+								postDataEncry(window.storageKeyName.INTERFACE_OA + 'infoCollect/doSetInfoUploadBack', {}, tempData1,
+									2,
+									function(data) {
+										events.closeWaiting();
+										if (data.code == 0) {
+											mui.toast('成功');
+											getNoticeByReceiveId_sendId_Detail(curPage.flag);
+										} else {
+											mui.toast(data.msg);
+										}
+									});
+							}
+						})
+					}
+				}
+			});
+
+			var addNotice = function(wd, encType, encAddr, encImg, encLen, encName) {
+				if (noticeDetailData.content.trim().length == 0) {
+					mui.toast("请输入备注", "cancel");
+					return;
+				}
+				if (noticeDetailData.content.length > 50) {
+					mui.toast("备注不能超过50字", "cancel");
+					return;
+				}
+				// //28.回复通知公告
+				var tempData1 = {
+					infoCollectId: curPage.InfoCollectId, //信息收集ID
+					receiveManId: personal.user_code, //上交人ID
+					content: noticeDetailData.content, //备注
+					encName: encName, //附件名称
+					encAddr: encAddr, //附件地址
+					index_code: curPage.access.split('#')[1],
+					op_code: 'index'
+				}
+				//28.回复通知公告
+				postDataEncry(window.storageKeyName.INTERFACE_OA + 'infoCollect/doSetInfoCollectUpload', {}, tempData1, 2,
+					function(data) {
+						encNameList = [];
+						events.closeWaiting();
+						if (data.code == 0) {
+							noticeDetailData.content = '';
+							multiMedia.imageRefresh();
+							mui.toast('成功');
+							getNoticeByReceiveId_sendId_Detail(curPage.flag);
+						} else {
+							mui.toast(data.msg);
+						}
+					});
+			}
+
+			//获取详情
+			var getNoticeByReceiveId_sendId_Detail = function(flag) {
+				events.showWaiting();
+				var comData0 = {};
+				var url;
+				if (flag == 0) { //72.通过信息收集接收表ID获取信息收集
+					comData0 = {
+						infoUploadId: curPage.InfoCollectManId, //信息收集接收表ID
+						index_code: curPage.access.split('#')[1],
+						op_code: 'index'
+					}
+					url = window.storageKeyName.INTERFACE_OA + 'infoCollect/getInfoCollectByReceiveId';
+				} else { //71.通过信息收集ID获取信息收集
+					comData0 = {
+						infoCollectId: curPage.InfoCollectId, //信息收集ID
+						index_code: curPage.access.split('#')[1],
+						op_code: 'index'
+					}
+					url = window.storageKeyName.INTERFACE_OA + 'infoCollect/getInfoCollectById';
+				}
+				// 获取收到的协同事务列表（接收人为单人）
+				postDataEncry(url, {}, comData0, 2,
+					function(data) {
+						events.closeWaiting();
+						console.log('data:' + JSON.stringify(data));
+						if (data.code == 0) {
+							if (data.data.InfoCollectEncName) {
+								data.data.InfoCollectEncName = data.data.InfoCollectEncName.split("|");
+								data.data.InfoCollectEncAddr = data.data.InfoCollectEncAddr.split("|");
+							}
+							if (data.data.UploadEncName) {
+								data.data.UploadEncName = data.data.UploadEncName.split("|");
+								data.data.UploadEncAddr = data.data.UploadEncAddr.split("|");
+								if (data.data.UploadEncAddr.length>0) {
+									// multiMedia.addImages(data.data.UploadEncAddr);
+									// multiMedia.options.imageId = data.data.UploadEncAddr.length + 1;
+									var getDownToken = {
+										appId: window.storageKeyName.QN_APPID, //int 必填 项目id
+										appKey: window.storageKeyName.QN_APPKEY,
+										urls: data.data.UploadEncAddr //array 必填 需要获取下载token文件的路径
+									}
+									var getDownTokenUrl = window.storageKeyName.QNGETDOWNTOKENFILE;
+									CloudFileUtil.getQNDownToken(getDownTokenUrl, getDownToken, function(data) {
+										console.log('七牛下载token ' + JSON.stringify(data));
+										// var urlStr = encodeURI(data.Data[0].Value)
+										// plus.runtime.openURL(urlStr);
+										var tepArr = [];
+										tepArr.push(data.Data[0].Value);
+										multiMedia.addImages(tepArr);
+										multiMedia.options.imageId = data.Data.length + 1;
+									}, function(xhr, type, errorThrown) {
+										mui.toast('获取文件失败 ' + type);
+									});
+								}
+							}
+							noticeDetailData.flag = 1;
+							//如果是接收的，判断是否右上角有功能
+							if (flag == 1) {
+								getUserInfo(data.data.noUploadList, curPage.access.split('#')[1], 'ReceiveManId','ReceiveManPic', function(callData) {
+									console.log('callData:' + JSON.stringify(callData));
+									for (var i = 0; i < data.data.noUploadList.length; i++) {
+										var tempM = data.data.noUploadList[i];
+										if (tempM.InfoUploadCloseStatus == 1) {
+											tempM.InfoUploadCloseStatusName = '关闭上交';
+										} else {
+											tempM.InfoUploadCloseStatusName = '打开上交';
+										}
+									}
+								});
+								getUserInfo(data.data.uploadedList, curPage.access.split('#')[1], 'ReceiveManId','ReceiveManPic', function(callData) {
+									console.log('callData:' + JSON.stringify(callData));
+									for (var i = 0; i < data.data.uploadedList.length; i++) {
+										var tempM = data.data.uploadedList[i];
+										if (tempM.UploadEncName) {
+											tempM.UploadEncName = tempM.UploadEncName.split("|");
+											tempM.UploadEncAddr = tempM.UploadEncAddr.split("|");
+										}
+										if (tempM.InfoUploadCloseStatus == 1) {
+											tempM.InfoUploadCloseStatusName = '关闭上交';
+										} else {
+											tempM.InfoUploadCloseStatusName = '打开上交';
+										}
+									}
+								});
+								
+								
+								console.log('11111');
+								// 进程处于“新建”且 状态处于“发出”时 显示撤销按钮
+								if (data.data.InfoCollectProgress == 1 && data.data.InfoCollectStatus == 1) {
+									console.log('222222');
+									tempVue.moreFlag = 1;
+									tempVue.moreName = '撤销';
+								} else if ((data.data.InfoCollectStatus == 1 || data.data.InfoCollectStatus == 3) && data.data.InfoCollectProgress != 1) { // 状态处于发出或部分关闭 且 进程为收集中 或完毕 即 不是新建 显示关闭按钮
+									console.log('333333');
+									tempVue.moreFlag = 2;
+									tempVue.moreName = '关闭';
+								}
+							}
+							noticeDetailData.tag = data.data.Tag;
+							noticeDetailData.detailModel = data.data;
+							console.log('noticeDetailData.detailModel:' + JSON.stringify(noticeDetailData.detailModel));
+							//将之前提交的资料，塞入默认数据
+							noticeDetailData.content = data.data.InfoUploadContent;
+						} else {
+							mui.toast(data.msg);
+						}
+					});
+			}
+		</script>
+	</body>
+
+</html>

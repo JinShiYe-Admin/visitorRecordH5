@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link href="../../css/common.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../../js/swiper/swiper-bundle.min.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+
+			.mui-bar~.mui-content .mui-fullscreen {
+				top: 44px;
+				height: auto;
+			}
+
+			.mui-pull-top-tips {
+				position: absolute;
+				top: -20px;
+				left: 50%;
+				margin-left: -25px;
+				width: 40px;
+				height: 40px;
+				border-radius: 100%;
+				z-index: 1;
+			}
+
+			.mui-bar~.mui-pull-top-tips {
+				top: 24px;
+			}
+
+			.mui-pull-top-wrapper {
+				width: 42px;
+				height: 42px;
+				display: block;
+				text-align: center;
+				background-color: #efeff4;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				background-clip: padding-box;
+				box-shadow: 0 4px 10px #bbb;
+				overflow: hidden;
+			}
+
+			.mui-pull-top-tips.mui-transitioning {
+				-webkit-transition-duration: 200ms;
+				transition-duration: 200ms;
+			}
+
+			.mui-pull-top-tips .mui-pull-loading {
+				/*-webkit-backface-visibility: hidden;
+				-webkit-transition-duration: 400ms;
+				transition-duration: 400ms;*/
+
+				margin: 0;
+			}
+
+			.mui-pull-top-wrapper .mui-icon,
+			.mui-pull-top-wrapper .mui-spinner {
+				margin-top: 7px;
+			}
+
+			.mui-pull-top-wrapper .mui-icon.mui-reverse {
+				/*-webkit-transform: rotate(180deg) translateZ(0);*/
+			}
+
+			.mui-pull-bottom-tips {
+				text-align: center;
+				background-color: #efeff4;
+				font-size: 15px;
+				line-height: 40px;
+				color: #777;
+			}
+
+			.mui-pull-top-canvas {
+				overflow: hidden;
+				background-color: #fafafa;
+				border-radius: 40px;
+				box-shadow: 0 4px 10px #bbb;
+				width: 40px;
+				height: 40px;
+				margin: 0 auto;
+			}
+
+			.mui-pull-top-canvas canvas {
+				width: 40px;
+			}
+
+			.mui-slider-indicator.mui-segmented-control {
+				background-color: #efeff4;
+			}
+
+			.catalogs {
+				position: fixed;
+				/* top: 45px; */
+				width: 100%;
+				left: 0;
+				background-color: #FFFFFF;
+			}
+
+			/*滑动菜单行高*/
+
+			.swiper-slide {
+				height: 30px;
+			}
+
+			.swiper-container {
+				padding-left: 20px !important;
+				padding-top: 10px !important;
+			}
+
+			.fontcolor {
+				color: #00CFBD;
+			}
+
+			.mui-slider .mui-segmented-control.mui-segmented-control-inverted~.mui-slider-group .mui-slider-item {
+				border-top: 0px;
+				border-bottom: 0px;
+			}
+
+			.biaoti {
+				width: 80%;
+				color: #000000;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" v-cloak style="background-color:#00CFBD;" id="tempHead">
+			<a v-cloak v-if="showBack==2" @click="clickLeftImg" class="mui-icon mui-pull-left">
+				<img v-cloak :src=headImg style="width: 26px;height: 26px;border-radius: 50%;" />
+			</a>
+			<a v-cloak v-if="showBack==1" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 @click="clickTitle()" class="mui-title" v-cloak style="color: white;">
+				<a class="mui-icon" style="font-size: 16px;">{{titleName}}<span class="mui-icon-arrowdown"></span></a>
+			</h1>
+		</header>
+		<div v-cloak class="mui-content" id="contentData">
+			<div v-cloak id="slider" class="mui-slider mui-fullscreen">
+				<div
+					class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted swiper-container catalogs">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" style="font-size: 14px; " :class="cate.ischeck==1?'fontcolor':''"
+							v-for="(cate,index) in resCategoryArray" @tap="catalogItemClick(index)">{{cate.title}}
+						</div>
+					</div>
+				</div>
+				<div v-cloak class="mui-slider-group">
+					<div v-cloak id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+						<div v-cloak id="scroll1" class="mui-scroll-wrapper">
+							<div v-cloak class="mui-scroll">
+								<ul v-cloak class="mui-table-view">
+									<li class="mui-table-view-cell mui-media"
+										v-for="(resourceModel,index) in resourceArray"
+										@tap="clickResourceModel(resourceModel,index)">
+										<a href="javascript:;">
+											<div v-if="resourceModel.is_pack">
+												<img class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/ziyuanPack.png" />
+											</div>
+											<div v-else="">
+												<img v-if="resourceModel.file_ext == 'mp4'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/mp4.png">
+												<img v-else-if="resourceModel.file_ext == 'doc'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/doc.png" />
+												<img v-else-if="resourceModel.file_ext == 'docx'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/docx.png" />
+												<img v-else-if="resourceModel.file_ext == 'mp3'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/mp3.png">
+												<img v-else-if="resourceModel.file_ext == 'asf'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/asf.png">
+												<img v-else-if="resourceModel.file_ext == 'avi'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/avi.png">
+												<img v-else-if="resourceModel.file_ext == 'flv'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/flv.png">
+												<img v-else-if="resourceModel.file_ext == 'gif'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/gif.png">
+												<img v-else-if="resourceModel.file_ext == 'ppt'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/ppt.png">
+												<img v-else-if="resourceModel.file_ext == 'pptx'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/pptx.png">
+												<img v-else-if="resourceModel.file_ext == 'xls'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/xls.png">
+												<img v-else-if="resourceModel.file_ext == 'xlsx'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/xlsx.png">
+												<img v-else-if="resourceModel.file_ext == 'mpg'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/mpg.png">
+												<img v-else-if="resourceModel.file_ext == 'swf'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/swf.png">
+												<img v-else-if="resourceModel.file_ext == 'ts'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/ts.png">
+												<img v-else-if="resourceModel.file_ext == 'wav'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/wav.png">
+												<img v-else-if="resourceModel.file_ext == 'wma'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/wma.png">
+												<img v-else-if="resourceModel.file_ext == 'wmv'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/wmv.png">
+												<img v-else-if="resourceModel.file_ext == 'pdf'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/pdf.png">
+												<img v-else-if="resourceModel.file_ext == 'exe'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/exe.png">
+												<img v-else-if="resourceModel.file_ext == 'jpg'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/jpg.png">
+												<img v-else-if="resourceModel.file_ext == 'png'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/png.png">
+												<img v-else-if="resourceModel.file_ext == 'rar'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/rar.png">
+												<img v-else-if="resourceModel.file_ext == 'zip'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/zip.png">
+												<img v-else-if="resourceModel.file_ext == 'txt'"
+													class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/txt.png">
+												<img v-else="" class="mui-media-object mui-pull-left"
+													src="../../img/zhiXueKeTang/file-icons/other.png">
+											</div>
+											<div class="mui-media-body biaoti" style="font-size: 14px;color: #333;">
+												{{resourceModel.name}}
+												<p class="mui-ellipsis" style="font-size: 12px;color: #999;">
+													{{resourceModel.create_time}} | {{resourceModel.owner_name}}
+												</p>
+											</div>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.js"></script>
+		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/swiper/swiper-bundle.js"></script>
+		<!--加密-->
+		<script src="../../js/libs/RSA/Barrett.js"></script>
+		<script src="../../js/libs/RSA/BigInt.js"></script>
+		<script src="../../js/libs/RSA/RSA.js"></script>
+		<script src="../../js/libs/encryption/RSAEncrypt.js"></script>
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src='../../js/libs/encryption/signHmacSHA1.js'></script>
+		<script src='../../js/libs/jquery.js'></script>
+		<script src='../../js/libs/encryption/sortSign.js'></script>
+		<!---->
+		<script src='../../js/libs/crypto-js/require.js'></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/publicProtocol.js"></script>
+		<script src="../../js/utils/events.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script src="../../js/utils/showMenu.js"></script>
+		<script>
+			//获取个人信息
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			console.log('personal:' + JSON.stringify(personal));
+			//选择章节目录监听
+			window.addEventListener('selectCatalog', function(data) {
+				console.log(JSON.stringify(data.detail));
+				tempHead.titleName = data.detail[0].name; //给标题赋值
+				//当前章节
+				contentData.resCatalogsModel = data.detail[0];
+				//当前学段
+				contentData.resPerModel = data.detail[1];
+				//当前科目
+				contentData.resSubModel = data.detail[2];
+				//刷新数据
+				contentData.refreshFlag = 0;
+				contentData.pageIndex = 1;
+				// 查询资源类型
+				getResCategory();
+			});
+			mui.init();
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					showBack: 0,
+					headTitle: '',
+					headImg: setImg(personal.img_url, 9),
+					titleName: ''
+				},
+				methods: {
+					clickLeftImg: function() {
+						appPay.openMenu();
+					},
+					clickTitle: function() {
+						console.log('点击标题');
+						var tempM = {
+							access: curPage.access.split('#')[1]
+						}
+						utils.mOpenWithData("../../html/zhiXueKeTang/catalogPage.html", tempM);
+					}
+				}
+			});
+			//vue数据
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					showFlag: 0, //1正常显示，0显示暂无数据
+					personal: personal,
+					refreshFlag: 0, //0刷新，1加载更多
+					resourceArray: [], //资源列表数组
+					pageIndex: 1, //第几页
+					resPerModel: {}, //当前学段
+					resSubModel: {}, //当前科目
+					resMaterModel: {}, //当前教版
+					resFascModel: {}, //当前分册
+					resCatalogsModel: {}, //当前目录
+					resCategoryArray: [], //资源类型列表
+					resCategoryModel: {}, //当前资源类型
+				},
+				methods: {
+					clickResourceModel: function(model) {
+						console.log('点击li：' + JSON.stringify(model));
+						var deadline = getQueryString(model.openFileUrl).e; //得到当前文件过期时间 时间戳
+						var timestamp = Math.round(new Date().getTime() / 1000).toString(); //得到当前时间戳
+						if (timestamp - deadline > 0) { //过期
+							mui.toast('当前文件已过期，请刷新列表重试！')
+							return 0;
+						}
+						if (plus.networkinfo.getCurrentType() == plus.networkinfo.CONNECTION_NONE) {
+							mui.toast('网络异常，请检查网络设置！');
+							return;
+						}
+						if (model.is_pack) { //资源包
+							console.log('000000001');
+							utils.mOpenWithData("../../html/zhiXueKeTang/inside_page.html", model);
+						} else {
+							// 判断文件是否存在
+							// var xmlhttp;
+							// if (window.XMLHttpRequest) {
+							// 	xmlhttp = new XMLHttpRequest(); //其他浏览器   
+							// } else if (window.ActiveXObject) {
+							// 	try {
+							// 		xmlhttp = new ActiveXObject("Msxml2.XMLHTTP"); //旧版IE   
+							// 	} catch (e) {}
+							// 	try {
+							// 		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP"); //新版IE   
+							// 	} catch (e) {}
+							// 	if (!xmlhttp) {
+							// 		window.alert("不能创建XMLHttpRequest对象");
+							// 	}
+							// }
+							// xmlhttp.open("GET", model.openFileUrl, false);
+							// xmlhttp.send();
+							// if (xmlhttp.readyState == 4) {
+							// 	if (xmlhttp.status == 200)
+							// 		console.log('文件存在');
+							// 	else {
+							// 		mui.toast('当前文件已不存在');
+							// 		console.log('文件不存在');
+							// 		return;
+							// 	}
+							// }
+							if (model.file_ext == 'mp4' || model.file_ext == 'mp3' || model.file_ext == 'wmv' ||
+								model.file_ext == 'wma' || model.file_ext == 'mpg' || model.file_ext == 'avi' ||
+								model
+								.file_ext == 'flv' || model.file_ext == 'mkv' || model.file_ext == 'asf') { //视频、音频
+								if (model.file_ext == 'mp4' || model.file_ext == 'mp3') {
+									utils.mOpenWithData("../../html/zhiXueKeTang/playVideo.html", model);
+								} else {
+									if (plus.os.name == 'Android') {
+										plus.runtime.openURL(model.openFileUrl);
+									} else {
+										plus.runtime.openWeb(model.openFileUrl);
+									}
+								}
+							} else if (model.file_ext == 'jpg' || model.file_ext == 'png' || model.file_ext ==
+								'gif') { //照片
+								if (plus.os.name == 'Android') {
+									plus.nativeUI.previewImage([model.openFileUrl]);
+								} else {
+									plus.nativeUI.previewImage(model.openFileUrl, {
+										current: 0,
+										loop: false,
+										indicator: 'number'
+									});
+								}
+							} else if (model.file_ext == 'ppt' || model.file_ext == 'pptx' || model.file_ext ==
+								'doc' ||
+								model.file_ext == 'docx' || model.file_ext == 'pdf' || model.file_ext == 'xlsx' ||
+								model
+								.file_ext == 'xls') { //文档
+								if (plus.os.name == 'Android') {
+									plus.runtime.openURL(model.openFileUrl);
+								} else {
+									plus.runtime.openWeb(model.openFileUrl);
+								}
+							} else {
+								mui.toast('不支持查看此类型文件');
+							}
+						}
+					},
+					catalogItemClick: function(index) {
+						for (var i = 0; i < contentData.resCategoryArray.length; i++) {
+							var tempM = contentData.resCategoryArray[i];
+							if (i == index) {
+								tempM.ischeck = 1;
+								contentData.resCategoryModel = tempM;
+								pulldownRefresh();
+							} else {
+								tempM.ischeck = 0;
+							}
+						}
+					}
+				},
+				mounted: function() {
+					//初始化滑动菜单
+					var swiper = new Swiper('.swiper-container', {
+						slidesPerView: 5, //菜单可见个数
+						spaceBetween: 10, //间隔
+						freeMode: true, //自由滑动模式
+						noSwiping: true, //禁止滑动
+					});
+				},
+				computed: {
+					getKm: function() {
+						return this.resCategoryArray;
+					}
+				},
+				watch: {
+					getKm: function(val) {
+						//初始化滑动菜单，防止数据请求慢，导致的初始化失败问题
+						setTimeout(function() {
+							var swiper = new Swiper('.swiper-container', {
+								slidesPerView: 5, //菜单可见个数
+								spaceBetween: 10, //间隔
+								freeMode: true, //自由滑动模式
+								noSwiping: true, //禁止滑动
+							});
+						}, 500);
+					}
+				}
+			});
+
+			/**
+			 * 下拉刷新具体业务实现
+			 */
+			function pulldownRefresh() {
+				contentData.refreshFlag = 0;
+				contentData.pageIndex = 1;
+				// 查询资源列表
+				getResPage(null);
+			}
+
+			// 查询学段
+			function getResPer() {
+				var tempData = {
+					index_code: curPage.access.split('#')[1]
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_ZXKT + '/pub/resPer', {}, tempData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						if (data.data.list && data.data.list.length > 0) {
+							contentData.resPerModel = data.data.list[0];
+							// 查询科目
+							getResSub();
+						} else {
+							mui.toast('暂无学段');
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+
+			// 查询科目
+			function getResSub() {
+				var tempData = {
+					per_code: contentData.resPerModel.per_code, //学段代码
+					index_code: curPage.access.split('#')[1]
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_ZXKT + '/pub/resSub', {}, tempData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						if (data.data.list && data.data.list.length > 0) {
+							contentData.resSubModel = data.data.list[0];
+							// 查询教版
+							getResMater();
+						} else {
+							mui.toast('暂无科目');
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+
+			// 查询教版
+			function getResMater() {
+				var tempData = {
+					per_code: contentData.resPerModel.per_code, //学段代码
+					sub_code: contentData.resSubModel.sub_code, //科目代码
+					index_code: curPage.access.split('#')[1]
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_ZXKT + '/pub/resMater', {}, tempData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						if (data.data.list && data.data.list.length > 0) {
+							contentData.resMaterModel = data.data.list[0];
+							// 查询分册
+							getResFasc();
+						} else {
+							mui.toast('暂无教版');
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+
+			// 查询分册
+			function getResFasc() {
+				var tempData = {
+					per_code: contentData.resPerModel.per_code, //学段代码
+					sub_code: contentData.resSubModel.sub_code, //科目代码
+					mater_code: contentData.resMaterModel.mater_code, //教版代码
+					index_code: curPage.access.split('#')[1]
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_ZXKT + '/pub/resFasc', {}, tempData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						if (data.data.list && data.data.list.length > 0) {
+							contentData.resFascModel = data.data.list[0];
+							// 查询目录
+							getResCatalogs();
+						} else {
+							mui.toast('暂无教版');
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+
+			// 查询目录
+			function getResCatalogs() {
+				var tempData = {
+					per_code: contentData.resPerModel.per_code, //学段代码
+					sub_code: contentData.resSubModel.sub_code, //科目代码
+					mater_code: contentData.resMaterModel.mater_code, //教版代码
+					fasc_code: contentData.resFascModel.fasc_code, //分册代码
+					index_code: curPage.access.split('#')[1]
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_ZXKT + '/pub/resCatalogs', {}, tempData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						if (data.data) {
+							getCalalogModel(data.data.catalog.children, function(tempData) {
+								contentData.resCatalogsModel = tempData;
+								tempHead.titleName = tempData.name; //给标题赋值
+								// 查询资源类型
+								getResCategory();
+							});
+						} else {
+							mui.toast('暂无教版');
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+
+			// 找到第一个可用的目录
+			function getCalalogModel(list, callback) {
+				var tempM = list[0];
+				if (tempM.children) {
+					getCalalogModel(tempM.children, callback);
+				} else {
+					callback(tempM);
+				}
+			}
+
+			// 查询资源类型
+			function getResCategory() {
+				var tempData = {
+					per_code: contentData.resPerModel.per_code, //学段代码
+					index_code: curPage.access.split('#')[1]
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_ZXKT + '/pub/resCategory', {}, tempData, 2, function(data) {
+					events.closeWaiting();
+					if (data.code == 0) {
+						if (data.data.list && data.data.list.length > 0) {
+							for (var i = 0; i < data.data.list.length; i++) {
+								var tempM = data.data.list[i];
+								if (i == 0) {
+									tempM.ischeck = 1;
+								} else {
+									tempM.ischeck = 0;
+								}
+							}
+							contentData.resCategoryArray = [].concat(data.data.list);
+							contentData.resCategoryModel = data.data.list[0];
+							// 查询资源列表
+							getResPage(null);
+						} else {
+							mui.toast('暂无资源类型');
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+
+			// 查询资源列表
+			function getResPage(self) {
+				var tempData = {
+					catalog_id: contentData.resCatalogsModel.id, //目录代码
+					category_id: contentData.resCategoryModel.key, //类型代码
+					sub_code: contentData.resSubModel.sub_code, //科目代码
+					page_number: contentData.pageIndex, //科目代码
+					page_size: '10', //
+					index_code: curPage.access.split('#')[1]
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_ZXKT + '/resource/resourcePage', {}, tempData, 2, function(
+					data) {
+					events.closeWaiting();
+					if (self) {
+						if (contentData.refreshFlag == 0) {
+							self.endPullDownToRefresh();
+						} else {
+							self.endPullUpToRefresh();
+						}
+					}
+					console.log('contentData.showFlag:' + contentData.showFlag);
+					if (data.code == 0) {
+						if (data.data.list.length < 10) {
+							mui(".mui-pull-loading")[0].innerHTML = "没有更多了";
+						} else {
+							mui(".mui-pull-loading")[0].innerHTML = "";
+						}
+						contentData.showFlag = 1;
+						for (var i = 0; i < data.data.list.length; i++) {
+							var model = data.data.list[i];
+							model.create_time = modifyTimeFormat(model.create_time);
+							if (model.convert_file_url == null || model.convert_file_url.length == 0) {
+								model.openFileUrl = model.original_file_url;
+							} else {
+								model.openFileUrl = model.convert_file_url;
+							}
+						}
+						if (contentData.refreshFlag == 0) { //刷新
+							contentData.resourceArray = [].concat(data.data.list);
+							if (data.data.list.length == 0) {
+								contentData.showFlag = 0;
+								mui.toast('数据为空');
+							} else {
+								contentData.pageIndex++;
+							}
+							// setTimeout(() => {
+							mui('#scroll1').scroll().scrollTo(0, 0)
+							// }, 300)
+						} else { //加载更多
+							contentData.resourceArray = contentData.resourceArray.concat(data.data.list);
+							console.log('contentData.resourceArray:' + contentData.resourceArray.length);
+							if (data.data.list.length == 0) {
+								mui.toast('已加载全部');
+							} else {
+								contentData.pageIndex++;
+							}
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			mui.plusReady(function() {
+				(function($) {
+					curPage = utils.getDataFromUrl(window.location.href);
+
+					console.log('2222:' + JSON.stringify(curPage));
+					tempHead.headTitle = curPage.name;
+
+					if (curPage && JSON.stringify(curPage) == '{}') { //前四个页面时，不显示返回按钮
+						var ws = plus.webview.currentWebview();
+						console.log("当前Webview：" + JSON.stringify(ws.preload));
+						if (ws.preload) {
+							curPage = ws.preload;
+							tempHead.headTitle = ws.preload.name;
+						}
+						if (ws.preload.index == 0) {
+							tempHead.showBack = 2;
+						}
+					} else {
+						tempHead.showBack = 1; //更多页面打开时，显示返回按钮
+					}
+
+					window.addEventListener('home_setHeadImg', function(data) {
+						tempHead.headImg = data.detail.imgurl;
+					});
+					// 查询学段
+					getResPer();
+					//阻尼系数
+					var deceleration = mui.os.ios ? 0.003 : 0.0009;
+					$('.mui-scroll-wrapper').scroll({
+						bounce: false,
+						indicators: true, //是否显示滚动条
+						deceleration: deceleration
+					});
+					$.ready(function() {
+						//循环初始化所有下拉刷新，上拉加载。
+						$.each(document.querySelectorAll('.mui-scroll'), function(index, pullRefreshEl) {
+							$(pullRefreshEl).pullToRefresh({
+								down: {
+									callback: function() {
+										var self = this;
+										contentData.refreshFlag = 0; //0刷新，1加载更多
+										contentData.pageIndex = 1;
+										// 查询资源列表
+										getResPage(self);
+									}
+								},
+								up: {
+									callback: function() {
+										var self = this;
+										contentData.refreshFlag = 1; //0刷新，1加载更多
+										// 查询资源列表
+										getResPage(self);
+									}
+								}
+							});
+						});
+					});
+				})(mui);
+			});
+
+			function getQueryString(url) {
+				try {
+					var theRequest = new Object();
+					if (url.indexOf("?") != -1) {
+						var str = url.split('?')[1];
+						strs = str.split("&");
+						for (var i = 0; i < strs.length; i++) {
+							theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+						}
+					}
+					return theRequest;
+				} catch (e) {
+					console.error('对userbus字段进行学段去重时发生异常,' + e);
+					console.error('====================')
+					console.error(e.stack);
+					console.error('====================')
+					return {};
+				}
+			}
+		</script>
+	</body>
+
+</html>
