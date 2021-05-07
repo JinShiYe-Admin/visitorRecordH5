@@ -8,6 +8,8 @@
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<script type="text/javascript" src="../../js/utils/mui.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" href="../../js/loginIndex/bootstrap-4.2.1.css">
+		<link rel="stylesheet" href="../../js/loginIndex/style.default.css" id="theme-stylesheet">
 		<style type="text/css">
 			.regisgerColo {
 				border-color: #00CFBD;
@@ -26,36 +28,41 @@
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			<!--<a  class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color: white;"></a>-->
-			<h1 class="mui-title">登录</h1>
-		</header>
 		<div class="mui-content" style="background-color: white;">
-			<div style="height: 200px;font-size: 18px;color: #00cfbd;padding: 100px 0px;text-align: center;">欢迎登录</div>
-			<!-- <div class='yonghuxieyi'>依据最新的法律要求，我们更新了《<a id='yonghuA' style='text-decoration: underline;'>用户协议</a>》和《<a id='yonghuB' style='text-decoration: underline;'>隐私政策</a>》，请您务必审慎阅读，充分理解相关条款内容，特别是字体加粗标识的重要条款。</div>
-			<div class='yonghuxieyi'>点击同意即代表您已阅读并同意《用户协议》和《隐私政策》，如果您不同意用户协议和隐私政策的内容，我们暂时无法为您提供服务。</div>
-			<div class='yonghuxieyi'>我们会尽力保护您的个人信息安全。</div> -->
-			<div class="mui-input-row">
-				<label style="margin-top: -5px;">
-					<image src="../../img/login/username.png" style="width: 25px;height: 25px;" />
-				</label>
-				<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入用户名">
-			</div>
-			<hr style=" height:1px;border:none;border-top:1px solid #aeaeae;;margin: -12px 20px 5px 60px ;" />
-
-			<div class="mui-input-row ">
-				<label>
-					<image src="../../img/login/password.png" style="width: 27px;height: 27px;" />
-				</label>
-				<input id='password' type="password" class="mui-input-clear mui-input " placeholder="请输入密码" style="margin-top: 5px;">
-			</div>
-			<hr style=" height:1px;border:none;border-top:1px solid #aeaeae;;margin: -12px 20px 0px 60px ;" />
-			
-			<div style="padding-top: 20px;padding-left: 20px;padding-right: 20px;">
-				<button id='login' type="button" class="mui-btn mui-btn-block mui-btn-primary" style="background: #00cfbd; border:none; margin-top: 30px;height: 40px;padding-top: 8px;border-radius: 20px;">登录</button>
-				<!--<button id='register' type="button" class="mui-btn mui-btn-block mui-btn-outlined regisgerColo" style=" margin-top: 30px;height: 40px;padding-top: 8px;">注册</button>-->
-			</div>
-			<div id="zhuce" style="padding-top: 20px;padding-left: 20px;color: #00cfbd;font-size: 15px;">账号注册/找回密码</div>
+			<div class="page login-page">
+			  <div class="container d-flex align-items-center">
+			    <div class="form-holder has-shadow">
+			      <div class="row">
+			        <!-- Logo & Information Panel-->
+			        <div class="col-lg-5">
+			          <div class="info d-flex align-items-center">
+			            <div class="content">
+			              <div class="logo">
+			                <h1>访客系统</h1>
+			              </div>
+			              <p>欢迎登陆</p>
+			            </div>
+			          </div>
+			        </div>
+			        <!-- Form Panel    -->
+			        <div class="col-lg-7 bg-white">
+			          <div class="form d-flex align-items-center">
+			            <div class="content">
+			                <div class="form-group">
+			                  <input id='account' type="text" name="userName" required="" data-msg="请输入用户名" placeholder="用户名" class="input-material">
+			                </div>
+			                <div class="form-group">
+			                  <input id='password' type="password" name="passWord" required="" data-msg="请输入密码" placeholder="密码" class="input-material">
+			                </div>
+			                <button id='login' type="submit" class="btn btn-primary">登录</button>
+			                </div>
+			              <br>
+			            </div>
+			          </div>
+			        </div>
+			      </div>
+			    </div>
+			  </div>
 		</div>
 	</body>
 	<script src="../../js/utils/vue.js"></script>
@@ -71,6 +78,8 @@
 	<script src="../../js/libs/encryption/signHmacSHA1.js"></script>
 	<script src="../../js/libs/jquery.js"></script>
 	<script src="../../js/libs/encryption/sortSign.js"></script>
+	<script src="../../js/utils/pushPermission.js"></script>
+	<script src="../../js/loginIndex/bootstrap-3.3.4.js"></script>
 	<!---->
 
 	<script src="../../js/utils/publicProtocol.js"></script>
@@ -81,9 +90,6 @@
 	
 
 	<script type="text/javascript">
-		//		$(function() {
-		//			
-		//		});
 		var backButtonPress = 0;
 		var tempModel = {};
 		var loginFlag = 0; //0自动登录，1不自动登录
@@ -96,6 +102,11 @@
 					plus.runtime.quit();
 				} else {
 					plus.nativeUI.toast('再按一次退出应用');
+					plus.pushPermission.gotoSetting(function(){
+						alert('Success')
+					},function(){
+						alert('fail')
+					})
 				}
 				setTimeout(function() {
 					backButtonPress = 0;
@@ -132,7 +143,7 @@
 			}
 			//判断是否是第一次使用APP end
 			
-			plus.navigator.setStatusBarBackground("#00CFBD");
+			plus.navigator.setStatusBarBackground("#3893D9"); 
 			tempModel = {
 				uuid: '',
 				appid: ''
@@ -144,16 +155,16 @@
 			//检查更新 start
 			// var CHECKUPDATE = store.get(window.storageKeyName.CHECKUPDATE);
 			// if('CHECK'==CHECKUPDATE || null==CHECKUPDATE){
-				events.showWaiting(" ");
+				// events.showWaiting(" ");
 				appUpdate.updateApp(function(type){
 					//wgt安装成功 回调
-					events.closeWaiting();
+					// events.closeWaiting();
 					//登录
 					getInfo()
 				},function(){ 
 					//取消更新/取消安装/wgt安装失败 回调
 					// store.set(window.storageKeyName.CHECKUPDATE,'UNCHECK');
-					events.closeWaiting();
+					// events.closeWaiting();
 					//登录
 					getInfo()
 				});
@@ -164,7 +175,6 @@
 		}
 		
 		function getInfo() {
-			console.log('333333');
 			plus.device.getInfo({
 				success: function(info) {
 					console.log('getDeviceInfo success: '+JSON.stringify(info));
@@ -237,11 +247,6 @@
 			outLine("appid: " + info.appid);
 			outLine("appkey: " + info.appkey);
 		}
-
-		//注册按钮
-		document.getElementById('zhuce').addEventListener('tap', function() {
-			utils.mOpenWithData("../../html/login/register.html", {});
-		})
 
 		//获取秘钥
 		var getEncryptKeyLogin = function(tempName, tempPW) {
@@ -327,7 +332,7 @@
 							console.log('tempFlag01:' + tempFlag);
 							if (tempFlag == 3) {
 								//跳转界面
-								gotoPage(tempPW);
+								// gotoPage(tempPW);
 							}
 						} else {
 							mui.toast(data3.msg);
@@ -472,16 +477,16 @@
 			delete tempData['user'];
 			console.log('new tempData:' + JSON.stringify(tempData));
 			store.set(window.storageKeyName.PERSONALINFO, tempData);
-			if (tempPW == '123456') {
+			if (tempPW == '123456***') {
 				var tempModel = {
 					flag: 1 //0是主动修改密码，1是判断是默认密码，自动让修改
 				}
 				utils.mOpenWithData("../../html/mine/modifyPassword.html", tempModel);
 			} else {
 				if (tempData.user_code == '0') { //无权限
-					utils.hrefSessionStorage('../../html/login/index2.html', {});
+					utils.hrefSessionStorage('../../html/login/index.html', {});
 				} else {
-					utils.hrefSessionStorage('../../html/test/test.html', {});
+					utils.hrefSessionStorage('../../html/test/index.html', {});
 				}
 			}
 		}
@@ -520,28 +525,22 @@
 			if (tempData.grds == null) {
 				tempData.grds = [];
 			}
-			//			tempData.clss = tempData.clss.concat(tempData.masterclss);
 			delete tempData['user'];
 			console.log('new tempData:' + JSON.stringify(tempData));
 			store.set(window.storageKeyName.PERSONALINFO, tempData);
-			if (tempPW == '123456') {
+			if (tempPW == '123456***') {
 				var tempModel = {
 					flag: 1 //0是主动修改密码，1是判断是默认密码，自动让修改
 				}
 				utils.mOpenWithData("../../html/mine/modifyPassword.html", tempModel);
 			} else {
-				plus.webview.open('../../html/login/index.html', '../../html/login/login.html', {
+				plus.webview.open('../../html/login/index.html', {
 					statusbar: {
 						background: "#00CFBD"
 					}
 				});
 				var wvs = plus.webview.all();
 				for (var i = 0, len = wvs.length; i < len; i++) {
-					//					if(wvs[i].getURL().indexOf('homeSchoolIndex.html') != -1 ||
-					//						wvs[i].getURL().indexOf('sciedu_home.html') != -1 ||
-					//						wvs[i].getURL().indexOf('courseIndex.html') != -1) {
-					//						continue;
-					//					}
 					plus.webview.close(wvs[i]);
 				}
 				var curr = plus.webview.currentWebview();
@@ -564,19 +563,12 @@
 
 		//从ios原生得到信息
 		var setUUID = function(tempStr) {
-			console.log('55555');
 			if (loginFlag == 0) {
-				console.log('666666');
-				//			var tempModel0 = $.parseJSON(tempStr);
-				//				store.set(window.storageKeyName.PUBLICPARAMETER, tempModel);
-
 				//判断上次是否登录过，自动登录
 				var personal = store.get(window.storageKeyName.PERSONALINFO);
 				console.log('personal:' + JSON.stringify(personal));
 				if (personal) {
 					if (personal.unit_code == 'undefined' || personal.unit_code == null || personal.userName0 == null) {
-						//login登录
-						//						loginPro('00000000000', '123');
 					} else {
 						document.getElementById("account").value = personal.userName0;
 						document.getElementById("password").value = personal.passWord0;
@@ -584,7 +576,6 @@
 						getEncryptKeyLogin(personal.userName0, personal.passWord0);
 					}
 				} else {
-					//					loginPro('00000000000', '000000');
 				}
 			} else {
 
