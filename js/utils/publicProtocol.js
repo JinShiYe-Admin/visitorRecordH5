@@ -333,7 +333,7 @@ var jQAjaxPost = function(url, data, callback) {
 					store.remove(window.storageKeyName.PERSONALINFO);
 					plus.webview.open('../../html/login/loginIndex.html', '../../html/login/loginIndex.html', {
 						statusbar: {
-							background: "#00CFBD"
+							background: "#3893D9"
 						}
 					});
 					// utils.mOpenWithData("../../html/login/loginIndex.html", {});

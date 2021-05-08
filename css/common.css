@@ -34,7 +34,7 @@ header {
 	font-size: 17px;
 	text-align: center;
 	line-height: 44px;
-	background: #00CFBD !important;
+	background: #3893D9 !important;
 	/*background: -webkit-linear-gradient(top,rgba(215,75,40,1),rgba(215,75,40,0.8));*/
 	z-index: 9999;
 	/*border-bottom: 1px solid rgba(215,75,40,0.8);*/
@@ -46,11 +46,11 @@ header {
 }
 
 .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
-	color: #00CFBD;
+	color: #3893D9;
 }
 
 .mui-segmented-control.mui-segmented-control-inverted~.mui-slider-progress-bar {
-	background-color: #00CFBD;
+	background-color: #3893D9;
 }
 
 /* .mui-bar-nav{
@@ -269,7 +269,7 @@ viewport-fit=cover
 }
 
 .mui-checkbox input[type=checkbox]:checked:before {
-	color: #00CFBD;
+	color: #3893D9;
 }
 
 .mui-media-bodys {
@@ -381,16 +381,16 @@ viewport-fit=cover
 
 
 .mui-segmented-control {
-	border-color: #00CFBD;
+	border-color: #3893D9;
 }
 
 .mui-segmented-control .mui-control-item {
 	color: #666;
-	border-color: #00CFBD;
+	border-color: #3893D9;
 }
 
 .mui-segmented-control .mui-control-item.mui-active {
-	background-color: #00CFBD;
+	background-color: #3893D9;
 	color: white;
 }
 
@@ -400,6 +400,6 @@ viewport-fit=cover
 }
 
 .mui-dtpicker-header button:last-child{
-				background-color:#00CFBD !important;
-				border-color:#00CFBD !important;
+				background-color:#3893D9 !important;
+				border-color:#3893D9 !important;
 			}

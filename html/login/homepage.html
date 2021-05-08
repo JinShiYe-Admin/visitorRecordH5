@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>首页</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../../fonts/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../fonts/iconfont2.css" />
+		<link rel="stylesheet" type="text/css" href="../../fonts/system/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style>
+			[v-cloak] {
+				visibility: hidden;
+				display:none !important;
+			}
+			.mui-bar-tab .mui-tab-item.mui-active {
+				color: #00CFBD;
+			}
+			.mui-title{
+				text-align: left;
+			}
+			
+			.mui-card .mui-control-content {
+				padding: 10px;
+			}
+			/* 右侧视图 */
+			.mui-control-content{
+				height: calc(100vh - 45px );
+			}
+			/* 左侧按钮 */
+			.tab-btn-left{
+				padding: 30px 0 15px;
+				border-bottom: 1px solid rgba(210,207,200,.9);
+			}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{
+				border-bottom: 0px;
+			}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active p{
+				color: #3893D9;
+			}
+			/* 左侧视图 */
+			.mui-segmented-control.mui-segmented-control-inverted{
+				border-right: 1px solid rgba(210,207,200,.9);
+				height: calc(100vh - 45px);
+			}
+			.line{
+				background-color: #00CFBD;
+				margin-bottom: 0.3125rem;
+				height: 0.125rem;
+			}
+			
+			/* 栅格 宽度修改 */
+			.mui-col-sm-1 {
+			    width: 10.33333333% !important;
+			}
+			
+			.mui-col-sm-11 {
+			    width: 89.66666667% !important;
+			}
+		</style>
+	</head>
+
+
+	<body>
+		<header class="mui-bar mui-bar-nav" id="tempHead">
+			<h1 v-cloak class="mui-title" >{{headTitle}}</h1>
+			<a @click="quit()" class="mui-pull-right" style="font-size: 1rem;margin-top: 0px;">注销</a>
+		</header>
+		<div v-cloak class="mui-content" style="margin-top: 0px;background: white;" id="contentData">
+			
+			<div class="mui-row">
+				<div class="mui-col-sm-1">
+					<!-- <div style="padding: 10px 0px;"> -->
+						<div id="segmentedControl" class="mui-segmented-control mui-segmented-control-inverted">
+							<div class="mui-col-sm-12 tab-btn-left">
+								<a @tap="tabClick('in')" class="mui-control-item mui-active" href="#item1">
+									<img :src="inActive?'../../img/home/ic_sign_in_active.png':'../../img/home/ic_sign_in.png'" style="width: 45px;height: 45px;">
+									<p>来访登记</p>
+								</a>
+							</div>
+							<div class="mui-col-sm-12 tab-btn-left">
+								<a @tap="tabClick('select')" class="mui-control-item" href="#item2">
+									<img :src="selectActive?'../../img/home/ic_sign_query_active.png':'../../img/home/ic_sign_query.png'" style="width: 45px;height: 45px;">
+									<p>访客查询</p>
+								</a>
+							</div>
+							<div class="mui-col-sm-12 tab-btn-left">
+								<a @tap="tabClick('out')" class="mui-control-item" href="#item3">
+									<img :src="outActive?'../../img/home/ic_sign_off_active.png':'../../img/home/ic_sign_off.png'" style="width: 45px;height: 45px;">
+									<p>访客签离</p>
+								</a>
+							</div>
+						</div>
+					<!-- </div> -->
+				</div>
+				<div class="mui-col-sm-11">
+					<div>
+						<div id="item1" class="mui-control-content mui-active">
+							<div id="scroll" class="mui-scroll-wrapper">
+								<div class="mui-scroll">
+									<ul class="mui-table-view">
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-1
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-2
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-3
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-4
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-5
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-6
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-7
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-8
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-9
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-10
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-11
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-12
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-13
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-14
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-15
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-16
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-17
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-18
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-19
+										</li>
+										<li class="mui-table-view-cell">
+											第一个选项卡子项-20
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div id="item2" class="mui-control-content">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell">
+									第二个选项卡子项-1
+								</li>
+								<li class="mui-table-view-cell">
+									第二个选项卡子项-2
+								</li>
+								<li class="mui-table-view-cell">
+									第二个选项卡子项-3
+								</li>
+							</ul>
+						</div>
+						<div id="item3" class="mui-control-content">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell">
+									第三个选项卡子项-1
+								</li>
+								<li class="mui-table-view-cell">
+									第三个选项卡子项-2
+								</li>
+								<li class="mui-table-view-cell">
+									第三个选项卡子项-3
+								</li>
+								<li class="mui-table-view-cell">
+									第三个选项卡子项-1
+								</li>
+								<li class="mui-table-view-cell">
+									第三个选项卡子项-2
+								</li>
+								<li class="mui-table-view-cell">
+									第三个选项卡子项-3
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	 
+		<script src="../../js/utils/storageKeyName.js"></script>
+		<script src="../../js/utils/mui.min.js"></script>
+		<script src="../../js/utils/vue.js"></script>
+		<script src="../../js/utils/store.js"></script>
+		<script src="../../js/utils/vconsole.min.js"></script>
+		<script src="../../js/utils/utils.js"></script>
+		<script src="../../js/libs/jquery.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			
+			// plus.pushPermission.gotoSetting(function(){
+			// 	alert('Success')
+			// },function(){
+			// 	alert('fail')
+			// })
+			
+			
+			mui.init();
+			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			
+			var tempHead = new Vue({
+				el: "#tempHead",
+				data: {
+					headTitle: '访客系统',
+				},
+				methods:{
+					quit:function(){
+						// plus.runtime.quit();
+						quit();
+					}
+				}
+			});
+			
+			var contentData = new Vue({
+				el: "#contentData",
+				data: {
+					inActive:true,//来访登记激活
+					selectActive:false,//来访查询激活
+					outActive:false,//访客签离激活
+					type:"in",//默认显示的tab类型
+				},
+				methods:{
+					tabClick:function(type){
+						if(this.type===type){}else{
+							this.type=type
+							this.inActive=false
+							this.selectActive=false
+							this.outActive=false
+							if(type==='in'){
+								this.inActive=true
+							}else if(type==='select'){
+								this.selectActive=true
+							}else if(type==='out'){
+								this.outActive=true
+							}
+						}
+					}
+				}
+			});
+			
+			
+			mui.plusReady(function() {
+				var tempMenu = store.get(window.storageKeyName.MENULIST);
+				var personal = store.get(window.storageKeyName.PERSONALINFO);
+				
+				mui('.mui-scroll-wrapper').scroll({
+					bounce: false,
+					indicators: true, //是否显示滚动条
+					deceleration: 0.0009
+				});
+				//安卓的连续点击两次退出程序
+				var backButtonPress = 0;
+				//重写返回键
+				mui.back = function(event) {
+					backButtonPress++;
+					if (backButtonPress > 1) {
+						plus.runtime.quit();
+					} else {
+						plus.nativeUI.toast('再按一次退出应用');
+					}
+					setTimeout(function() {
+						backButtonPress = 0;
+					}, 1000);
+					return false;
+				};
+			});
+			
+			//注销登录
+			function quit(){
+				store.remove(window.storageKeyName.PERSONALINFO);
+				//获取所有已打开的webview 实例————重新打开login.html————循环关闭页面
+				plus.webview.open('../../html/login/loginIndex.html', '../../html/login/loginIndex.html', {
+					statusbar: {
+						background: "#3893D9"
+					}
+				},"fade-in",10);
+				setTimeout(function(){
+					var curr = plus.webview.currentWebview();
+					var wvs = plus.webview.all();
+					try{
+						if(wvs){
+							for (var i = 0, len = wvs.length; i < len; i++) {
+								//关闭除login 页面外的其他页面
+								if (wvs[i].getURL()!=null && wvs[i].getURL()!=undefined){
+									if(wvs[i].getURL().indexOf('loginIndex.html')!=-1) {
+										continue;
+									}else{
+										plus.webview.close(wvs[i]);
+									}
+								}
+							}
+						}
+					}catch(e){
+						console.log("这有一个退出异常！！！！！！！！！！: " + JSON.stringify(e));
+					} 
+					curr.close();
+				},600)
+			}
+		</script>
+	</body>
+
+</html>

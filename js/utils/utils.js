@@ -149,7 +149,7 @@ var utils = (function(mod) {
 			id:ids[ids.length - 1],
 			styles:{
 				statusbar:{
-					background: "#00CFBD"
+					background: "#3893D9"
 				}
 			},
 			// show:{

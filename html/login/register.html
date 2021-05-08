@@ -80,7 +80,7 @@
 			}
 
 			.mui-checkbox input[type=checkbox]:checked:before {
-				color: #00cfbd;
+				color: #3893D9;
 			}
 
 			.mui-input-row label~input,
@@ -172,18 +172,18 @@
 			<div class="mui-input-row">
 				<label class="aCss">短信验证码</label>
 				<input :disabled="disabledFlag==2?true:false"  type="number" maxlength="6" placeholder="请输入验证码" v-model="yanzm" style="color: #000000;float: left;width: 100px;">
-				<button v-if="yanZMTime==60" @tap='sendYanzm()' :disabled="yanZMTime<60||disabledFlag==2?true:false" type="button" class="mui-btn" style="background-color: #00cfbd;color: white;border-color: white;margin-right: 10px;width: 100px;margin-top: 1px;">获取验证码</button>
-				<button v-if="yanZMTime<60" :disabled="yanZMTime<60||disabledFlag==2?true:false" type="button" class="mui-btn" style="background-color: #00cfbd;color: white;border-color: white;margin-right: 10px;width: 130px;margin-top: 1px;">{{yanZMTime}}秒后重新获取</button>
+				<button v-if="yanZMTime==60" @tap='sendYanzm()' :disabled="yanZMTime<60||disabledFlag==2?true:false" type="button" class="mui-btn" style="background-color: #3893D9;color: white;border-color: white;margin-right: 10px;width: 100px;margin-top: 1px;">获取验证码</button>
+				<button v-if="yanZMTime<60" :disabled="yanZMTime<60||disabledFlag==2?true:false" type="button" class="mui-btn" style="background-color: #3893D9;color: white;border-color: white;margin-right: 10px;width: 130px;margin-top: 1px;">{{yanZMTime}}秒后重新获取</button>
 			</div>
 			<div style="text-align: center;margin-top: 10px;">
-				<button @tap='searchList()' :disabled="disabledFlag==1?false:true" class="mui-btn" style="background-color: #00cfbd;color: white;border-color: white;margin-left: 10px;">查询</button>
-				<button @tap='clearData()' class="mui-btn" style="background-color: #00cfbd;color: white;border-color: white;margin-left: 10px;">清空</button>
+				<button @tap='searchList()' :disabled="disabledFlag==1?false:true" class="mui-btn" style="background-color: #3893D9;color: white;border-color: white;margin-left: 10px;">查询</button>
+				<button @tap='clearData()' class="mui-btn" style="background-color: #3893D9;color: white;border-color: white;margin-left: 10px;">清空</button>
 			</div>
 			<ul class="mui-table-view" style="margin-top: 20px;">
 			    <li class="mui-table-view-cell mui-media" v-for="item in userList">
 			        <a href="javascript:;">
-						<button v-if="item.status==0" class="mui-pull-right" @tap='tapItem(item)' style="background-color: #00cfbd;margin-top: 5px;color: white;border-color: white;">注册</button>
-						<button v-if="item.status==1" class="mui-pull-right" @tap='tapItem(item)' style="background-color: #00cfbd;margin-top: 5px;color: white;border-color: white;;">找回密码</button>
+						<button v-if="item.status==0" class="mui-pull-right" @tap='tapItem(item)' style="background-color: #3893D9;margin-top: 5px;color: white;border-color: white;">注册</button>
+						<button v-if="item.status==1" class="mui-pull-right" @tap='tapItem(item)' style="background-color: #3893D9;margin-top: 5px;color: white;border-color: white;;">找回密码</button>
 						<p v-if="item.status==2" class="mui-pull-right" style="color: red;margin-top: 5px;">账号已停用</p>
 						<p v-if="item.status==3" class="mui-pull-right" style="color: red;margin-top: 5px;">账号已屏蔽</p>
 			            <div class="mui-media-body" style="color: dimgrey;font-size: 15px;padding-right: 10px;margin-top: 0px;">
