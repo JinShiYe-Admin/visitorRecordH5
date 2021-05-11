@@ -21,6 +21,17 @@
 			.mui-bar-tab .mui-tab-item.mui-active {
 				color: #3893D9;
 			}
+			a:hover {
+			    color: #FAFAFA;
+			}
+			.mui-h4, h4 {
+			    font-size: 18px;
+			}
+			h1, h2, h3, h4, h5, h6 {
+			    line-height: 1;
+			    margin-top: 5px;
+			    margin-bottom: 5px;
+			}
 			/* 左侧按钮 */
 			.tab-btn-left{
 				padding: 30px 0 15px;
@@ -132,7 +143,7 @@
 			.mui-slider .mui-segmented-control.mui-segmented-control-inverted~.mui-slider-group .mui-slider-item{
 				border-bottom: 0;
 			}
-			.bfr-bottom{
+			.visitor-bottom{
 				width: 220px !important;
 				font-weight: 600;
 			}
@@ -144,9 +155,16 @@
 				margin-top: 8px;
 				padding-right: 3px;
 			}
-			
-			/* 底部按钮样式 */
-			.mui-btn-outlined{
+			/* 自定义按钮样式 */
+			.mui-btn-sys{
+				border: 1px solid 3893D9;
+				background-color: #3893D9;
+				color: #FAFAFA;
+			}
+			.mui-btn, button, input[type=button], input[type=reset], input[type=submit]{
+				padding: 6px 8px 4px;
+			}
+			.mui-btn-outlined-lg{
 				width: 140px;
 				margin: 0 10px;
 				font-size: 18px;
@@ -165,6 +183,13 @@
 			.layui-table thead tr{
 				background-color: #3893D9;
 				color: #FAFAFA;
+			}
+			.layui-table-cell {
+				height: 33px;
+				padding: 5px 5px 2px;
+			}
+			.layui-table-view .layui-table td, .layui-table-view .layui-table th{
+				padding:3px 0;
 			}
 		</style> 
 	</head>
@@ -185,7 +210,7 @@
 				<div class="mui-col-sm-11">
 					<div>
 						<div id="item1" class="mui-control-content mui-active">
-							<h4>访客信息</h4>
+							<h4 class="mui-h4">访客信息</h4>
 							<div class="line"></div>
 							<div class="mui-row" style="margin-top: 1rem;">
 								<div class="mui-col-sm-2">
@@ -213,11 +238,11 @@
 								</div>
 							</div>
 							<div style="margin-top: 1.5rem;"></div>
-							<h4>被访人信息</h4>
+							<h4 class="mui-h4">被访人信息</h4>
 							<div class="line"></div>
 							<div class="mui-row" style="margin-top: 1rem;">
 								<div id="slider" class="mui-slider">
-									<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted bfr-bottom">
+									<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted visitor-bottom">
 											<a class="mui-control-item mui-active" href="#item1mobile">教职工</a>
 											<a class="mui-control-item" href="#item2mobile">学生</a>
 									</div>
@@ -270,13 +295,13 @@
 								</div>
 							</div>
 							<div class="mui-row" style="margin-top: 2rem;text-align: center;">
-								<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined">
+								<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-btn-outlined-lg">
 									保存
 								</button>
-								<button type="button" class="mui-btn mui-btn-success mui-btn-outlined">
+								<button type="button" class="mui-btn mui-btn-success mui-btn-outlined mui-btn-outlined-lg">
 									保存并打印
 								</button>
-								<button type="button" class="mui-btn mui-btn-outlined">
+								<button type="button" class="mui-btn mui-btn-outlined mui-btn-outlined-lg">
 									取消
 								</button>
 							</div>
@@ -288,41 +313,40 @@
 									<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框">
 									<label style="width: 90px;">是否离开：</label>
 									<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框">
-									<label style="width: 80px;">被仿人：</label>
+									<label style="width: 80px;">被访人：</label>
 									<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框">
 									<label style="width: 90px;">进入时间：</label>
 									<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框">
 									<label style="width: 40px;">至：</label>
 									<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框">
-									<button type="button" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;">查询</button>
+									<button type="button" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 14px;">查询</button>
 								</div>
 							 </div>
-							 <div class="mui-row" style="margin-right: 15px;">
-							 	 <table class="layui-hide" id="demo"></table>
-								 <div id="pageLAY" style="text-align: right;"></div>
+							 <div class="mui-row" style="margin-right: 15px;margin-bottom: 0px;">
+							 	 <table class="layui-hide" id="queryT" lay-filter="queryTable"></table>
+								 <div id="pageQuery" style="text-align: right;"></div>
 							 </div>
 						</div>
 						<div id="item3" class="mui-control-content">
-							<ul class="mui-table-view">
-								<li class="mui-table-view-cell">
-									第三个选项卡子项-1
-								</li>
-								<li class="mui-table-view-cell">
-									第三个选项卡子项-2
-								</li>
-								<li class="mui-table-view-cell">
-									第三个选项卡子项-3
-								</li>
-								<li class="mui-table-view-cell">
-									第三个选项卡子项-1
-								</li>
-								<li class="mui-table-view-cell">
-									第三个选项卡子项-2
-								</li>
-								<li class="mui-table-view-cell">
-									第三个选项卡子项-3
-								</li>
-							</ul>
+							<div class="mui-row">
+									<div class="mui-input-row mui-input-row-bottom">
+										<label style="width: 80px;">关键字：</label>
+										<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框">
+										<label style="width: 80px;">被访人：</label>
+										<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框">
+										<label style="width: 90px;">进入时间：</label>
+										<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框">
+										<label style="width: 40px;">至：</label>
+										<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框">
+										<button type="button" class="mui-btn" style="background-color: #3893D9;border: 1px solid #3893D9;font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 14px;">读卡</button>
+										<button type="button" class="mui-btn mui-btn-success" style="font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 14px;">扫码</button>
+										<button type="button" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 14px;">查询</button>
+									</div>
+							</div>
+							<div class="mui-row" style="margin-right: 15px;margin-bottom: 0px;">
+								<table class="layui-hide" id="queryO" lay-filter="outTable"></table>
+								<div id="pageOut" style="text-align: right;"></div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -337,6 +361,14 @@
 		<script src="../../js/utils/utils.js"></script>
 		<!-- <script src="../../js/libs/jquery.js"></script> -->
 		<script src="../../js/layui/layui.js"></script>
+		<script type="text/html" id="queryBar">
+			<div class="mui-btn mui-btn-outlined" lay-event="detail" style="margin-right: 5px;margin-top: -3px;">详情</div>
+			<div class="mui-btn mui-btn-success" lay-event="print" style="margin-top: -3px">打印</div>
+		</script>
+		<script type="text/html" id="outBar">
+			<div class="mui-btn mui-btn-outlined" lay-event="detail" style="margin-right: 5px;margin-top: -3px">详情</div>
+			<div class="mui-btn mui-btn-danger" lay-event="print" style="margin-top: -3px">签离</div>
+		</script>
 		<script type="text/javascript" charset="utf-8">
 			
 			// plus.pushPermission.gotoSetting(function(){
@@ -357,7 +389,12 @@
 				methods:{
 					quit:function(){
 						// plus.runtime.quit();
-						quit();
+						var btnArray = ['否', '是'];
+						mui.confirm('注销登录后将跳转至登录页面', ' ', btnArray, function(e) {
+							if (e.index == 1) {
+								quit();
+							}
+						},'div')
 					}
 				}
 			});
@@ -382,9 +419,10 @@
 								this.inActive=true
 							}else if(type==='select'){
 								this.selectActive=true
-								getSelectDataTable();
+								getQueryData();
 							}else if(type==='out'){
 								this.outActive=true
+								getOutData();
 							}
 						}
 					},
@@ -421,16 +459,16 @@
 			});
 			
 			//获取表格数据——访客查询
-			function getSelectDataTable(){
+			function getQueryData(){
 				layui.use(['laypage','table'], function(){
 				  var laypage = layui.laypage;
 				  var table = layui.table;
-				  initSelectTable(table,'',[]);
+				  initQueryTable(table,'',[]);
 				  //执行一个laypage实例
 				  laypage.render({
-				    elem: 'pageLAY' //注意，这里的 test1 是 ID，不用加 # 号
+				    elem: 'pageQuery' //注意，这里的 test1 是 ID，不用加 # 号
 				    ,count: 150  //TODO
-					,limit:11
+					,limit:10
 					,theme: '#3893D9'
 					,first: '首页'
 					,last: '尾页'
@@ -442,9 +480,9 @@
 						//TODO 模拟请求数据
 						setTimeout(function(){
 							var da=[];
-							var datassss1=[{"id":"张三三1","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57}]
+							var datassss3=[{"id":"张三三1","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57}]
 							var datassss2=[{"id":"张三三2","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57}]
-							var datassss3=[{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57}]
+							var datassss1=[{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57}]
 							if(obj.curr==1){
 								da=datassss1
 							}
@@ -454,48 +492,149 @@
 							if(obj.curr==3){
 								da=datassss3
 							}
-							initSelectTable(table,'1',da);
-						},1000)
+							initQueryTable(table,'1',da);
+						},100)
 					  }
 				  });
 				});
 			}
 			//初始化表格——访客查询
-			function initSelectTable(table,ty,da){
+			function initQueryTable(table,ty,da){
 				var don=''
 				if(ty){
 					don=function(res, curr, count){events.closeWaiting();}
 				}
 				table.render({
-					elem: '#demo'
-					,height: 'full-200'
-					,cellMinWidth: 90
+					elem: '#queryT'
+					,height: 'full-205' 
+					,cellMinWidth:110
 					,limit:11
 					,cols: [[ //表头
-					  {field: 'id', title: '姓名', rowspan: 2}
-					  ,{field: 'username', title: '随行人数',  rowspan: 2}
-					  ,{field: 'sex', title: '访问事由', rowspan: 2 }
+					  {align: 'center',field: 'id', title: '姓名', rowspan: 2}
+					  ,{align: 'center',field: 'username', title: '随行人数',  rowspan: 2}
+					  ,{field: 'sex',width:200, title: '访问事由', rowspan: 2 }
 					  ,{align: 'center', title: '被访教职工', colspan:2}
-					  ,{align: 'center', title: '被仿学生', colspan:3}
-					  ,{field: 'experience', title: '进入时间', rowspan: 2 }
-					  ,{field: 'score', title: '是否离开',  rowspan: 2}
-					  ,{field: 'classify', title: '签离时间', rowspan: 2}
-					  ,{field: 'wealth', title: '操作',  rowspan: 2}
+					  ,{align: 'center', title: '被访学生', colspan:3}
+					  ,{align: 'center',field: 'experience',width:200, title: '进入时间', rowspan: 2 }
+					  ,{align: 'center',field: 'classify',width:200, title: '签离时间', rowspan: 2}
+					  ,{fixed: 'right',align: 'center',field: 'score', title: '是否离开',  rowspan: 2}
+					  ,{fixed: 'right',align: 'center',width:130, title: '操作',  rowspan: 2,toolbar: '#queryBar'}
 					  ]
 					  ,[
-					   {field: 'city', title: '部门',}
-					   ,{field: 'sign', title: '姓名',}
-					   ,{field: 'experience', title: '年级班级',}
-					   ,{field: 'classify', title: '学生',}
-					   ,{field: 'wealth', title: '班主任',}
+					   {align: 'center',field: 'city', title: '部门',}
+					   ,{align: 'center',field: 'sign', title: '姓名',}
+					   ,{align: 'center',field: 'experience', title: '年级班级',}
+					   ,{align: 'center',field: 'classify', title: '学生',}
+					   ,{align: 'center',field: 'wealth', title: '班主任',}
 					   ]]
 					   ,done:don
 					,data:da
 				  });
+				  table.on('tool(queryTable)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+				    var data = obj.data; //获得当前行数据
+				    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+				    var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+				   
+				    if(layEvent === 'detail'){ //查看
+						utils.mOpenWithData("./outVisitorDetail.html", {});
+				    } else if(layEvent === 'print'){ //打印
+				      layer.confirm('真的打印行么', function(index){
+				        // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+				        // layer.close(index);
+				        //向服务端发送删除指令
+				      });
+				    }
+				  });
 			}
 			
-			//获取表格数据
-			function initOutDataTable(){
+			//获取表格数据——访客签离
+			function getOutData(){
+				layui.use(['laypage','table'], function(){
+				  var laypage = layui.laypage;
+				  var table = layui.table;
+				  initOutTable(table,'',[]);
+				  //执行一个laypage实例
+				  laypage.render({
+				    elem: 'pageOut' //注意，这里的 test1 是 ID，不用加 # 号
+				    ,count: 150  //TODO
+					,limit:10
+					,theme: '#3893D9'
+					,first: '首页'
+					,last: '尾页'
+					 ,jump: function(obj, first){
+						 console.log(first); 
+					    console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+					    console.log(obj.limit); //得到每页显示的条数
+						events.showWaiting()
+						//TODO 模拟请求数据
+						setTimeout(function(){
+							var da=[];
+							var datassss3=[{"id":"张三三1","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57}]
+							var datassss2=[{"id":"张三三2","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57}]
+							var datassss1=[{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57},{"id":"张三三3","username":"66","sex":"女","city":"城市-0","sign":"签名-0","experience":'2021年5月10日 15:40:06',"logins":24,"wealth":82830700,"classify":"2021年5月10日 15:40:21","score":57}]
+							if(obj.curr==1){
+								da=datassss1
+							}
+							if(obj.curr==2){
+								da=datassss2
+							}
+							if(obj.curr==3){
+								da=datassss3
+							}
+							initOutTable(table,'1',da);
+						},100)
+					  }
+				  });
+				});
+			}
+			
+			//初始化表格——访客签离
+			function initOutTable(table,ty,da){
+				var don=''
+				if(ty){
+					don=function(res, curr, count){events.closeWaiting();}
+				}
+				table.render({
+					elem: '#queryO'
+					,height: 'full-205' 
+					,cellMinWidth:110
+					,limit:11
+					,cols: [[ //表头
+					  {align: 'center',field: 'id', title: '姓名', rowspan: 2}
+					  ,{align: 'center',field: 'username', title: '随行人数',  rowspan: 2}
+					  ,{field: 'sex',width:200, title: '访问事由', rowspan: 2 }
+					  ,{align: 'center', title: '被访教职工', colspan:2}
+					  ,{align: 'center', title: '被访学生', colspan:3}
+					  ,{align: 'center',field: 'experience',width:200, title: '进入时间', rowspan: 2 }
+					  ,{align: 'center',field: 'classify',width:200, title: '签离时间', rowspan: 2}
+					  ,{fixed: 'right',align: 'center',field: 'score', title: '是否离开',  rowspan: 2}
+					  ,{fixed: 'right',align: 'center',width:130, title: '操作',  rowspan: 2,toolbar: '#outBar'}
+					  ]
+					  ,[
+					   {align: 'center',field: 'city', title: '部门',}
+					   ,{align: 'center',field: 'sign', title: '姓名',}
+					   ,{align: 'center',field: 'experience', title: '年级班级',}
+					   ,{align: 'center',field: 'classify', title: '学生',}
+					   ,{align: 'center',field: 'wealth', title: '班主任',}
+					   ]]
+					   ,done:don
+					,data:da
+				  });
+				  table.on('tool(outTable)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+				    var data = obj.data; //获得当前行数据
+				    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+				    var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+				   
+				    if(layEvent === 'detail'){ //查看
+						utils.mOpenWithData("./outVisitorDetail.html", {});
+				    } else if(layEvent === 'print'){ //打印
+				      layer.confirm('真的打印行么', function(index){
+				        // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+				        // layer.close(index);
+				        //向服务端发送删除指令
+				      });
+				    }
+				  });
 			}
 			
 			//注销登录
