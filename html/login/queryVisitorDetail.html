@@ -1,8 +1,5 @@
 <!doctype html>
 <html>
-	<!-- 课堂考勤详情
-
- -->
 	<head>
 		<meta charset="UTF-8">
 		<title></title>
@@ -19,13 +16,139 @@
 				background-color: #FFFFFF;
 			}
 			
-			.mui-content{
+			.mui-bar~.mui-content {
+				top: 44px;
+				height: calc(100vh - 55px );
 				background-color: #FFFFFF;
+				padding:15px 0 0 15px;
 			}
 			
-			.mui-bar~.mui-content .mui-fullscreen {
-				top: 44px;
-				height: auto;
+			/* 局部样式修改 */
+			a:hover {
+			    color: #FAFAFA;
+			}
+			.mui-h4, h4 {
+			    font-size: 20px;
+				color: #c3865c;
+			}
+			h1, h2, h3, h4, h5, h6 {
+			    line-height: 1;
+			    margin-top: 5px;
+			    margin-bottom: 5px;
+			}
+			
+			/* 自定义按钮样式 */
+			.mui-btn-sys{
+				border: 1px solid 3893D9;
+				background-color: #3893D9;
+				color: #FAFAFA;
+			}
+			.mui-btn, button, input[type=button], input[type=reset], input[type=submit]{
+				padding: 6px 8px 4px;
+			}
+			.mui-btn-outlined-lg{
+				width: 140px;
+				margin: 0 10px;
+				font-size: 18px;
+				font-weight: 600;
+				line-height: 2;
+			}
+			/* 分割线 */
+			.line{
+				background-color: #3893D9;
+				margin-bottom: 0.3125rem;
+				height: 0.125rem;
+			}
+			
+			/* 身份证照片框样式 */
+			.card-img{
+				border: 1px solid rgba(210,207,200,.9);
+				width:171px;
+				height: 240px;
+			}
+			.card-text{
+				display: block;
+				margin: 63% 27% 0;
+				width: 80px;
+				font-size: 15px;
+				color: grey;
+			}
+			
+			/* 输入框样式和间距修改 */
+			.mui-input-row label{
+				font-size: 16px;
+				width: 38%;
+				font-weight: 600;
+				text-align: right;
+			}
+			.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea{
+				border-bottom: 1px solid rgba(210,207,200,.8);
+				width: 62%;
+				float: left;
+			}
+			
+			.mui-input-row-right label{
+				width: 30%;
+				font-weight: 600;
+				text-align: center;
+			}
+			.mui-input-row-right label~input, .mui-input-row-right label~select, .mui-input-row-right label~textarea{
+				border-bottom: 1px solid rgba(210,207,200,.8);
+				width: 70%;
+				float: left;
+			}
+			
+			.mui-input-row-bottom-4 label{
+				width: 45%;
+				font-weight: 600;
+				text-align: left;
+			}
+			
+			.mui-input-row-bottom-4 label~input, .mui-input-row-bottom-4 label~select, .mui-input-row-bottom-4 label~textarea{
+				border-bottom: 1px solid rgba(210,207,200,.8);
+				width: 55%;
+				float: left;
+			}
+			
+			.mui-input-row-bottom-5 label{
+				width: 30%;
+				font-weight: 600;
+				text-align: left;
+			}
+			
+			.mui-input-row-bottom-5 label~input, .mui-input-row-bottom-5 label~select, .mui-input-row-bottom-5 label~textarea{
+				border-bottom: 1px solid rgba(210,207,200,.8);
+				width: 70%;
+				float: left;
+			}
+			
+			.mui-input-row-bottom-7 label{
+				width: 25%;
+				font-weight: 600;
+				text-align: left;
+			}
+			
+			.mui-input-row-bottom-7 label~input, .mui-input-row-bottom-7 label~select, .mui-input-row-bottom-7 label~textarea{
+				border-bottom: 1px solid rgba(210,207,200,.8);
+				width: 75%;
+				float: left;
+			}
+			
+			.mui-input-row-bottom-12 label{
+				width: 15%;
+				font-weight: 600;
+				text-align: left;
+			}
+			
+			.mui-input-row-bottom-12 label~input, .mui-input-row-bottom-12 label~select, .mui-input-row-bottom-12 label~textarea{
+				border-bottom: 1px solid rgba(210,207,200,.8);
+				width: 85%;
+				float: left;
+			}
+			
+			/* 表单间距 */
+			.mui-input-row{
+				margin-top: 8px;
 			}
 		</style>
 	</head>
@@ -36,13 +159,124 @@
 			<h1 v-cloak class="mui-title">{{titleName}}</h1>
 		</header>
 		<div id="datasource" class="mui-content mui-fullscreen">
-			卧槽
+			<div class="mui-row">
+				<div class="mui-col-sm-8">
+					<div class="mui-card">
+						<div class="mui-card-header mui-h4">访客信息</div>
+						<div class="mui-card-content" style="padding: 10px;">
+							 <div class="mui-row">
+							 	<div class="mui-col-sm-2">
+							 		<img v-if="IDCardImg" class="card-img" src="../../img/home/idcard.jpg">
+							 		<div v-else class="card-img" ><span class="card-text">身份证照片</span></div>
+							 	</div>
+							 	<div class="mui-col-sm-10">
+							 		<div class="mui-row" style="margin-left:2rem;">
+							 			<template v-for="item in 10">
+							 				<div class="mui-col-sm-6">
+							 					<div class="mui-input-row">
+							 						<label>出生日期：</label>
+							 						<input  type="text" placeholder="暂无信息"  disabled="true">
+							 					</div>
+							 				</div>
+							 			</template>
+							 		</div>
+							 	</div>
+							 </div>
+							 <div class="mui-row">
+								<div class="mui-col-sm-12">
+									<div class="mui-input-row mui-input-row-bottom-12">
+										<label>采访单位：</label>
+										<input  type="text" placeholder="暂无信息"  disabled="true">
+									</div>
+								</div>
+							 </div>
+							 <div class="mui-row">
+							 	<div class="mui-col-sm-7">
+							 		<div class="mui-input-row mui-input-row-bottom-7">
+							 			<label>地址：</label>
+							 			<input  type="text" placeholder="暂无信息"  disabled="true">
+							 		</div>
+							 	</div>
+							 	<div class="mui-col-sm-5">
+							 		<div class="mui-input-row mui-input-row-bottom-5">
+							 			<label>车牌号：</label>
+							 			<input  type="text" placeholder="暂无信息"  disabled="true">
+							 		</div>
+							 	</div>
+							 	<div class="mui-col-sm-4">
+							 		<div class="mui-input-row mui-input-row-bottom-4">
+							 			<label>进入时间：</label>
+							 			<input  type="text" placeholder="暂无信息"  disabled="true">
+							 		</div>
+							 	</div>
+							 	<div class="mui-col-sm-4">
+							 		<div class="mui-input-row mui-input-row-bottom-4">
+							 			<label>是否离开：</label>
+							 			<input  type="text" placeholder="暂无信息"  disabled="true">
+							 		</div>
+							 	</div>
+							 	<div class="mui-col-sm-4">
+							 		<div class="mui-input-row mui-input-row-bottom-4">
+							 			<label>离开时间：</label>
+							 			<input  type="text" placeholder="暂无信息"  disabled="true">
+							 		</div>
+							 	</div>
+							 	<div class="mui-col-sm-12">
+							 		<div class="mui-input-row mui-input-row-bottom-12">
+							 			<label>备注：</label>
+							 			<input  type="text" placeholder="暂无信息"  disabled="true">
+							 		</div>
+							 	</div>
+							 </div>
+						</div>
+					</div>
+				</div>
+				<div class="mui-col-sm-4">
+					<div class="mui-card">
+						<div class="mui-card-header mui-h4">被访人信息</div>
+						<div class="mui-card-content" style="padding: 10px">
+							<div class="mui-row">
+								<template v-for="item in 4">
+									<div class="mui-col-sm-12">
+										<div class="mui-input-row mui-input-row-right">
+											<label>出生日期：</label>
+											<input  type="text" placeholder="暂无信息" disabled="true">
+										</div>
+									</div>
+								</template>
+							</div>
+						</div>
+					</div>
+					<div style="margin-top: 1rem;"></div>
+					<div class="mui-card">
+						<div class="mui-card-header mui-h4">登记人信息</div>
+						<div class="mui-card-content" style="padding: 10px ;">
+							<div class="mui-row">
+								<template v-for="item in 2">
+									<div class="mui-col-sm-12">
+										<div class="mui-input-row mui-input-row-right">
+											<label>出生日期：</label>
+											<input  type="text" placeholder="暂无信息"  disabled="true">
+										</div>
+									</div>
+								</template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="mui-row" style="margin-top: 2rem;text-align: center;">
+				<button type="button" class="mui-btn mui-btn-success mui-btn-outlined mui-btn-outlined-lg">
+					打印
+				</button>
+				<button type="button" @tap="back()" class="mui-btn mui-btn-outlined mui-btn-outlined-lg">
+					取消
+				</button>
+			</div>
 		</div>
 		<script src="../../js/utils/mui.min.js"></script>
 		<script src="../../js/utils/storageKeyName.js"></script>
 		<script src="../../js/utils/vconsole.min.js"></script>
-		<script src="../../js/utils/mui.pullToRefresh.js"></script>
-		<script src="../../js/utils/mui.pullToRefresh.material.js"></script>
 		<script src="../../js/utils/vue.js"></script>
 		<script src="../../js/utils/publicProtocol.js"></script>
 		<script src="../../js/utils/store.js"></script>
@@ -63,9 +297,6 @@
 			var personal = store.get(window.storageKeyName.PERSONALINFO);
 			console.log('personal:' + JSON.stringify(personal));
 			var curPage = {};
-			var pageIndex = 1; //请求数据页面
-			var totalPageCount; //总页码
-			var flagRef = 0; //是刷新0，还是加载更多1
 			var tempVue = new Vue({
 				el: "#tempVue",
 				data: {
@@ -75,23 +306,20 @@
 			var datasource = new Vue({
 				el: "#datasource",
 				data: {
-					formData: {
-					}, //表单内容
+					IDCardImg:'1',//身份证照片
 				},
+				methods:{
+					back:function(){
+						mui.back();
+					}
+				}
 			});
 
 			mui.plusReady(function() {
 				curPage = utils.getDataFromUrl(window.location.href);
 				console.log(JSON.stringify(curPage));
-				tempVue.titleName = ' 课堂考勤详情';
+				tempVue.titleName = '访客信息详情';
 				datasource.formData=curPage;
-				//阻尼系数、初始化刷新加载更多
-				var deceleration = mui.os.ios ? 0.003 : 0.0009;
-				mui('.mui-scroll-wrapper').scroll({
-					bounce: false,
-					indicators: true, //是否显示滚动条
-					deceleration: deceleration
-				});
 			});
 			
 		</script>

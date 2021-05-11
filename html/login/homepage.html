@@ -26,6 +26,7 @@
 			}
 			.mui-h4, h4 {
 			    font-size: 18px;
+				color: #c3865c;
 			}
 			h1, h2, h3, h4, h5, h6 {
 			    line-height: 1;
@@ -34,6 +35,8 @@
 			}
 			/* 左侧按钮 */
 			.tab-btn-left{
+				font-size: 20px;
+				font-weight: 600;
 				padding: 30px 0 15px;
 				border-bottom: 1px solid rgba(210,207,200,.9);
 			}
@@ -70,13 +73,6 @@
 			    width: 89.66666667% !important;
 			}
 			
-			.content-body{
-				padding: 0.9375rem 0 0 0.9375rem;
-			}
-			
-			h4 {
-				color: #c3865c;
-			}
 			
 			/* 身份证照片框样式 */
 			.card-img{
@@ -95,7 +91,7 @@
 			.scan{
 				border: 2px solid #C0726C;
 				border-radius: 50%;
-				padding:27px 17px;
+				padding:24px 17px;
 				width: 75px;
 				height: 75px;
 				color:#C0726C;font-size:1.125rem;
@@ -105,6 +101,7 @@
 			
 			/* 输入框样式和间距修改 */
 			.mui-input-row label{
+				font-size: 16px;
 				width: 28%;
 				font-weight: 600;
 				text-align: right;
@@ -116,27 +113,31 @@
 			}
 			
 			.mui-input-row-bottom label{
-				width: 22%;
+				width: 24%;
 				font-weight: 600;
 				text-align: right;
 				padding: 11px 5px;
 			} 
 			.mui-input-row-bottom label~input, .mui-input-row-bottom label~select, .mui-input-row-bottom label~textarea{
 				border: 1px solid rgba(210,207,200,.8);
-				width: 70%;
+				width: 68%;
 				float: left;
 			}
 			
 			.mui-input-row-bottom-lar label{
-				width: 28%;
+				width: 30%;
 				font-weight: 600;
 				text-align: right;
 				padding: 11px 5px;
 			} 
 			.mui-input-row-bottom-lar label~input, .mui-input-row-bottom-lar label~select, .mui-input-row-bottom-lar label~textarea{
 				border: 1px solid rgba(210,207,200,.8);
-				width: 70%;
+				width: 68%;
 				float: left;
+			}
+			/* 表单间距 */
+			.mui-input-row{
+				margin-top: 8px;
 			}
 			
 			/* 被访人信息 slider 样式修改 */
@@ -146,10 +147,6 @@
 			.visitor-bottom{
 				width: 220px !important;
 				font-weight: 600;
-			}
-			/* 表单间距 */
-			.mui-input-row{
-				margin-top: 8px;
 			}
 			.mui-input-row-bottom,.mui-input-row-bottom-lar{
 				margin-top: 8px;
@@ -162,7 +159,8 @@
 				color: #FAFAFA;
 			}
 			.mui-btn, button, input[type=button], input[type=reset], input[type=submit]{
-				padding: 6px 8px 4px;
+				padding: 7px 10px 5px;
+				width: 60px;
 			}
 			.mui-btn-outlined-lg{
 				width: 140px;
@@ -188,8 +186,11 @@
 				height: 33px;
 				padding: 5px 5px 2px;
 			}
-			.layui-table-view .layui-table td, .layui-table-view .layui-table th{
-				padding:3px 0;
+			.layui-table-view .layui-table th{
+				padding:1px 0;
+			}
+			.layui-table-view .layui-table td{
+				padding:11px 0 ;
 			}
 		</style> 
 	</head>
@@ -324,10 +325,104 @@
 							 </div>
 							 <div class="mui-row" style="margin-right: 15px;margin-bottom: 0px;">
 							 	 <table class="layui-hide" id="queryT" lay-filter="queryTable"></table>
-								 <div id="pageQuery" style="text-align: right;"></div>
+								 <div id="pageQuery" style="text-align: right;margin-top: -5px"></div>
 							 </div>
 						</div>
 						<div id="item3" class="mui-control-content">
+							<!-- 该区域在页面上不显示，点击签离按钮后在弹出层内显示，但需要一起渲染 start-->
+							<div id='layToast' class="mui-row" style="display: none;">
+								 <div class="mui-row">
+								 	<div class="mui-col-sm-8">
+								 		<div class="mui-card">
+								 			<div class="mui-card-header mui-h4">访客信息</div>
+								 			<div class="mui-card-content" style="padding: 10px;">
+								 				 <div class="mui-row">
+								 				 	<div class="mui-col-sm-2">
+								 				 		<img v-if="IDCardImg" class="card-img" src="../../img/home/idcard.jpg">
+								 				 		<div v-else class="card-img" ><span class="card-text">身份证照片</span></div>
+								 				 	</div>
+								 				 	<div class="mui-col-sm-10">
+								 				 		<div class="mui-row" style="margin-left:2rem;">
+								 				 			<template v-for="item in 10">
+								 				 				<div class="mui-col-sm-6">
+								 				 					<div class="mui-input-row">
+								 				 						<label>出生日期：</label>
+								 				 						<input  type="text" placeholder="暂无信息"  disabled="true">
+								 				 					</div>
+								 				 				</div>
+								 				 			</template>
+								 				 		</div>
+								 				 	</div>
+								 				 </div>
+								 				 <div class="mui-row">
+								 					<div class="mui-col-sm-12">
+								 						<div class="mui-input-row mui-input-row-bottom-12">
+								 							<label>采访单位：</label>
+								 							<input  type="text" placeholder="暂无信息"  disabled="true">
+								 						</div>
+								 					</div>
+								 				 </div>
+								 				 <div class="mui-row">
+								 				 	<div class="mui-col-sm-7">
+								 				 		<div class="mui-input-row mui-input-row-bottom-7">
+								 				 			<label>地址：</label>
+								 				 			<input  type="text" placeholder="暂无信息"  disabled="true">
+								 				 		</div>
+								 				 	</div>
+								 				 	<div class="mui-col-sm-5">
+								 				 		<div class="mui-input-row mui-input-row-bottom-5">
+								 				 			<label>车牌号：</label>
+								 				 			<input  type="text" placeholder="暂无信息"  disabled="true">
+								 				 		</div>
+								 				 	</div>
+								 				 	<div class="mui-col-sm-4">
+								 				 		<div class="mui-input-row mui-input-row-bottom-4">
+								 				 			<label>进入时间：</label>
+								 				 			<input  type="text" placeholder="暂无信息"  disabled="true">
+								 				 		</div>
+								 				 	</div>
+								 				 	<div class="mui-col-sm-4">
+								 				 		<div class="mui-input-row mui-input-row-bottom-4">
+								 				 			<label>是否离开：</label>
+								 				 			<input  type="text" placeholder="暂无信息"  disabled="true">
+								 				 		</div>
+								 				 	</div>
+								 				 	<div class="mui-col-sm-4">
+								 				 		<div class="mui-input-row mui-input-row-bottom-4">
+								 				 			<label>离开时间：</label>
+								 				 			<input  type="text" placeholder="暂无信息"  disabled="true">
+								 				 		</div>
+								 				 	</div>
+								 				 	<div class="mui-col-sm-12">
+								 				 		<div class="mui-input-row mui-input-row-bottom-12">
+								 				 			<label>备注：</label>
+								 				 			<input  type="text" placeholder="暂无信息"  disabled="true">
+								 				 		</div>
+								 				 	</div>
+								 				 </div>
+								 			</div>
+								 		</div>
+								 	</div>
+								 	<div class="mui-col-sm-4">
+								 		<div class="mui-card">
+								 			<div class="mui-card-header mui-h4">被访人信息</div>
+								 			<div class="mui-card-content" style="padding: 10px">
+								 				<div class="mui-row">
+								 					<template v-for="item in 4">
+								 						<div class="mui-col-sm-12">
+								 							<div class="mui-input-row mui-input-row-right">
+								 								<label>出生日期：</label>
+								 								<input  type="text" placeholder="暂无信息" disabled="true">
+								 							</div>
+								 						</div>
+								 					</template>
+								 				</div>
+								 			</div>
+								 		</div>
+								 	</div>
+								 </div>
+							</div>
+							<!-- 该区域在页面上不显示，点击签离按钮后在弹出层内显示，但需要一起渲染 end-->
 							<div class="mui-row">
 									<div class="mui-input-row mui-input-row-bottom">
 										<label style="width: 80px;">关键字：</label>
@@ -345,7 +440,7 @@
 							</div>
 							<div class="mui-row" style="margin-right: 15px;margin-bottom: 0px;">
 								<table class="layui-hide" id="queryO" lay-filter="outTable"></table>
-								<div id="pageOut" style="text-align: right;"></div>
+								<div id="pageOut" style="text-align: right;margin-top: -5px;"></div>
 							</div>
 						</div>
 					</div>
@@ -362,12 +457,11 @@
 		<!-- <script src="../../js/libs/jquery.js"></script> -->
 		<script src="../../js/layui/layui.js"></script>
 		<script type="text/html" id="queryBar">
-			<div class="mui-btn mui-btn-outlined" lay-event="detail" style="margin-right: 5px;margin-top: -3px;">详情</div>
-			<div class="mui-btn mui-btn-success" lay-event="print" style="margin-top: -3px">打印</div>
+			<div class="mui-btn mui-btn-outlined" lay-event="detail" style="margin-right: 5px;margin-top: -5px;">详情</div>
+			<div class="mui-btn mui-btn-success" lay-event="print" style="margin-top: -5px">打印</div>
 		</script>
 		<script type="text/html" id="outBar">
-			<div class="mui-btn mui-btn-outlined" lay-event="detail" style="margin-right: 5px;margin-top: -3px">详情</div>
-			<div class="mui-btn mui-btn-danger" lay-event="print" style="margin-top: -3px">签离</div>
+			<div class="mui-btn mui-btn-danger" lay-event="singOut" style="margin-top: -5px">签离</div>
 		</script>
 		<script type="text/javascript" charset="utf-8">
 			
@@ -501,14 +595,14 @@
 			//初始化表格——访客查询
 			function initQueryTable(table,ty,da){
 				var don=''
-				if(ty){
+				if(ty){//ty为空，代表初始化表格，不为空的任意字符串，代表重载表格加载数据
 					don=function(res, curr, count){events.closeWaiting();}
 				}
 				table.render({
 					elem: '#queryT'
 					,height: 'full-205' 
 					,cellMinWidth:110
-					,limit:11
+					,limit:8
 					,cols: [[ //表头
 					  {align: 'center',field: 'id', title: '姓名', rowspan: 2}
 					  ,{align: 'center',field: 'username', title: '随行人数',  rowspan: 2}
@@ -518,7 +612,7 @@
 					  ,{align: 'center',field: 'experience',width:200, title: '进入时间', rowspan: 2 }
 					  ,{align: 'center',field: 'classify',width:200, title: '签离时间', rowspan: 2}
 					  ,{fixed: 'right',align: 'center',field: 'score', title: '是否离开',  rowspan: 2}
-					  ,{fixed: 'right',align: 'center',width:130, title: '操作',  rowspan: 2,toolbar: '#queryBar'}
+					  ,{fixed: 'right',align: 'center',width:140, title: '操作',  rowspan: 2,toolbar: '#queryBar'}
 					  ]
 					  ,[
 					   {align: 'center',field: 'city', title: '部门',}
@@ -536,7 +630,7 @@
 				    var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
 				   
 				    if(layEvent === 'detail'){ //查看
-						utils.mOpenWithData("./outVisitorDetail.html", {});
+						utils.mOpenWithData("./queryVisitorDetail.html", {});
 				    } else if(layEvent === 'print'){ //打印
 				      layer.confirm('真的打印行么', function(index){
 				        // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
@@ -557,7 +651,7 @@
 				  laypage.render({
 				    elem: 'pageOut' //注意，这里的 test1 是 ID，不用加 # 号
 				    ,count: 150  //TODO
-					,limit:10
+					,limit:8
 					,theme: '#3893D9'
 					,first: '首页'
 					,last: '尾页'
@@ -591,14 +685,14 @@
 			//初始化表格——访客签离
 			function initOutTable(table,ty,da){
 				var don=''
-				if(ty){
+				if(ty){//ty为空，代表初始化表格，不为空的任意字符串，代表重载表格加载数据
 					don=function(res, curr, count){events.closeWaiting();}
 				}
 				table.render({
 					elem: '#queryO'
 					,height: 'full-205' 
 					,cellMinWidth:110
-					,limit:11
+					,limit:8
 					,cols: [[ //表头
 					  {align: 'center',field: 'id', title: '姓名', rowspan: 2}
 					  ,{align: 'center',field: 'username', title: '随行人数',  rowspan: 2}
@@ -608,7 +702,7 @@
 					  ,{align: 'center',field: 'experience',width:200, title: '进入时间', rowspan: 2 }
 					  ,{align: 'center',field: 'classify',width:200, title: '签离时间', rowspan: 2}
 					  ,{fixed: 'right',align: 'center',field: 'score', title: '是否离开',  rowspan: 2}
-					  ,{fixed: 'right',align: 'center',width:130, title: '操作',  rowspan: 2,toolbar: '#outBar'}
+					  ,{fixed: 'right',align: 'center',width:90, title: '操作',  rowspan: 2,toolbar: '#outBar'}
 					  ]
 					  ,[
 					   {align: 'center',field: 'city', title: '部门',}
@@ -625,16 +719,33 @@
 				    var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
 				    var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
 				   
-				    if(layEvent === 'detail'){ //查看
-						utils.mOpenWithData("./outVisitorDetail.html", {});
-				    } else if(layEvent === 'print'){ //打印
-				      layer.confirm('真的打印行么', function(index){
-				        // obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
-				        // layer.close(index);
-				        //向服务端发送删除指令
-				      });
+				    if(layEvent === 'singOut'){ //打印
+				      signOut();
 				    }
 				  });
+			}
+			
+			//签离信息弹出层
+			function signOut(){
+				layui.use(['jquery','layer'],function(){
+					var $=layui.$
+					layer.open({
+						type: 1
+						,title: false //不显示标题栏
+						,closeBtn: false
+						,area: 'auto'
+						,shade: 0.7
+						,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+						,btn: ['确认签离', '取消']
+						,btnAlign: 'c'
+						,moveType: 1 //拖拽模式，0或者1
+						,content: $('#layToast')
+						,yes: function(index,layero){
+						   // layer.close(index); 
+						  mui.toast('TODO 协议签离')
+						}
+					  });
+				});
 			}
 			
 			//注销登录
@@ -670,5 +781,4 @@
 			}
 		</script>
 	</body>
-
 </html>
