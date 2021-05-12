@@ -79,12 +79,13 @@
 				font-size: 16px;
 				width: 38%;
 				font-weight: 600;
-				text-align: right;
+				text-align: center;
 			}
 			.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea{
-				border-bottom: 1px solid rgba(210,207,200,.8);
+				border-bottom: 0px solid rgba(210,207,200,.8);
 				width: 62%;
 				float: left;
+				
 			}
 			/* 输入框样式和间距修改 被访人/登记人 信息栏*/
 			.mui-input-row-right label{
@@ -93,7 +94,7 @@
 				text-align: center;
 			}
 			.mui-input-row-right label~input, .mui-input-row-right label~select, .mui-input-row-right label~textarea{
-				border-bottom: 1px solid rgba(210,207,200,.8);
+				border-bottom: 0px solid rgba(210,207,200,.8);
 				width: 70%;
 				float: left;
 			}
@@ -104,7 +105,7 @@
 				text-align: left;
 			}
 			.mui-input-row-bottom-4 label~input, .mui-input-row-bottom-4 label~select, .mui-input-row-bottom-4 label~textarea{
-				border-bottom: 1px solid rgba(210,207,200,.8);
+				border-bottom: 0px solid rgba(210,207,200,.8);
 				width: 55%;
 				float: left;
 			}
@@ -114,19 +115,20 @@
 				text-align: left;
 			}
 			.mui-input-row-bottom-5 label~input, .mui-input-row-bottom-5 label~select, .mui-input-row-bottom-5 label~textarea{
-				border-bottom: 1px solid rgba(210,207,200,.8);
+				border-bottom: 0px solid rgba(210,207,200,.8);
 				width: 70%;
 				float: left;
 			}
-			.mui-input-row-bottom-7 label{
-				width: 25%;
+			.mui-input-row-bottom-8 label{
+				width: 23%;
 				font-weight: 600;
 				text-align: left;
 			}
-			.mui-input-row-bottom-7 label~input, .mui-input-row-bottom-7 label~select, .mui-input-row-bottom-7 label~textarea{
-				border-bottom: 1px solid rgba(210,207,200,.8);
-				width: 75%;
+			.mui-input-row-bottom-8 label~input, .mui-input-row-bottom-8 label~select, .mui-input-row-bottom-8 label~textarea{
+				border-bottom: 0px solid rgba(210,207,200,.8);
+				width: 76%;
 				float: left;
+				margin-left: -2px;
 			}
 			.mui-input-row-bottom-12 label{
 				width: 15%;
@@ -134,7 +136,7 @@
 				text-align: left;
 			}
 			.mui-input-row-bottom-12 label~input, .mui-input-row-bottom-12 label~select, .mui-input-row-bottom-12 label~textarea{
-				border-bottom: 1px solid rgba(210,207,200,.8);
+				border-bottom: 0px solid rgba(210,207,200,.8);
 				width: 85%;
 				float: left;
 			}
@@ -142,6 +144,17 @@
 			/* 表单间距 */
 			.mui-input-row{
 				margin-top: 8px;
+			}
+			
+			/* 弹出层 卡片样式修改 */
+			.mui-card-header.mui-h4{
+				border-top: 1px solid rgba(218,218,221,.9);
+			}
+			.mui-card-content-inner {
+			    padding: 10px;
+			}
+			.layui-layer-btn.layui-layer-btn-c{
+				background-color: #FFFFFF;
 			}
 		</style>
 	</head>
@@ -176,24 +189,22 @@
 							 	</div>
 							 </div>
 							 <div class="mui-row">
-								<div class="mui-col-sm-12">
-									<div class="mui-input-row mui-input-row-bottom-12">
-										<label>采访单位：</label>
-										<input  type="text" placeholder="暂无信息"  disabled="true">
-									</div>
-								</div>
-							 </div>
-							 <div class="mui-row">
-							 	<div class="mui-col-sm-7">
-							 		<div class="mui-input-row mui-input-row-bottom-7">
+								 <div class="mui-col-sm-8">
+								 	<div class="mui-input-row mui-input-row-bottom-8">
+								 		<label>来访单位：</label>
+								 		<input value="山东金视野教育科技股份有限公司开发部" type="text" placeholder="暂无信息"  disabled="true">
+								 	</div>
+								 </div>
+								 <div class="mui-col-sm-4">
+								 	<div class="mui-input-row mui-input-row-bottom-4">
+								 		<label>车牌号：</label>
+								 		<input  type="text" placeholder="暂无信息"  disabled="true">
+								 	</div>
+								 </div>
+							 	<div class="mui-col-sm-12">
+							 		<div class="mui-input-row mui-input-row-bottom-12">
 							 			<label>地址：</label>
-							 			<input  type="text" placeholder="暂无信息"  disabled="true">
-							 		</div>
-							 	</div>
-							 	<div class="mui-col-sm-5">
-							 		<div class="mui-input-row mui-input-row-bottom-5">
-							 			<label>车牌号：</label>
-							 			<input  type="text" placeholder="暂无信息"  disabled="true">
+							 			<input value="山东省济南市天桥区铜元局前街1号金冠商务中心309室"  type="text" placeholder="暂无信息"  disabled="true">
 							 		</div>
 							 	</div>
 							 	<div class="mui-col-sm-4">
