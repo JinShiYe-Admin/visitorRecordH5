@@ -562,30 +562,32 @@
 
 		//从ios原生得到信息
 		var setUUID = function(tempStr) {
+			events.showWaiting();
 			if (loginFlag == 0) {
-				
 				//判断上次是否登录过，自动登录
 				var personal = store.get(window.storageKeyName.PERSONALINFO);
 				console.log('personal:' + JSON.stringify(personal));
 				if (personal) {
 					if (personal.unit_code == 'undefined' || personal.unit_code == null || personal.userName0 == null) {
-						appUpdate.updateApp(function(type){},function(){});
+						appUpdate.updateApp(function(type){events.closeWaiting();},function(){events.closeWaiting();});
 					} else {
 						document.getElementById("account").value = personal.userName0;
 						document.getElementById("password").value = personal.passWord0;
 						appUpdate.updateApp(function(type){//wgt安装成功 回调
+							events.closeWaiting();
 							//login登录
 							getEncryptKeyLogin(personal.userName0, personal.passWord0);
 						},function(){ //取消更新/取消安装/wgt安装失败 回调
 							//login登录
+							events.closeWaiting();
 							getEncryptKeyLogin(personal.userName0, personal.passWord0);
 						});
 					}
 				} else {
-					appUpdate.updateApp(function(type){},function(){});
+					appUpdate.updateApp(function(type){events.closeWaiting();},function(){events.closeWaiting();});
 				}
 			} else {
-				appUpdate.updateApp(function(type){},function(){});
+				appUpdate.updateApp(function(type){events.closeWaiting();},function(){events.closeWaiting();});
 			}
 		}
 
