@@ -143,7 +143,7 @@
 			.mui-input-row-toast label{
 				width: 35%;
 				font-weight: 600;
-				text-align: right;
+				text-align: left;
 				padding: 11px 5px;
 			} 
 			.mui-input-row-toast label~input, .mui-input-row-toast label~select, .mui-input-row-toast label~textarea{
@@ -155,7 +155,7 @@
 			.mui-input-row-toast-in label{
 				width: 35%;
 				font-weight: 600;
-				text-align: right;
+				text-align: left;
 				padding: 11px 5px;
 			} 
 			.mui-input-row-toast-in label~input, .mui-input-row-toast-in label~select, .mui-input-row-toast-in label~textarea{
@@ -473,26 +473,36 @@
 											<div class="mui-card-content">
 												<div class="mui-card-content-inner">
 													<div class="mui-row">
-														<div class="mui-col-sm-2">
+														<div class="mui-col-sm-4">
 															<img v-if="IDCardImg" class="card-img" src="../../img/home/idcard.jpg">
 															<div v-else class="card-img" ><span class="card-text">身份证照片</span></div>
 														</div>
-														<div class="mui-col-sm-10">
+														<div class="mui-col-sm-8">
 															<div class="mui-row">
 																<div class="mui-col-sm-12">
 																	<div class="mui-input-row mui-input-row-toast">
-																		<label>出生日期：</label>
+																		<label>姓名：</label>
 																		<input  type="text" placeholder="暂无信息"  disabled="true">
 																	</div>
 																</div>
-																<template v-for="item in 3">
-																	<div class="mui-col-sm-12" style="margin-top:18px ;">
-																		<div class="mui-input-row mui-input-row-toast">
-																			<label>出生日期：</label>
-																			<input  type="text" placeholder="暂无信息"  disabled="true">
-																		</div>
+																<div class="mui-col-sm-12">
+																	<div class="mui-input-row mui-input-row-toast">
+																		<label>性别：</label>
+																		<input  type="text" placeholder="暂无信息"  disabled="true">
 																	</div>
-																</template>
+																</div>
+																<div class="mui-col-sm-12">
+																	<div class="mui-input-row mui-input-row-toast">
+																		<label>证件类型：</label>
+																		<input  type="text" placeholder="暂无信息"  disabled="true">
+																	</div>
+																</div>
+																<div class="mui-col-sm-12">
+																	<div class="mui-input-row mui-input-row-toast">
+																		<label>证件号码：</label>
+																		<input  type="text" placeholder="暂无信息"  disabled="true">
+																	</div>
+																</div>
 															</div>
 														</div>
 													</div>
@@ -509,18 +519,16 @@
 													<div class="mui-row">
 														<div class="mui-col-sm-12">
 															<div class="mui-input-row mui-input-row-toast">
-																<label>出生日期：</label>
+																<label>被访人：</label>
 																<input  type="text" placeholder="暂无信息" disabled="true">
 															</div>
 														</div>
-														<template v-for="item in 3">
-															<div class="mui-col-sm-12">
-																<div class="mui-input-row mui-input-row-toast"  style="margin-top:26px ;">
-																	<label>出生日期：</label>
-																	<input  type="text" placeholder="暂无信息" disabled="true">
-																</div>
+														<div class="mui-col-sm-12">
+															<div class="mui-input-row mui-input-row-toast">
+																<label>被访部门：</label>
+																<input  type="text" placeholder="暂无信息" disabled="true">
 															</div>
-														</template>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -534,19 +542,19 @@
 														<div class="mui-col-sm-4">
 															<div class="mui-input-row  mui-input-row-toast">
 																<label>进入时间：</label>
-																<input  type="text" placeholder="普通输入框"   disabled="true">
+																<input  type="text" disabled="true">
 															</div>
 														</div>
 														<div class="mui-col-sm-4">
 															<div class="mui-input-row  mui-input-row-toast-in">
 																<label>离开时间：</label>
-																<input  type="text" placeholder="普通输入框">
+																<input id="laytoast_leavetime" type="text" placeholder="请选择离开时间" readonly="true"><span class="span-icon" style="margin-left: -30px;"><i class="layui-icon layui-icon-date layui-font-18"></i></span>
 															</div>
 														</div>
 														<div class="mui-col-sm-4">
 															<div class="mui-input-row mui-input-row-toast">
 																<label>登记时间：</label>
-																<input type="text" placeholder="普通输入框"   disabled="true">
+																<input type="text" disabled="true">
 															</div>
 														</div>
 													</div>
@@ -836,6 +844,7 @@
 				  // 访客签离
 				  var interviewee_type_out = layui.dropdown//被访人
 				  var begin_time_ino = layui.laydate;//进入时间
+				  var laytoast_leavetime=layui.laydate;//弹出层 离开时间
 				  interviewee_type_out.render({
 				    elem: '#interviewee_type_out'//可绑定在任意元素中，此处以上述按钮为例
 				    ,data:[{title:'全部',id:''},{title:'教职工',id:0},{title:'学生',id:1}] 
@@ -847,6 +856,17 @@
 				  begin_time_ino.render({
 				      elem: '#begin_time_ino'
 				       ,range: '至'
+					   ,theme: '#3893D9'
+					   ,done: function(value, date, endDate){
+					       console.log(value); //得到日期生成的值，如：2017-08-18
+					       console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+					       console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+					     }
+				    });
+					
+					laytoast_leavetime.render({
+				      elem: '#laytoast_leavetime'
+				       ,type: 'datetime'
 					   ,theme: '#3893D9'
 					   ,done: function(value, date, endDate){
 					       console.log(value); //得到日期生成的值，如：2017-08-18

@@ -79,7 +79,7 @@
 				font-size: 16px;
 				width: 38%;
 				font-weight: 600;
-				text-align: center;
+				text-align: left;
 			}
 			.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea{
 				border-bottom: 0px solid rgba(210,207,200,.8);
@@ -91,7 +91,7 @@
 			.mui-input-row-right label{
 				width: 30%;
 				font-weight: 600;
-				text-align: center;
+				text-align: left;
 			}
 			.mui-input-row-right label~input, .mui-input-row-right label~select, .mui-input-row-right label~textarea{
 				border-bottom: 0px solid rgba(210,207,200,.8);
@@ -177,14 +177,66 @@
 							 	</div>
 							 	<div class="mui-col-sm-10">
 							 		<div class="mui-row" style="margin-left:2rem;">
-							 			<template v-for="item in 10">
-							 				<div class="mui-col-sm-6">
-							 					<div class="mui-input-row">
-							 						<label>出生日期：</label>
-							 						<input  type="text" placeholder="暂无信息"  disabled="true">
-							 					</div>
-							 				</div>
-							 			</template>
+										<div class="mui-col-sm-6">
+											<div class="mui-input-row">
+												<label>姓名：</label>
+												<input  type="text" placeholder="暂无信息"  disabled="true">
+											</div>
+										</div>
+										<div class="mui-col-sm-6">
+											<div class="mui-input-row">
+												<label>访客单号：</label>
+												<input  type="text" placeholder="暂无信息"  disabled="true">
+											</div>
+										</div>
+										<div class="mui-col-sm-6">
+											<div class="mui-input-row">
+												<label>性别：</label>
+												<input  type="text" placeholder="暂无信息"  disabled="true">
+											</div>
+										</div>
+										<div class="mui-col-sm-6">
+											<div class="mui-input-row">
+												<label>访问事由：</label>
+												<input  type="text" placeholder="暂无信息"  disabled="true">
+											</div>
+										</div>
+										<div class="mui-col-sm-6">
+											<div class="mui-input-row">
+												<label>出生日期：</label>
+												<input  type="text" placeholder="暂无信息"  disabled="true">
+											</div>
+										</div>
+										<div class="mui-col-sm-6">
+											<div class="mui-input-row">
+												<label>手机：</label>
+												<input  type="text" placeholder="暂无信息"  disabled="true">
+											</div>
+										</div>
+										<div class="mui-col-sm-6">
+											<div class="mui-input-row">
+												<label>证件类型：</label>
+												<input  type="text" placeholder="暂无信息"  disabled="true">
+											</div>
+										</div>
+										<div class="mui-col-sm-6">
+											<div class="mui-input-row">
+												<label>随行人数：</label>
+												<input  type="text" placeholder="暂无信息"  disabled="true">
+											</div>
+										</div>
+										<div class="mui-col-sm-6">
+											<div class="mui-input-row">
+												<label>证件号码：</label>
+												<input  type="text" placeholder="暂无信息"  disabled="true">
+											</div>
+										</div>
+										<div class="mui-col-sm-6">
+											<div class="mui-input-row">
+												<label>随身物品：</label>
+												<input  type="text" placeholder="暂无信息"  disabled="true">
+											</div>
+										</div>
 							 		</div>
 							 	</div>
 							 </div>
@@ -240,14 +292,30 @@
 						<div class="mui-card-header mui-h4">被访人信息</div>
 						<div class="mui-card-content" style="padding: 10px">
 							<div class="mui-row">
-								<template v-for="item in 4">
-									<div class="mui-col-sm-12">
-										<div class="mui-input-row mui-input-row-right">
-											<label>出生日期：</label>
-											<input  type="text" placeholder="暂无信息" disabled="true">
-										</div>
+								<div class="mui-col-sm-12">
+									<div class="mui-input-row mui-input-row-right">
+										<label>年级：</label>
+										<input  type="text" placeholder="暂无信息" disabled="true">
 									</div>
-								</template>
+								</div>
+								<div class="mui-col-sm-12">
+									<div class="mui-input-row mui-input-row-right">
+										<label>班级：</label>
+										<input  type="text" placeholder="暂无信息" disabled="true">
+									</div>
+								</div>
+								<div class="mui-col-sm-12">
+									<div class="mui-input-row mui-input-row-right">
+										<label>姓名：</label>
+										<input  type="text" placeholder="暂无信息" disabled="true">
+									</div>
+								</div>
+								<div class="mui-col-sm-12">
+									<div class="mui-input-row mui-input-row-right">
+										<label>班主任：</label>
+										<input  type="text" placeholder="暂无信息" disabled="true">
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -256,14 +324,18 @@
 						<div class="mui-card-header mui-h4">登记人信息</div>
 						<div class="mui-card-content" style="padding: 10px ;">
 							<div class="mui-row">
-								<template v-for="item in 2">
-									<div class="mui-col-sm-12">
-										<div class="mui-input-row mui-input-row-right">
-											<label>出生日期：</label>
-											<input  type="text" placeholder="暂无信息"  disabled="true">
-										</div>
+								<div class="mui-col-sm-12">
+									<div class="mui-input-row mui-input-row-right">
+										<label>姓名：</label>
+										<input  type="text" placeholder="暂无信息"  disabled="true">
 									</div>
-								</template>
+								</div>
+								<div class="mui-col-sm-12">
+									<div class="mui-input-row mui-input-row-right">
+										<label>登记时间：</label>
+										<input  type="text" placeholder="暂无信息"  disabled="true">
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
