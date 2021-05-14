@@ -433,7 +433,7 @@
 								<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-btn-outlined-lg">
 									保存
 								</button>
-								<button type="button" class="mui-btn mui-btn-success mui-btn-outlined mui-btn-outlined-lg">
+								<button type="button" @tap="printPage" class="mui-btn mui-btn-success mui-btn-outlined mui-btn-outlined-lg">
 									保存并打印
 								</button>
 								<button type="button" class="mui-btn mui-btn-outlined mui-btn-outlined-lg">
@@ -584,7 +584,7 @@
 										<!-- <label style="width: 40px;">至：</label>
 										<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框"> -->
 										<button type="button" class="mui-btn" style="background-color: #3893D9;border: 1px solid #3893D9;font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 14px;">读卡</button>
-										<button type="button" class="mui-btn mui-btn-success" style="font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 14px;">扫码</button>
+										<button @tap="getQRCode()" type="button" class="mui-btn mui-btn-success" style="font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 14px;">扫码</button>
 										<button type="button" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 14px;">查询</button>
 									</div>
 							</div>
@@ -605,6 +605,9 @@
 		<!-- <script src="../../js/utils/vconsole.min.js"></script> -->
 		<script src="../../js/utils/utils.js"></script>
 		<!-- <script src="../../js/libs/jquery.js"></script> -->
+		<script src="../../js/utils/usbPrinter.js"></script>
+		<script src="../../js/utils/qrCode.js"></script>
+		<script src="../../js/utils/pushPermission.js"></script>
 		<script src="../../js/layui/layui.js"></script>
 		<script type="text/html" id="queryBar">
 			<div class="mui-btn mui-btn-outlined" lay-event="detail" style="margin-right: 5px;margin-top: -10px;">详情</div>
@@ -614,12 +617,6 @@
 			<div class="mui-btn mui-btn-danger" lay-event="singOut" style="margin-top: -10px">签离</div>
 		</script>
 		<script type="text/javascript" charset="utf-8">
-			
-			// plus.pushPermission.gotoSetting(function(){
-			// 	alert('Success')
-			// },function(){
-			// 	alert('fail')
-			// })
 			
 			
 			mui.init();
@@ -678,6 +675,14 @@
 							}
 						}
 					},
+					printPage:function(){//访客登记  保存并打印按钮
+						var visitorID="刘帅：202166666"
+						plus.usbPrinter.printPage(function(args){
+							console.log(args);
+						},function(args){
+							console.log(args);
+						},visitorID)
+					},
 					scan:function(){//读证按钮点击
 						mui.toast("TODO 原生读卡")
 					},
@@ -690,6 +695,33 @@
 					},
 					visitor_select:function(){
 						mui.toast("666："+this.times)
+					},
+					getQRCode:function(){//访客签离 获取二维码内容
+					    events.showWaiting('请稍后')
+						plus.qrCode.getQRCode(function(args){
+							console.log("args: " + JSON.stringify(args));
+							var str=args[0];
+							var json=JSON.parse(str);
+							if(json.msg){
+								var Intent = plus.android.importClass("android.content.Intent");
+								var intent = new Intent();
+								intent.setClassName("com.telpo.tps550.api", "com.telpo.tps550.api.barcode.Capture");
+								var main = plus.android.runtimeMainActivity();
+								main.startActivityForResult(intent,0x124);
+								main.onActivityResult = function(requestCode, resultCode, data) {
+									if(requestCode == 0x124) {
+										if(resultCode == 0) {
+											plus.qrCode.playBeep();
+											var qrcode = data.getStringExtra("qrCode");
+											console.log("扫描结果："+qrcode);
+											setTimeout(function(){
+												events.closeWaiting()
+											},1000)
+										}
+									}
+								}
+							}
+						},function(args){})
 					}
 				}
 			});
@@ -717,10 +749,8 @@
 					}, 1000);
 					return false;
 				};
-				
 				initLayuiFunc();
 			});
-			initLayuiFunc();
 			
 			//初始化layui相关的下拉菜单
 			function initLayuiFunc(){
@@ -895,7 +925,7 @@
 						 console.log(first); 
 					    console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
 					    console.log(obj.limit); //得到每页显示的条数
-						// events.showWaiting()
+						events.showWaiting()
 						//TODO 模拟请求数据
 						setTimeout(function(){
 							var da=[];
@@ -922,7 +952,7 @@
 				var don=''
 				if(ty){//ty为空，代表初始化表格，不为空的任意字符串，代表重载表格加载数据
 					don=function(res, curr, count){
-						// events.closeWaiting();
+						events.closeWaiting();
 					}
 				}
 				table.render({
@@ -986,7 +1016,7 @@
 						 // console.log(first); 
 					  //   console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
 					  //   console.log(obj.limit); //得到每页显示的条数
-						// events.showWaiting()
+						events.showWaiting()
 						//TODO 模拟请求数据
 						setTimeout(function(){
 							var da=[];
@@ -1014,7 +1044,7 @@
 				var don=''
 				if(ty){//ty为空，代表初始化表格，不为空的任意字符串，代表重载表格加载数据
 					don=function(res, curr, count){
-						// events.closeWaiting();
+						events.closeWaiting();
 						}
 				}
 				table.render({
