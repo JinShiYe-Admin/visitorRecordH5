@@ -247,7 +247,7 @@
 								</div>
 							</div>
 							<div class="mui-row" style="margin-top: 2rem;text-align: center;">
-								<button type="button"  @tap="saveData"  class="mui-btn mui-btn-primary mui-btn-outlined mui-btn-outlined-lg">
+								<button type="button"  @tap="saveData(0)"  class="mui-btn mui-btn-primary mui-btn-outlined mui-btn-outlined-lg">
 									保存
 								</button>
 								<button type="button" @tap="saveData(1)" class="mui-btn mui-btn-success mui-btn-outlined mui-btn-outlined-lg">
@@ -262,16 +262,25 @@
 							 <div class="mui-row">
 								<div class="mui-input-row mui-input-row-bottom">
 									<label style="width: 80px;">关键字：</label>
-									<input style="width: 120px;margin-right: 5px;" v-model="visitor_name" type="text" placeholder="访客查询">
-									<label style="width: 90px;">是否离开：</label>
-									<input id="leave_flag" style="width: 120px;margin-right: 5px;" v-model="leave_flag"  type="text" readonly="true"><span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
+									<input style="width: 120px;margin-right: 5px;" v-model="visitor_queryData.visitor_name" type="text" placeholder="访客姓名">
+									<label style="width: 90px;">是否签离：</label>
+									<select style="width: 120px;margin-right: 5px;"  v-model="visitor_queryData.leave_flagSelectId">
+									  <template v-for="item in visitor_queryData.leave_flagList">
+										  <option :value=item.id>{{item.title}}</option>
+									  </template>
+									</select>  
+									<span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
 									<label style="width: 80px;">被访人：</label>
-									<input id="interviewee_type" style="width: 120px;margin-right: 5px;" v-model="interviewee_type"  type="text" readonly="true"><span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
+									<select style="width: 120px;margin-right: 5px;"  v-model="visitor_queryData.visitor_typeSelectId">
+									  <template v-for="item in visitor_queryData.visitor_typeList">
+										 <option :value=item.id>{{item.title}}</option>
+									  </template>
+									</select>  
+									<span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
 									<label style="width: 90px;">进入时间：</label>
-									<input id="begin_time_in" style="width: 240px;margin-right: 5px;" v-model="times" type="text" placeholder="点击选择时间范围" readonly="true"><span class="span-icon" style="margin-left: -30px;"><i class="layui-icon layui-icon-date layui-font-18"></i></span>
-									<!-- <label style="width: 40px;">至：</label>
-									<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框"> -->
-									<button @tap="visitor_select()" type="button" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 14px;">查询</button>
+									<input id="begin_time_in" style="width: 220px;margin-right: 5px;" v-model="visitor_queryData.times" type="text" placeholder="点击选择时间范围" readonly="true"><span class="span-icon" style="margin-left: -30px;"><i class="layui-icon layui-icon-date layui-font-18"></i></span>
+									<button @tap="visitor_select()" type="button" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 7px;">重置</button>
+									<button @tap="visitor_select()" type="button" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 7px;">查询</button>
 								</div>
 							 </div>
 							 <div class="mui-row" style="margin-right: 15px;margin-bottom: 0px;">
@@ -395,14 +404,18 @@
 										<label style="width: 80px;">关键字：</label>
 										<input style="width: 120px;margin-right: 5px;" type="text" placeholder="访客姓名">
 										<label style="width: 80px;">被访人：</label>
-										<input id="interviewee_type_out" style="width: 120px;margin-right: 5px;" v-model="interviewee_type_out" type="text" readonly="true"><span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
+										<select style="width: 120px;margin-right: 5px;"  v-model="visitor_outData.visitor_typeSelectId">
+										  <template v-for="item in visitor_outData.visitor_typeList">
+											 <option :value=item.id>{{item.title}}</option>
+										  </template>
+										</select>  
+										<span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
 										<label style="width: 90px;">进入时间：</label>
 										<input id="begin_time_ino" style="width: 240px;margin-right: 5px;" type="text" placeholder="点击选择时间范围" readonly="true"><span class="span-icon" style="margin-left: -30px;"><i class="layui-icon layui-icon-date layui-font-18"></i></span>
-										<!-- <label style="width: 40px;">至：</label>
-										<input style="width: 120px;margin-right: 5px;" type="text" placeholder="普通输入框"> -->
-										<button type="button" class="mui-btn" style="background-color: #3893D9;border: 1px solid #3893D9;font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 14px;">读卡</button>
-										<button @tap="getQRCode()" type="button" class="mui-btn mui-btn-success" style="font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 14px;">扫码</button>
-										<button type="button" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 14px;">查询</button>
+										<button type="button" class="mui-btn" style="background-color: #3893D9;border: 1px solid #3893D9;font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 7px;">读卡</button>
+										<button @tap="getQRCode()" type="button" class="mui-btn mui-btn-success" style="font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 7px;">扫码</button>
+										<button type="button" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 28px;">重置</button>
+										<button type="button" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 7px;">查询</button>
 									</div>
 							</div>
 							<div class="mui-row" style="margin-right: 15px;margin-bottom: 0px;">
@@ -509,7 +522,7 @@
 						clsSelectId:'',//选择的班级ID
 						stuList:[{title:'请选择学生',id:''}],//学生列表
 						stuSelectId:'',//选择的学生ID
-						
+						submit:true,//是否允许提交数据
 						//表单会用到的
 						headPhoto:'',//身份证头像  base64
 						dptSelectObj:'',//选择的部门对象
@@ -536,20 +549,26 @@
 					},
 					//访客查询
 					visitor_queryData:{ 
-						
+						leave_flagList:[{title:'全部',id:''},{title:'未签离',id:0},{title:'已签离',id:1}],//是否离开 列表
+						visitor_typeList:[{title:'全部',id:''},{title:'教职工',id:0},{title:'学生',id:1}],//访问类型 列表
+						//表单会用到的
+						visitor_name:'',//访客姓名关键字
+						leave_flagSelectId:'',//是否离开  选择的id
+						visitor_typeSelectId:'',//访问类型  选择的id
+						times:'',//	进入开始时间-结束时间  范围
+						page_number:1,//	当前页数
+						page_size:8,//	每页记录数
 					},
 					//访客签离
 					visitor_outData:{
-						
+						visitor_typeList:[{title:'全部',id:''},{title:'教职工',id:0},{title:'学生',id:1}],//访问类型 列表
+						//表单会用到的
+						visitor_name:'',//访客姓名关键字
+						visitor_typeSelectId:'',//访问类型  选择的id
+						times:'',//	进入开始时间-结束时间  范围
+						page_number:1,//	当前页数
+						page_size:8,//	每页记录数
 					},
-					
-					// 访客查询 查询栏变量
-					leave_flag:'全部',//是否离开
-					interviewee_type:'全部',//访问类型
-					visitor_name:'',//访客姓名关键字
-					times:'',//进入时间 范围
-					// 访客签离 查询栏变量
-					interviewee_type_out:'全部',//访问类型
 				},
 				methods:{
 					tabClick:function(tab){//tab按钮点击
@@ -632,7 +651,32 @@
 						}
 					},
 					saveData:function(type){//访客登记  保存按钮
-						saveData(type)
+						if(contentData.visitor_inData.visitor_name==''){
+							mui.toast('请填写姓名')
+						}else if(contentData.visitor_inData.visitor_for==''){
+							mui.toast('请填写访问事由')
+						}else if(contentData.visitor_inData.visitor_counter==''){
+							mui.toast('请填写随行人数')
+						}else if(contentData.visitor_inData.interviewee_type==0 && contentData.visitor_inData.dptUserSelectObj==''){
+							mui.toast('请选择部门人员姓名')
+						}else if(contentData.visitor_inData.interviewee_type==1 && contentData.visitor_inData.stuSelectObj==''){
+							mui.toast('请选择学生')
+						}else{
+							if(this.visitor_inData.submit){
+								this.visitor_inData.submit=false;
+								events.showWaiting();
+								if(contentData.visitor_inData.headPhoto){
+									upLoadIDCardImg(contentData.visitor_inData.headPhoto.split(",")[1],function(img_url){
+										saveData(img_url,type)
+									},function(){
+										contentData.visitor_inData.submit=true;
+										events.closeWaiting();
+									});
+								}else{
+									saveData(null,type)
+								}
+							}
+						}
 					},
 					resetData:function(){//访客登记  取消按钮
 						resetData()
@@ -664,8 +708,8 @@
 					layerNo:function(){//弹出层取消按钮
 						layer.close(this.index);
 					},
-					visitor_select:function(){
-						mui.toast("666："+this.times)
+					visitor_select:function(){//访客查询 
+						console.log(JSON.stringify(this.visitor_queryData))
 					},
 					getQRCode:function(){//访客签离 获取二维码内容
 					    events.showWaiting('请稍后')
@@ -722,11 +766,12 @@
 				setMenus();
 				//初始化下拉
 				initLayuiFunc();
-			});
+			}); 
 			
 			//初始化菜单
 			function setMenus(){
 				var menus=store.get(window.storageKeyName.MENULIST);
+				//根据服务器传回来的菜单，设置要显示的菜单，名称和权限符， 这里的menus已经在loginIndex里进行了匹配和筛选，如果没有菜单，不允许登录，如果能走到这里，说明至少有一个菜单项
 				for (var i = 0; i < menus[0].childList.length; i++) {
 					var child=menus[0].childList[i]
 					if(child.url==="schapp_Visitor_In"){
@@ -743,6 +788,7 @@
 						contentData.visitor_out.access=child.access
 					} 
 				}
+				//判断默认要显示的第一个tab
 				var firstMenu=menus[0].childList[0];
 				if(firstMenu.url==="schapp_Visitor_In"){
 					contentData.defaultTab='in' 
@@ -770,19 +816,77 @@
 			}
 			
 			//访客登记 提交数据
-			function saveData(type){
-				if(type){
-					printData();
+			function saveData(url,type){
+				const params = {
+					visitor_name:contentData.visitor_inData.visitor_name,//	访客姓名
+					visitor_for:contentData.visitor_inData.visitor_for,//	访问事由
+					visitor_sex:contentData.visitor_inData.visitor_sex,//	访客性别
+					visitor_phone:contentData.visitor_inData.visitor_phone,//	访客手机
+					visitor_birthday:contentData.visitor_inData.visitor_birthday,//	访客出生日期
+					visitor_counter:contentData.visitor_inData.visitor_counter,//	随行人数
+					visitor_goods:contentData.visitor_inData.visitor_goods,//	随行物品
+					certificate_type:contentData.visitor_inData.certificate_type,//	证件类型
+					certificate_number:contentData.visitor_inData.certificate_number,//	证件号码
+					img_url:url?url:'',//	访客照片
+					unit_name:contentData.visitor_inData.unit_name,//	访客单位
+					address:contentData.visitor_inData.address,//	访客地址
+					plate_number:contentData.visitor_inData.plate_number,//	访客车牌号
+					note:contentData.visitor_inData.note,//	备注
+					interviewee_type:contentData.visitor_inData.interviewee_type,//	被访人类型
+					teacher_code:'',//	教师代码
+					teacher_name:'',//	教师姓名
+					dpt_code:'',//	部门代码
+					dpt_name:'',//	部门名称
+					stu_code:'',//	学生代码
+					stu_name:'',//	学生名称
+					grd_code:'',//	年级代码
+					grd_name:'',//	年级名称
+					cls_code:'',//	班级代码
+					cls_name:'',//	班级名称
+					head_teacher_code:'',//	班主任代码
+					head_teacher_name:'',//	班主任名称
+					index_code: contentData.visitor_in.access.split('#')[1],
 				}
+				if(contentData.visitor_inData.interviewee_type==0){
+					params.teacher_code=contentData.visitor_inData.dptUserSelectObj.id//	教师代码
+					params.teacher_name=contentData.visitor_inData.dptUserSelectObj.title//	教师姓名
+					params.dpt_code=contentData.visitor_inData.dptSelectObj.id//	部门代码
+					params.dpt_name=contentData.visitor_inData.dptSelectObj.title//	部门名称
+				}else if(contentData.visitor_inData.interviewee_type==1){
+					params.stu_code=contentData.visitor_inData.stuSelectObj.id//	学生代码
+					params.stu_name=contentData.visitor_inData.stuSelectObj.title//	学生名称
+					params.grd_code=contentData.visitor_inData.grdSelectObj.id//	年级代码
+					params.grd_name=contentData.visitor_inData.grdSelectObj.title//	年级名称
+					params.cls_code=contentData.visitor_inData.clsSelectObj.id//	班级代码
+					params.cls_name=contentData.visitor_inData.clsSelectObj.title//	班级名称
+					params.head_teacher_code=contentData.visitor_inData.masterObj.user_code//	班主任代码
+					params.head_teacher_name=contentData.visitor_inData.masterObj.user_name//	班主任名称
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_VISITOR + 'visitor/addRecord', {}, params, 2, function(data) {
+					console.log("data: " + JSON.stringify(data));
+					if (data.code == 0) {
+						 if(type){
+							mui.toast("正在打印凭条");
+							var record_code=data.msg
+						 	printData(record_code);
+						 }else{
+							mui.toast("数据保存成功");
+						 }
+						 resetData();
+					}else{
+						mui.toast(data.msg);
+					}
+					contentData.visitor_inData.submit=true;
+					events.closeWaiting();
+				});
 			}
 			//访客登记 打印数据
-			function printData(){
-				var visitorID="访问单号：202166666789102235"
+			function printData(record_code){
 				plus.usbPrinter.printPage(function(args){
 					console.log(args);
 				},function(args){
 					console.log(args);
-				},visitorID)
+				},record_code)
 			}
 			
 			//重置访客登记 表单数据
@@ -819,13 +923,14 @@
 			}
 			
 			// 上传身份证头像
-			function upLoadIDCardImg(base64Str){
+			function upLoadIDCardImg(base64Str,callback,ecallback){
 				var wd =events.showWaiting();
 				var fileName='IDcardHeadPhoto'+new Date().getTime(); 
 				UploadHeadImage.uploadIDCardHeadImge(wd,1,fileName,base64Str,function(domain){
 					console.log("domain: " + JSON.stringify(domain));
-					wd.close();
+					callback(domain)
 				},function(){
+					ecallback();
 					wd.close();
 				})
 			}
@@ -875,7 +980,7 @@
 					sch_code:personal.sch_code,
 					page_size:'999',
 					page_number:'1',
-					index_code: contentData.visitor_in.access,
+					index_code: contentData.visitor_in.access.split('#')[1],
 				}
 				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'dpt', {}, params, 2, function(data) {
 					if (data.code == 0) {
@@ -901,7 +1006,7 @@
 					dpt_codes:dptId,
 					page_size:'999',
 					page_number:'1',
-					index_code: contentData.visitor_in.access,
+					index_code: contentData.visitor_in.access.split('#')[1],
 				}
 				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'dptUser', {}, params, 2, function(data) {
 					console.log(JSON.stringify(data))
@@ -1099,7 +1204,8 @@
 				    ,data:[{title:'全部',id:''},{title:'未签离',id:0},{title:'已签离',id:1}]
 				    ,id: 'leave_flag'
 				    ,click: function(obj){
-				      console.log(JSON.stringify(obj));
+					  contentData.visitor_queryData.leave_flag=obj.title
+					  contentData.visitor_queryData.leave_flag_obj=obj
 				    }
 				  });
 				  interviewee_type.render({
@@ -1107,7 +1213,8 @@
 				    ,data:[{title:'全部',id:''},{title:'教职工',id:0},{title:'学生',id:1}]
 				    ,id: 'interviewee_type'
 				    ,click: function(obj){
-				      console.log(JSON.stringify(obj));
+					  contentData.visitor_queryData.interviewee_type=obj.title
+					  contentData.visitor_queryData.interviewee_type_obj=obj
 				    }
 				  });
 				  begin_time_in.render({
@@ -1115,12 +1222,14 @@
 				      ,range: '至'
 					  ,theme: '#3893D9'
 					 ,done: function(value, date, endDate){
-						 contentData.times=value
 					     console.log(value); //得到日期生成的值，如：2017-08-18
 					     console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
 					     console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+						 contentData.visitor_queryData.times=value
 					   }
 				    });
+				  
+				  
 				  
 				  // 访客签离
 				  var interviewee_type_out = layui.dropdown//被访人

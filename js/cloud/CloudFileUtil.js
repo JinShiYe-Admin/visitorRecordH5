@@ -315,7 +315,7 @@ var CloudFileUtil = (function($, mod) {
 				Pops: ops,
 				NotifyUrl: ''
 			}
-			console.log(desKey+"参数数据：" + JSON.stringify(param));
+			// console.log(desKey+"参数数据：" + JSON.stringify(param));
 			
 			configure.options = {
 				AppID: appId,
