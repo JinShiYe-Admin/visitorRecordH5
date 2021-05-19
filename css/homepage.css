@@ -39,9 +39,9 @@
 				height: calc(100vh - 45px);
 			}
 			.line{
-				background-color: #3893D9;
-				margin-bottom: 0.3125rem;
-				height: 0.125rem;
+				background-color: #3893D9 !important;
+				margin-bottom: 0.3125rem !important;
+				height: 0.125rem !important;
 			}
 			
 			/* 栅格 宽度修改 */
@@ -213,7 +213,7 @@
 			
 			/* 弹出层 卡片样式修改 */
 			.mui-card-header.mui-h4{
-				border-top: 1px solid rgba(218,218,221,.9);
+				border-top: 0px solid rgba(218,218,221,.9);
 			}
 			.mui-card-content-inner {
 			    padding: 10px;

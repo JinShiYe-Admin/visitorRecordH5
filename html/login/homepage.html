@@ -19,7 +19,6 @@
 				visibility: hidden;
 				display:none !important;
 			}
-			
 		</style> 
 	</head>
 	<body>
@@ -40,7 +39,7 @@
 					<div>
 						<div id="item1" v-show="visitor_in.tabShow" class="mui-control-content" :class="visitor_in.tabActive?'mui-active':''">
 							<h4 class="mui-h4">访客信息</h4>
-							<div class="line"></div>
+							<div class="line" style="margin-top: 10px;"></div>
 							<div class="mui-row" style="margin-top: 1rem;">
 								<div class="mui-col-sm-2">
 									<img v-if="visitor_inData.headPhoto" class="card-img" :src=visitor_inData.headPhoto />
@@ -139,7 +138,7 @@
 							</div>
 							<div style="margin-top: 1.8rem;"></div>
 							<h4 class="mui-h4">被访人信息</h4>
-							<div class="line"></div>
+							<div class="line"  style="margin-top: 10px;"></div>
 							<div class="mui-row" style="margin-top: 1rem;">
 								<div id="slider" class="mui-slider">
 									<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted visitor-bottom">
@@ -246,7 +245,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="mui-row" style="margin-top: 2rem;text-align: center;">
+							<div class="mui-row" style="margin-top: 1rem;text-align: center;">
 								<button type="button"  @tap="saveData(0)"  class="mui-btn mui-btn-primary mui-btn-outlined mui-btn-outlined-lg">
 									保存
 								</button>
@@ -291,9 +290,8 @@
 						<div id="item3" v-show="visitor_out.tabShow" class="mui-control-content" :class="visitor_out.tabActive?'mui-active':''">
 							<!-- 该区域在页面上不显示，点击签离按钮后在弹出层内显示，但需要一起渲染 start-->
 							<div id='layToast' class="mui-row" style="display: none;">
-								 <div class="mui-row" style="padding:3px">
-								 	<div class="mui-col-sm-8" >
-										<div class="mui-card">
+								 <div class="mui-row" style="padding-top: 15px;">
+								 	<div class="mui-col-sm-8" style="padding:0px 3px 0;">
 											<div class="mui-card-header mui-h4">访客信息</div>
 											<div class="line"></div>
 											<div class="mui-card-content">
@@ -311,19 +309,19 @@
 																		<input  type="text" placeholder="暂无信息"  disabled="true">
 																	</div>
 																</div>
-																<div class="mui-col-sm-12">
+																<div class="mui-col-sm-12" style="margin-top: 10px;">
 																	<div class="mui-input-row mui-input-row-toast">
 																		<label>性别：</label>
 																		<input  type="text" placeholder="暂无信息"  disabled="true">
 																	</div>
 																</div>
-																<div class="mui-col-sm-12">
+																<div class="mui-col-sm-12" style="margin-top: 10px;">
 																	<div class="mui-input-row mui-input-row-toast">
 																		<label>证件类型：</label>
 																		<input  type="text" placeholder="暂无信息"  disabled="true">
 																	</div>
 																</div>
-																<div class="mui-col-sm-12">
+																<div class="mui-col-sm-12" style="margin-top: 10px;">
 																	<div class="mui-input-row mui-input-row-toast">
 																		<label>证件号码：</label>
 																		<input  type="text" placeholder="暂无信息"  disabled="true">
@@ -334,10 +332,8 @@
 													</div>
 												</div>
 											</div>
-										</div>
 								 	</div>
-								 	<div class="mui-col-sm-4">
-										<div class="mui-card">
+								 	<div class="mui-col-sm-4" style="padding:0px 3px 0;">
 											<div class="mui-card-header mui-h4">被访人信息</div>
 											<div class="line"></div>
 											<div class="mui-card-content">
@@ -349,7 +345,7 @@
 																<input  type="text" placeholder="暂无信息" disabled="true">
 															</div>
 														</div>
-														<div class="mui-col-sm-12">
+														<div class="mui-col-sm-12" style="margin-top: 10px;">
 															<div class="mui-input-row mui-input-row-toast">
 																<label>被访部门：</label>
 																<input  type="text" placeholder="暂无信息" disabled="true">
@@ -358,10 +354,8 @@
 													</div>
 												</div>
 											</div>
-										</div>
 								 	</div>
 									<div class="mui-col-sm-12">
-										<div class="mui-card">
 											<div class="mui-card-content" style="border-top: 1px solid rgba(218,218,221,.9);">
 												<div class="mui-card-content-inner">
 													<div class="mui-row">
@@ -386,7 +380,6 @@
 													</div>
 												</div>
 											</div>
-										</div>
 									</div>
 									<div class="mui-col-sm-12" style="margin-top: 2rem;text-align: center;">
 										<button type="button" @tap="layerYes()" class="mui-btn mui-btn-danger  mui-btn-outlined-lg">
@@ -1452,7 +1445,7 @@
 						type: 1
 						,title: false //不显示标题栏
 						,closeBtn: false
-						,area: ['1000px','550px']
+						,area: ['900px','500px']
 						,shade: 0.7
 						,id: 'LAY_layuipro' //设定一个id，防止重复弹出
 						,btn: []
