@@ -87,26 +87,28 @@
 				text-align: right;
 			}
 			.mui-input-row .span-icon{
-				    vertical-align: middle;
-				    margin: 12px 0px 0px -22px;
-				    position: absolute;
+				vertical-align: middle;
+				margin: 12px 0px 0px -22px;
+				position: absolute;
 			}
 			.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea{
-				border: 1px solid rgba(210,207,200,.8);
+				border: 1px solid rgba(210,207,200,.8) !important;
 				width: 72%;
 				float: left;
+				font-size: 15px !important;
 			}
 			/* 输入框样式和间距修改 被访人信息栏*/
 			.mui-input-row-bottom label{
-				width: 24%;
-				font-weight: 600;
-				text-align: right;
-				padding: 11px 5px;
+				width: 24% ;
+				font-weight: 600 ;
+				text-align: right ;
+				padding: 11px 5px ;
 			} 
 			.mui-input-row-bottom label~input, .mui-input-row-bottom label~select, .mui-input-row-bottom label~textarea{
-				border: 1px solid rgba(210,207,200,.8);
-				width: 68%;
-				float: left;
+				border: 1px solid rgba(210,207,200,.8) !important;
+				width: 68% ;
+				float: left ;
+				font-size: 15px !important;
 			}
 			.mui-input-row-bottom-lar label{
 				width: 30%;
@@ -118,6 +120,7 @@
 				border: 1px solid rgba(210,207,200,.8);
 				width: 68%;
 				float: left;
+				font-size: 15px !important;
 			}
 			/* 输入框样式和间距修改 弹出层信息栏*/
 			.mui-input-row-toast label{
@@ -131,6 +134,7 @@
 				border-bottom: 0px solid rgba(210,207,200,.8);
 				width: 60%;
 				float: left;
+				font-size: 15px !important;
 			}
 			.mui-input-row-toast-in label{
 				width: 35%;
@@ -141,6 +145,7 @@
 			.mui-input-row-toast-in label~input, .mui-input-row-toast-in label~select, .mui-input-row-toast-in label~textarea{
 				width: 60%;
 				float: left;
+				font-size: 15px !important;
 			}
 			/* 表单间距 */
 			.mui-input-row{

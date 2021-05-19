@@ -43,7 +43,7 @@
 							<div class="line"></div>
 							<div class="mui-row" style="margin-top: 1rem;">
 								<div class="mui-col-sm-2">
-									<img v-if="visitor_inData.idCardInfo.headPhoto" class="card-img" :src=visitor_inData.idCardInfo.headPhoto />
+									<img v-if="visitor_inData.headPhoto" class="card-img" :src=visitor_inData.headPhoto />
 									<div v-else class="card-img" ><span class="card-text">身份证照片</span></div>
 									<div class="scan" @tap="scan()">读证</div>
 								</div>
@@ -52,109 +52,135 @@
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label><span style="color: #D26A60;">*</span>姓名：</label>
-												<input type="text" placeholder="请输入姓名">
+												<input type="text" v-model="visitor_inData.visitor_name" placeholder="请输入姓名">
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label><span style="color: #D26A60;">*</span>访问事由：</label>
-												<input type="text" placeholder="输入或选择" style="width: 57%;">
+												<input type="text" v-model="visitor_inData.visitor_for" placeholder="输入或选择" style="width: 57%;">
 												<button id="visitor_for" class="mui-btn mui-btn-outlined" style="font-size: 18px;color: #3893D9;width: 15%;height: 40px;"><span class="mui-icon mui-icon-arrowdown"></span></button>
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label>性别：</label>
-												<input type="text" placeholder="请选择">
+												<select class="" v-model="visitor_inData.visitor_sex">
+												   <option :value=0>女</option>
+												   <option :value=1>男</option>
+												</select> 
+												<span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label>手机：</label>
-												<input type="text" placeholder="请输入手机号">
+												<input type="number" v-model="visitor_inData.visitor_phone" placeholder="请输入手机号">
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label>出生日期：</label>
-												<input type="text" placeholder="请输入出生日期">
+												<input type="text" v-model="visitor_inData.visitor_birthday" placeholder="请输入出生日期">
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label><span style="color: #D26A60;">*</span>随行人数：</label>
-												<input type="text" placeholder="输入或选择" style="width: 57%;">
+												<input type="text" v-model="visitor_inData.visitor_counter" placeholder="输入或选择" style="width: 57%;">
 												<button id="visitor_counter" class="mui-btn mui-btn-outlined" style="font-size: 18px;color: #3893D9;width: 15%;height: 40px;"><span class="mui-icon mui-icon-arrowdown"></span></button>
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label>证件类型：</label>
-												<input type="text" placeholder="输入或选择" style="width: 57%;">
+												<input type="text" v-model="visitor_inData.certificate_type" placeholder="输入或选择" style="width: 57%;">
 												<button id="certificate_type" class="mui-btn mui-btn-outlined" style="font-size: 18px;color: #3893D9;width: 15%;height: 40px;"><span class="mui-icon mui-icon-arrowdown"></span></button>
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label>随行物品：</label>
-												<input type="text" placeholder="请输入随行物品">
+												<input type="text" v-model="visitor_inData.visitor_goods"  placeholder="请输入随行物品">
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label>证件号码：</label>
-												<input type="text" placeholder="请输入证件号码">
+												<input v-model="visitor_inData.certificate_number" type="text" placeholder="请输入证件号码">
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label>来访单位：</label>
-												<input type="text" placeholder="请输入来访单位">
+												<input v-model="visitor_inData.unit_name" type="text" placeholder="请输入来访单位">
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label>地址：</label>
-												<input type="text" placeholder="请输入地址">
+												<input v-model="visitor_inData.address" type="text" placeholder="请输入地址">
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label>车牌号：</label>
-												<input type="text" placeholder="请输入车牌号">
+												<input v-model="visitor_inData.plate_number" type="text" placeholder="请输入车牌号">
 											</div>
 										</div>
 										<div class="mui-col-sm-6">
 											<div class="mui-input-row">
 												<label>备注：</label>
-												<input  type="text" placeholder="请输入备注">
+												<input v-model="visitor_inData.note"  type="text" placeholder="请输入备注">
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div style="margin-top: 1.5rem;"></div>
+							<div style="margin-top: 1.8rem;"></div>
 							<h4 class="mui-h4">被访人信息</h4>
 							<div class="line"></div>
 							<div class="mui-row" style="margin-top: 1rem;">
 								<div id="slider" class="mui-slider">
 									<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted visitor-bottom">
-											<a class="mui-control-item mui-active" href="#item1mobile">教职工</a>
-											<a class="mui-control-item" href="#item2mobile">学生</a>
+											<a @tap="bottomTabClick('tec')" class="mui-control-item mui-active" href="#item1mobile">教职工</a>
+											<a @tap="bottomTabClick('stu')" class="mui-control-item" href="#item2mobile">学生</a>
 									</div>
 									<div class="mui-slider-group">
 										<div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
 											<div class="mui-row">
 												<div class="mui-col-sm-3">
 													<div class="mui-input-row mui-input-row-bottom">
-														<label><span style="color: #D26A60;">*</span>部门：</label>
-														<input id="tec_dpt" type="text" placeholder="请选择" readonly="true"><span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
+														 <div class="layui-form-item">
+															<label><span style="color: #D26A60;">*</span>部门：</label>
+															<select class="" v-model="visitor_inData.dptSelectId" @change="dptSelectChanged">
+															  <template v-for="item in visitor_inData.dptList">
+																  <template v-if="item.id===''"> 
+																  		<option disabled="true" :value=item.id>{{item.title}}</option>
+																  </template>
+																  <template v-else> 
+																  		<option :value=item.id>{{item.title}}</option>
+																  </template>
+															  </template>
+															</select> 
+															<span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
+														  </div>
 													</div>
 												</div>
 												<div class="mui-col-sm-3">
 													<div class="mui-input-row mui-input-row-bottom">
 														<label><span style="color: #D26A60;">*</span>姓名：</label>
-														<input id="tec_name" type="text" placeholder="请选择" readonly="true"><span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
+														<select class="" v-model="visitor_inData.dptUserSelectId" @change="dptUserSelectChanged">
+														  <template v-for="item in visitor_inData.dptUserList">
+															  <template v-if="item.id===''"> 
+															  		<option disabled="true" :value=item.id>{{item.title}}</option>
+															  </template>
+															  <template v-else> 
+															  		<option :value=item.id>{{item.title}}</option>
+															  </template>
+														  </template>
+														</select>  
+														<span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
 													</div>
 												</div>
 											</div>
@@ -164,25 +190,55 @@
 												<div class="mui-col-sm-3">
 													<div class="mui-input-row mui-input-row-bottom">
 														<label><span style="color: #D26A60;">*</span>年级：</label>
-														<input id="stu_grd" type="text" placeholder="请选择" readonly="true"><span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
+														<select class="" v-model="visitor_inData.grdSelectId" @change="grdSelectChanged">
+														  <template v-for="item in visitor_inData.grdList">
+															  <template v-if="item.id===''"> 
+															  		<option disabled="true" :value=item.id>{{item.title}}</option>
+															  </template>
+															  <template v-else> 
+															  		<option :value=item.id>{{item.title}}</option>
+															  </template>
+														  </template>
+														</select>  
+														<span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
 													</div>
 												</div>
 												<div class="mui-col-sm-3">
 													<div class="mui-input-row mui-input-row-bottom">
 														<label><span style="color: #D26A60;">*</span>班级：</label>
-														<input id="stu_cls"  type="text" placeholder="请选择" readonly="true"><span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
+														<select class="" v-model="visitor_inData.clsSelectId" @change="clsSelectChanged">
+														  <template v-for="item in visitor_inData.clsList">
+															  <template v-if="item.id===''"> 
+															  		<option disabled="true" :value=item.id>{{item.title}}</option>
+															  </template>
+															  <template v-else> 
+															  		<option :value=item.id>{{item.title}}</option>
+															  </template>
+														  </template>
+														</select>  
+														<span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
 													</div>
 												</div>
 												<div class="mui-col-sm-3">
 													<div class="mui-input-row mui-input-row-bottom">
 														<label><span style="color: #D26A60;">*</span>姓名：</label>
-														<input  id="stu_name"  type="text" placeholder="请选择" readonly="true"><span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
+														<select class="" v-model="visitor_inData.stuSelectId" @change="stuSelectChanged">
+														  <template v-for="item in visitor_inData.stuList">
+															  <template v-if="item.id===''"> 
+															  		<option disabled="true" :value=item.id>{{item.title}}</option>
+															  </template>
+															  <template v-else> 
+															  		<option :value=item.id>{{item.title}}</option>
+															  </template>
+														  </template>
+														</select>  
+														<span class="span-icon"><i class="layui-icon layui-icon-down layui-font-12"></i></span>
 													</div>
 												</div>
 												<div class="mui-col-sm-3">
 													<div class="mui-input-row mui-input-row-bottom-lar">
 														<label><span style="color: #D26A60;">*</span>班主任：</label>
-														<input  type="text" placeholder="选择学生后展示" readonly="true">
+														<input :value="visitor_inData.masterObj?visitor_inData.masterObj.user_name:''" type="text" placeholder="选择学生后展示" readonly="true">
 													</div>
 												</div>
 											</div>
@@ -191,13 +247,13 @@
 								</div>
 							</div>
 							<div class="mui-row" style="margin-top: 2rem;text-align: center;">
-								<button type="button" class="mui-btn mui-btn-primary mui-btn-outlined mui-btn-outlined-lg">
+								<button type="button"  @tap="saveData"  class="mui-btn mui-btn-primary mui-btn-outlined mui-btn-outlined-lg">
 									保存
 								</button>
-								<button type="button" @tap="printPage" class="mui-btn mui-btn-success mui-btn-outlined mui-btn-outlined-lg">
+								<button type="button" @tap="saveData(1)" class="mui-btn mui-btn-success mui-btn-outlined mui-btn-outlined-lg">
 									保存并打印
 								</button>
-								<button type="button" class="mui-btn mui-btn-outlined mui-btn-outlined-lg">
+								<button type="button" @tap="resetData" class="mui-btn mui-btn-outlined mui-btn-outlined-lg">
 									取消
 								</button>
 							</div>
@@ -365,11 +421,11 @@
 		<script src="../../js/utils/events.js"></script>
 		<!-- <script src="../../js/utils/vconsole.min.js"></script> -->
 		<script src="../../js/utils/utils.js"></script>
-		<!-- <script src="../../js/libs/jquery.js"></script> -->
+		<script src="../../js/libs/jquery.js"></script>
 		<script src="../../js/utils/usbPrinter.js"></script>
 		<script src="../../js/utils/qrCode.js"></script>
 		<script src="../../js/utils/idCardReader.js"></script>
-		
+		<script src="../../js/utils/publicProtocol.js"></script>
 		<script src="../../js/qiniu/qiniu.js"></script>
 		<script src="../../js/utils/cryption.js"></script>
 		<script src="../../js/cloud/load.js"></script>
@@ -392,6 +448,13 @@
 			
 			mui.init();
 			var personal = store.get(window.storageKeyName.PERSONALINFO);
+			var visitor_counter //访问人数
+			var visitor_for //访问事由
+			var certificate_type //证件类型
+			var tec_name //教师姓名
+			var stu_grd //年级
+			var stu_cls //班级
+			var stu_name //学生姓名
 			
 			var tempHead = new Vue({
 				el: "#tempHead",
@@ -436,10 +499,43 @@
 					//以上变量为页面控制使用，一般不用改
 					//访客登记
 					visitor_inData:{
-						idCardInfo:{}
+						dptList:[{title:'请选择部门',id:''}],//部门列表
+						dptSelectId:'',//选择的部门ID
+						dptUserList:[{title:'请选择部门人员',id:''}],//部门人员列表 
+						dptUserSelectId:'',//选择的部门人员ID
+						grdList:[{title:'请选择年级',id:''}],//年级列表
+						grdSelectId:'',//选择的年级ID
+						clsList:[{title:'请选择班级',id:''}],//班级列表 
+						clsSelectId:'',//选择的班级ID
+						stuList:[{title:'请选择学生',id:''}],//学生列表
+						stuSelectId:'',//选择的学生ID
+						
+						//表单会用到的
+						headPhoto:'',//身份证头像  base64
+						dptSelectObj:'',//选择的部门对象
+						dptUserSelectObj:'',//选择的部门人员对象
+						grdSelectObj:'',//选择的年级对象
+						clsSelectObj:'',//选择的班级对象
+						stuSelectObj:'',//选择的学生对象
+						masterObj:'',//选择的班级对应的班主任对象
+						visitor_name:'',//	访客姓名
+						visitor_for:'',//	访问事由
+						visitor_sex:0,//	访客性别
+						visitor_phone:'',//	访客手机
+						visitor_birthday:'',//	访客出生日期
+						visitor_counter:'',//	随行人数
+						visitor_goods:'',//	随行物品
+						certificate_type:'',//	证件类型
+						certificate_number:'',//	证件号码
+						img_url:'',//	访客照片
+						unit_name:'',//	访客单位
+						address:'',//	访客地址
+						plate_number:'',//	访客车牌号
+						note:'',//	备注
+						interviewee_type:0,//	被访人类型
 					},
 					//访客查询
-					visitor_queryData:{
+					visitor_queryData:{ 
 						
 					},
 					//访客签离
@@ -473,13 +569,73 @@
 							}
 						}
 					},
-					printPage:function(){//访客登记  保存并打印按钮
-						var visitorID="访问单号：202166666789102235"
-						plus.usbPrinter.printPage(function(args){
-							console.log(args);
-						},function(args){
-							console.log(args);
-						},visitorID)
+					bottomTabClick:function(type){//底部tab栏切换到学生时，获取年级
+						if(type=='tec'){//被访人类型 教师
+							this.visitor_inData.interviewee_type=0
+						}else{//被访人类型 学生
+							this.visitor_inData.interviewee_type=1
+							if(this.visitor_inData.grdList.length===1){
+								getGrdList();
+							}
+						}
+						
+					},
+					dptSelectChanged:function(event){//访客登记 部门选择变动监听
+						var dptId=this.visitor_inData.dptSelectId
+						var dptList =this.visitor_inData.dptList
+						for (var i = 0; i < dptList.length; i++) {
+							if(dptId===dptList[i].id){
+								this.visitor_inData.dptSelectObj=dptList[i]
+							}
+						}
+						getDptUser(dptId);
+					},
+					dptUserSelectChanged:function(event){//访客登记 部门人员选择变动监听
+						var dptUserId=this.visitor_inData.dptUserSelectId
+						var dptUserList =this.visitor_inData.dptUserList
+						for (var i = 0; i < dptUserList.length; i++) {
+							if(dptUserId===dptUserList[i].id){
+								this.visitor_inData.dptUserSelectObj=dptUserList[i]
+							}
+						}
+					},
+					grdSelectChanged:function(event){//访客登记 年级选择变动监听
+						var grdId=this.visitor_inData.grdSelectId
+						var grdList =this.visitor_inData.grdList
+						for (var i = 0; i < grdList.length; i++) {
+							if(grdId===grdList[i].id){
+								this.visitor_inData.grdSelectObj=grdList[i]
+							}
+						}
+						this.visitor_inData.masterObj=''
+						getClsList(grdId);
+					},
+					clsSelectChanged:function(event){//访客登记 班级选择变动监听
+						var clsId=this.visitor_inData.clsSelectId
+						var clsList =this.visitor_inData.clsList
+						for (var i = 0; i < clsList.length; i++) {
+							if(clsId===clsList[i].id){
+								this.visitor_inData.clsSelectObj=clsList[i]
+							}
+						}
+						this.visitor_inData.masterObj=''
+						getStuList(this.visitor_inData.grdSelectObj.id,clsId);
+						getClsMaster(this.visitor_inData.grdSelectObj.id,clsId);
+					},
+					stuSelectChanged:function(event){//访客登记 学生选择变动监听
+						var stuId=this.visitor_inData.stuSelectId
+						var stuList =this.visitor_inData.stuList
+						for (var i = 0; i < stuList.length; i++) {
+							if(stuId===stuList[i].id){
+								this.visitor_inData.stuSelectObj=stuList[i]
+							}
+						}
+					},
+					saveData:function(type){//访客登记  保存按钮
+						saveData(type)
+					},
+					resetData:function(){//访客登记  取消按钮
+						resetData()
 					},
 					scan:function(){//读证按钮点击
 						// events.showWaiting("正在读证...")
@@ -493,18 +649,13 @@
 						// 	events.closeWaiting()
 						// 	console.log("报错了。。。"+args);
 						// })
+						resetData();
 						var idInfo=  {name:"L S",sex:"男 \/ M",nation:"汉",born:"1998.07.15",address:"山东省邹平县????????",period:"2020.06.22 - 2040.06.22",
 						apartment:"邹平县公安局",country:"112",no:"372330199807155152",card_type:" ",reserve:" ",
 						headPhoto:"/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAcdBQADASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAAAAECA//EACcQAQEBAAEDAwUAAwEBAAAAAAABETECIUFRYYEScZHB8KGx0fHh/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAH/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwDoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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"}
 						var hdPhoth=idInfo.headPhoto;
-						idInfo.headPhoto="data:image/jpg;base64,"+hdPhoth
-						this.visitor_inData.idCardInfo=idInfo;
-						
-						
-						
-						
-						
-						upLoadIDCardImg(idInfo.headPhoto.split(",")[1]);
+						var newHeadPhoto="data:image/jpg;base64,"+hdPhoth
+						this.visitor_inData.headPhoto=newHeadPhoto;
 					},
 					layerYes:function(){//弹出层确定按钮
 						// layer.close(index);
@@ -546,7 +697,6 @@
 			});
 			
 			mui.plusReady(function() {
-				var tempMenu = store.get(window.storageKeyName.MENULIST);
 				var personal = store.get(window.storageKeyName.PERSONALINFO);
 				mui('.mui-scroll-wrapper').scroll({
 					bounce: false,
@@ -570,25 +720,13 @@
 				};
 				//初始化菜单
 				setMenus();
-				events.closeWaiting()
+				//初始化下拉
+				initLayuiFunc();
 			});
 			
 			//初始化菜单
 			function setMenus(){
 				var menus=store.get(window.storageKeyName.MENULIST);
-				var firstMenu=menus[0].childList[0];
-				if(firstMenu.url==="schapp_Visitor_In"){
-					contentData.defaultTab='in' 
-					contentData.visitor_in.tabActive=true
-				}else if(firstMenu.url==="schapp_Visitor_Query"){
-					contentData.defaultTab='select'
-					contentData.visitor_query.tabActive=true
-					getQueryData();
-				}else if(firstMenu.url==="schapp_Visitor_Out"){
-					contentData.defaultTab='out'
-					contentData.visitor_out.tabActive=true
-					getOutData();
-				} 
 				for (var i = 0; i < menus[0].childList.length; i++) {
 					var child=menus[0].childList[i]
 					if(child.url==="schapp_Visitor_In"){
@@ -605,12 +743,85 @@
 						contentData.visitor_out.access=child.access
 					} 
 				}
+				var firstMenu=menus[0].childList[0];
+				if(firstMenu.url==="schapp_Visitor_In"){
+					contentData.defaultTab='in' 
+					contentData.visitor_in.tabActive=true
+					getDpt(); 
+				}else if(firstMenu.url==="schapp_Visitor_Query"){
+					contentData.defaultTab='select'
+					contentData.visitor_query.tabActive=true
+					getQueryData();
+				}else if(firstMenu.url==="schapp_Visitor_Out"){
+					contentData.defaultTab='out'
+					contentData.visitor_out.tabActive=true
+					getOutData();
+				} 
+				
+				document.getElementById('slider').addEventListener('slide', function(e) {
+					if(e.detail.slideNumber === 0){
+						contentData.visitor_inData.interviewee_type=0
+					}
+					if (e.detail.slideNumber === 1 && contentData.visitor_inData.grdList.length===1) {
+						contentData.visitor_inData.interviewee_type=1
+						getGrdList();
+					} 
+				});
+			}
+			
+			//访客登记 提交数据
+			function saveData(type){
+				if(type){
+					printData();
+				}
+			}
+			//访客登记 打印数据
+			function printData(){
+				var visitorID="访问单号：202166666789102235"
+				plus.usbPrinter.printPage(function(args){
+					console.log(args);
+				},function(args){
+					console.log(args);
+				},visitorID)
+			}
+			
+			//重置访客登记 表单数据
+			function resetData(){
+				contentData.visitor_inData.dptSelectId=''//选择的部门ID
+				contentData.visitor_inData.dptUserList=[{title:'请选择部门人员',id:''}]//部门人员列表 
+				contentData.visitor_inData.dptUserSelectId=''//选择的部门人员ID
+				contentData.visitor_inData.grdSelectId=''//选择的年级ID
+				contentData.visitor_inData.clsList=[{title:'请选择班级',id:''}]//班级列表 
+				contentData.visitor_inData.clsSelectId=''//选择的班级ID
+				contentData.visitor_inData.stuList=[{title:'请选择学生',id:''}]//学生列表
+				contentData.visitor_inData.stuSelectId=''//选择的学生ID
+				contentData.visitor_inData.headPhoto=''//身份证头像  base64
+				contentData.visitor_inData.dptSelectObj=''//选择的部门对象
+				contentData.visitor_inData.dptUserSelectObj=''//选择的部门人员对象
+				contentData.visitor_inData.grdSelectObj=''//选择的年级对象
+				contentData.visitor_inData.clsSelectObj=''//选择的班级对象
+				contentData.visitor_inData.stuSelectObj=''//选择的学生对象
+				contentData.visitor_inData.masterObj=''//选择的班级对应的班主任对象
+				contentData.visitor_inData.visitor_name=''//	访客姓名
+				contentData.visitor_inData.visitor_for=''//	访问事由
+				contentData.visitor_inData.visitor_sex=0//	访客性别
+				contentData.visitor_inData.visitor_phone=''//	访客手机
+				contentData.visitor_inData.visitor_birthday=''//	访客出生日期
+				contentData.visitor_inData.visitor_counter=''//	随行人数
+				contentData.visitor_inData.visitor_goods=''//	随行物品
+				contentData.visitor_inData.certificate_type=''//	证件类型
+				contentData.visitor_inData.certificate_number=''//	证件号码
+				contentData.visitor_inData.img_url=''//	访客照片
+				contentData.visitor_inData.unit_name=''//	访客单位
+				contentData.visitor_inData.address=''//	访客地址
+				contentData.visitor_inData.plate_number=''//	访客车牌号
+				contentData.visitor_inData.note=''//	备注
 			}
 			
 			// 上传身份证头像
 			function upLoadIDCardImg(base64Str){
 				var wd =events.showWaiting();
-				var fileName='IDcard'+new Date().getTime(); 
+				var fileName='IDcardHeadPhoto'+new Date().getTime(); 
 				UploadHeadImage.uploadIDCardHeadImge(wd,1,fileName,base64Str,function(domain){
 					console.log("domain: " + JSON.stringify(domain));
 					wd.close();
@@ -658,45 +869,24 @@
 			}
 			
 			//访客登记——获取部门 1.13.学校部门
-			function getDptUser(dptModel) {
+			function getDpt() {
+				events.showWaiting();
 				const params = {
-					dpt_codes:dptModel.dpt_code,
+					sch_code:personal.sch_code,
 					page_size:'999',
 					page_number:'1',
-					index_code: curPage.access.split('#')[1],
+					index_code: contentData.visitor_in.access,
 				}
-				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'dptUser', {}, params, 2, function(data) {
-					console.log(JSON.stringify(data))
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'dpt', {}, params, 2, function(data) {
 					if (data.code == 0) {
-						var users = data.data.list;
-						if(users.length>0 ){
-							var tempArr = [{
-								user_name:'全部老师',
-								user_code:'0',
-								dpt_code:dptModel.dpt_code,
-							}];
-							users = tempArr.concat(users);
-							for (var i = 0; i < users.length; i++) {
-								var tempM = users[i];
-								tempM.value = tempM.user_code;
-								tempM.text = tempM.user_name;
-							}
-							for (var i = 0; i < datasource.dptList.length; i++) {
-								var tempDpt = datasource.dptList[i];
-								if (tempDpt.dpt_code == users[0].dpt_code) {
-									tempDpt.userArray = [].concat(users);
-								}
-							}
-							datasource.userList=users;
-							datasource.userValue=users[0];
-							// 获取数据
-							pageIndex = 1;
-							flagRef = 0;
-							datasource.pageArray = [];
-							getPageDataArray();
-						}else{
-							mui.toast('当前部门没有人员');
-						}
+						 var dpts = data.data.list;
+						 for (var i = 0; i < dpts.length; i++) {
+						 	var tempM = dpts[i];
+						 	tempM.id = tempM.dpt_code;
+						 	tempM.title = tempM.dpt_name;
+						 }
+						 contentData.visitor_inData.dptList=[{title:'请选择部门',id:''}].concat(dpts)
+						 contentData.visitor_inData.dptSelectId='';
 					}else{
 						mui.toast(data.msg);
 					}
@@ -705,42 +895,26 @@
 			}
 			
 			//访客登记——获取部门用户 1.14.学校部门用户
-			function getDptUser(dptModel) {
+			function getDptUser(dptId) {
+				events.showWaiting();
 				const params = {
-					dpt_codes:dptModel.dpt_code,
+					dpt_codes:dptId,
 					page_size:'999',
 					page_number:'1',
-					index_code: curPage.access.split('#')[1],
+					index_code: contentData.visitor_in.access,
 				}
 				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'dptUser', {}, params, 2, function(data) {
 					console.log(JSON.stringify(data))
 					if (data.code == 0) {
 						var users = data.data.list;
 						if(users.length>0 ){
-							var tempArr = [{
-								user_name:'全部老师',
-								user_code:'0',
-								dpt_code:dptModel.dpt_code,
-							}];
-							users = tempArr.concat(users);
 							for (var i = 0; i < users.length; i++) {
 								var tempM = users[i];
-								tempM.value = tempM.user_code;
-								tempM.text = tempM.user_name;
+								tempM.id = tempM.user_code;
+								tempM.title = tempM.user_name;
 							}
-							for (var i = 0; i < datasource.dptList.length; i++) {
-								var tempDpt = datasource.dptList[i];
-								if (tempDpt.dpt_code == users[0].dpt_code) {
-									tempDpt.userArray = [].concat(users);
-								}
-							}
-							datasource.userList=users;
-							datasource.userValue=users[0];
-							// 获取数据
-							pageIndex = 1;
-							flagRef = 0;
-							datasource.pageArray = [];
-							getPageDataArray();
+							contentData.visitor_inData.dptUserList=[{title:'请选择部门人员',id:''}].concat(users)
+							contentData.visitor_inData.dptUserSelectId='';
 						}else{
 							mui.toast('当前部门没有人员');
 						}
@@ -751,26 +925,141 @@
 				});
 			}
 			
+			// 访客登记——获取数据范围授权：年级 1.15
+			function getGrdList() { 
+				events.showWaiting();
+				comData = {
+					op_code:'index',
+					get_grd:true,
+					index_code: contentData.visitor_in.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'acl/dataRange', {}, comData, 2, function(data) {
+					console.log(JSON.stringify(data))
+					events.closeWaiting();
+					if (data.code == 0) {
+						var grds = data.data.grd_list;
+						var grdList=[];
+						grds.map(function(currentValue) {
+							var obj = {};
+							obj.id = currentValue.value;
+							obj.title = currentValue.name;
+							grdList.push(obj)
+						})
+						if(grdList.length>0 ){
+							contentData.visitor_inData.grdList=[{title:'请选择年级',id:''}].concat(grdList)
+							contentData.visitor_inData.grdSelectId='';
+						}else{
+							mui.toast('无数据授权 无法获取年级');
+						}
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			//访客登记——获取数据范围授权：班级 1.15
+			function getClsList(grd_id) {
+				events.showWaiting();
+				const params = {
+					op_code:'index',
+					grd_code:grd_id,
+					get_cls:true,
+					index_code: contentData.visitor_in.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'acl/dataRange', {}, params, 2, function(data) {
+					console.log(JSON.stringify(data))
+					events.closeWaiting();
+					if (data.code == 0) {
+						var clss = data.data.cls_list;
+						var clssList=[];
+						clss.map(function(currentValue) {
+							var obj = {};
+							obj.id = currentValue.value;
+							obj.title = currentValue.name;
+							clssList.push(obj)
+						})
+						if(clssList.length>0 ){
+							contentData.visitor_inData.clsList=[{title:'请选择班级',id:''}].concat(clssList)
+							contentData.visitor_inData.clsSelectId='';
+						}else{
+							mui.toast('年级下无班级！');
+						}
+					}else{
+						mui.toast(data.msg);
+					}
+				});
+			}
+			//访客登记——获取数据范围授权：学生 1.15
+			function getStuList(grd_id,cls_id) {
+				events.showWaiting();
+				const params = {
+					op_code:'index',
+					grd_code: grd_id,
+					cls_code: cls_id,
+					get_stu:true,
+					index_code: contentData.visitor_in.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'acl/dataRange', {}, params, 2, function(data) {
+					console.log(JSON.stringify(data))
+					events.closeWaiting();
+					if (data.code == 0) {
+						var stu = data.data.stu_list;
+						var stuList=[];
+						stu.map(function(currentValue) {
+							var obj = {};
+							obj.id = currentValue.value;
+							obj.title = currentValue.name;
+							stuList.push(obj)
+						})
+						if(stuList.length>0 ){
+							contentData.visitor_inData.stuList=[{title:'请选择学生',id:''}].concat(stuList)
+							contentData.visitor_inData.stuSelectId='';
+						}else{
+							mui.toast('班级下无学生');
+						}
+					}else{
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
+			// 访客登记——获取班主任 1.6
+			function getClsMaster(grd_code,cls_code) { 
+				comData = {
+					grd_codes:grd_code,
+					cls_codes:cls_code,
+					index_code: contentData.visitor_in.access.split('#')[1],
+				}
+				postDataEncry(window.storageKeyName.INTERFACE_HR_SUB + 'clsTec', {}, comData, 2, function(data) {
+					if (data.code == 0) {
+						 var tList=data.data.list
+						 var master='';
+						 for (var i = 0; i < tList.length; i++) {
+							if(tList[i].is_master==1){
+								master=tList[i]
+							}
+						 }
+						contentData.visitor_inData.masterObj=master
+					} else {
+						mui.toast(data.msg);
+					}
+				});
+			}
+			
 			//初始化layui相关的下拉菜单
 			function initLayuiFunc(){
-				var visitors=[]
-				for (var i = 1; i <= 10; i++) {
-					var vobj={
-						title:i+' 人',
-						id:i
-					}
-					visitors.push(vobj)
-				}
 				layui.use(['dropdown','laydate'], function(){
 				  // 来访登记
-				  var visitor_counter = layui.dropdown //访问人数
-				  var visitor_for = layui.dropdown //访问事由
-				  var certificate_type = layui.dropdown //证件类型
-				  var tec_dpt = layui.dropdown //部门
-				  var tec_name = layui.dropdown //教师姓名
-				  var stu_grd = layui.dropdown //年级
-				  var stu_cls = layui.dropdown //班级
-				  var stu_name = layui.dropdown //学生姓名
+				  visitor_counter = layui.dropdown //访问人数
+				  visitor_for = layui.dropdown //访问事由
+				  certificate_type = layui.dropdown //证件类型
+				  var visitors=[]
+				  for (var i = 1; i <= 10; i++) {
+				  	var vobj={
+				  		title:i+' 人',
+				  		id:i
+				  	}
+				  	visitors.push(vobj)
+				  }
 				  visitor_counter.render({
 				    elem: '#visitor_counter' //可绑定在任意元素中，此处以上述按钮为例
 					// ,style:'width:28%'
@@ -778,15 +1067,17 @@
 				    ,id: 'visitor_counter'
 				    ,click: function(obj){
 				      console.log(JSON.stringify(obj));
+					  contentData.visitor_inData.visitor_counter=obj.id
 				    }
 				  });
+				  
 				  visitor_for.render({
 				    elem: '#visitor_for'//可绑定在任意元素中，此处以上述按钮为例
 				  	// ,style:'width:28%'
 				    ,data:[{title:'公务',id:'公务'},{title:'探亲',id:'探亲'},{title:'其他',id:'其他'}]
 				    ,id: 'visitor_for'
 				    ,click: function(obj){
-				      console.log(JSON.stringify(obj));
+					  contentData.visitor_inData.visitor_for=obj.id
 				    }
 				  });
 				  certificate_type.render({
@@ -794,49 +1085,10 @@
 				    ,data:[{title:'身份证',id:'身份证'},{title:'学生证',id:'学生证'},{title:'护照',id:'护照'}]
 				    ,id: 'certificate_type'
 				    ,click: function(obj){
-				      console.log(JSON.stringify(obj));
+					  contentData.visitor_inData.certificate_type=obj.id
 				    }
 				  });
-				  tec_dpt.render({
-				    elem: '#tec_dpt'//可绑定在任意元素中，此处以上述按钮为例
-				    ,data:[{title:'部门1',id:'10000'},{title:'部门2',id:'10001'},{title:'部门3',id:'10003'}]
-				    ,id: 'tec_dpt'
-				    ,click: function(obj){
-				      console.log(JSON.stringify(obj));
-				    }
-				  });
-				  tec_name.render({
-				    elem: '#tec_name'//可绑定在任意元素中，此处以上述按钮为例
-				    ,data:[{title:'教师1',id:'身份证'},{title:'教师2',id:'学生证'},{title:'教师3',id:'护照'}]
-				    ,id: 'tec_name'
-				    ,click: function(obj){
-				      console.log(JSON.stringify(obj));
-				    }
-				  });
-				  stu_grd.render({
-				    elem: '#stu_grd'//可绑定在任意元素中，此处以上述按钮为例
-				    ,data:[{title:'一年级',id:'10000'},{title:'二年级',id:'10001'},{title:'三年级',id:'10003'}]
-				    ,id: 'stu_grd'
-				    ,click: function(obj){
-				      console.log(JSON.stringify(obj));
-				    }
-				  });
-				  stu_cls.render({
-				    elem: '#stu_cls'//可绑定在任意元素中，此处以上述按钮为例
-				    ,data:[{title:'1601班',id:'身份证'},{title:'1602班',id:'学生证'},{title:'1603班',id:'护照'}]
-				    ,id: 'stu_cls'
-				    ,click: function(obj){
-				      console.log(JSON.stringify(obj));
-				    }
-				  });
-				  stu_name.render({
-				    elem: '#stu_name'//可绑定在任意元素中，此处以上述按钮为例
-				    ,data:[{title:'学生1',id:'身份证'},{title:'学生2',id:'学生证'},{title:'学生3',id:'护照'}]
-				    ,id: 'stu_name'
-				    ,click: function(obj){
-				      console.log(JSON.stringify(obj));
-				    }
-				  });
+				   
 				  
 				  // 访客查询
 				  var leave_flag = layui.dropdown //是否离开
