@@ -80,7 +80,9 @@ var storageKeyName = (function(mod) {
 	mod.FIRSTOPEN = 'firstOpen';//首次打开，判断是否同意用户协议
 	mod.PWD_ENCRYPTION = '#@_JFnice_@#';//修改密码时，加密密钥
 	mod.SCHOOLID = 100005;//学校ID
-	mod.ANDROIDUPDATEURL='http://192.168.1.243:8080/app/versionCode.xml';//安卓升级地址
+	
+	mod.ANDROIDUPDATEURL='http://www.jiaobao.net/dl/fangkeji/versionCode.xml';//安卓升级地址
+	
 	mod.IOSUPDATEURL='http://itunes.apple.com/lookup?id=1503612695';//IOS升级地址
 	mod.PRIVACE='http://www.jiaobao.net/dl/jiaobaoxiaoyuan/jbxyPrivacy.htm';//用户隐私政策地址
 	

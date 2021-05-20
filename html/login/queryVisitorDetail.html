@@ -410,11 +410,16 @@
 						mui.back();
 					},
 					printData:function(){
-						plus.usbPrinter.printPage(function(args){
-							console.log(args);
-						},function(args){
-							console.log(args);
-						},this.formData.record_code)
+						console.log(this.formData.leave_flag);
+						if(this.formData.leave_flag==1){
+							mui.toast('该访客已签离，无法打印凭条')
+						}else{
+							// plus.usbPrinter.printPage(function(args){
+							// 	console.log(args);
+							// },function(args){
+							// 	console.log(args);
+							// },this.formData.record_code)
+						}
 					},
 				}
 			});
