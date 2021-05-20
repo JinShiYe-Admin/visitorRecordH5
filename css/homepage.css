@@ -130,7 +130,7 @@
 				padding: 11px 5px;
 			} 
 			.mui-input-row-toast label~input, .mui-input-row-toast label~select, .mui-input-row-toast label~textarea{
-				border: 0;
+				border: 0 !important;
 				border-bottom: 0px solid rgba(210,207,200,.8);
 				width: 60%;
 				float: left;
