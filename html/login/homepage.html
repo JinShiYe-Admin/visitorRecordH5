@@ -827,8 +827,10 @@
 						that.visitor_inData.certificate_type='身份证';
 						that.visitor_inData.certificate_number=jsonObj.no;
 						that.visitor_inData.address=jsonObj.address;
+						plus.qrCode.playBeep();
 					},
 					TTTTTTTest2:function(){//测试用
+						plus.qrCode.playBeep();
 						checkAndOpenData('372330199807155152','');
 					}
 				}
@@ -1635,6 +1637,7 @@
 			
 			//根据扫码或读卡得到的 身份证号码或者访客单号查询访客详情，并打开签离弹窗
 			function checkAndOpenData(idCardNumber,visitor_code){
+				events.showWaiting();
 				const params = {
 					certificate_number:idCardNumber?idCardNumber:'',//	证件号码
 					record_code:visitor_code?visitor_code:'',//	访问单号
@@ -1651,6 +1654,7 @@
 				}
 				postDataEncry(window.storageKeyName.INTERFACE_VISITOR + 'visitor/page', {}, params, 2, function(da) {
 					console.log("da: " + JSON.stringify(da));
+					events.closeWaiting();
 					if (da.code == 0) {
 						 if(da.data && da.data.list.length===1){
 							 var data=da.data.list[0];
