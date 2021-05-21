@@ -402,7 +402,7 @@
 														<div class="mui-col-sm-4">
 															<div class="mui-input-row  mui-input-row-toast-in">
 																<label>离开时间：</label>
-																<input id="laytoast_leavetime" type="text" placeholder="请选择离开时间" readonly="true"><span class="span-icon" style="margin-left: -30px;"><i class="layui-icon layui-icon-date layui-font-18"></i></span>
+																<input id="laytoast_leavetime" type="text" :value="visitor_outData.leave_time" placeholder="请选择离开时间" readonly="true"><span class="span-icon" style="margin-left: -30px;"><i class="layui-icon layui-icon-date layui-font-18"></i></span>
 															</div>
 														</div>
 														<div class="mui-col-sm-4">
@@ -429,7 +429,7 @@
 							<div class="mui-row">
 									<div class="mui-input-row mui-input-row-bottom">
 										<label style="width: 80px;">关键字：</label>
-										<input style="width: 120px;margin-right: 5px;" type="text" placeholder="访客姓名">
+										<input style="width: 120px;margin-right: 5px;" v-model="visitor_outData.visitor_name" type="text" placeholder="访客姓名">
 										<label style="width: 80px;">被访人：</label>
 										<select style="width: 120px;margin-right: 5px;"  v-model="visitor_outData.visitor_typeSelectId">
 										  <template v-for="item in visitor_outData.visitor_typeList">
@@ -1413,8 +1413,8 @@
 				var beginTime='';
 				var endTime='';
 				if(times){
-					beginTime=times.split("至")[0];
-					endTime=times.split("至")[1];
+					beginTime=times.split(" 至 ")[0];
+					endTime=times.split(" 至 ")[1];
 				}
 				const params = {
 					certificate_number:'',//	证件号码
@@ -1650,6 +1650,7 @@
 						contentData.visitor_outData.formData={}
 						data.sex_name=data.visitor_sex?'男':'女'
 						contentData.visitor_outData.formData=data
+						contentData.visitor_outData.leave_time=moment().format("YYYY-MM-DD HH:mm:ss")
 						if(data.img_url !='' && data.img_url !=null){
 							getIDCardImg(data.img_url,function(urlStr){
 								contentData.visitor_outData.IDCardImg=urlStr;
