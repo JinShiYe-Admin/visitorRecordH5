@@ -127,10 +127,10 @@
 												<input oninput="if(value.length>20)value=value.slice(0,20)" v-model="visitor_inData.plate_number" type="text" placeholder="请输入车牌号">
 											</div>
 										</div>
-										<div class="mui-col-sm-6">
+										<div class="mui-col-sm-12">
 											<div class="mui-input-row">
-												<label>备注：</label>
-												<input oninput="if(value.length>30)value=value.slice(0,30)" v-model="visitor_inData.note"  type="text" placeholder="请输入备注">
+												<label style="width: 14%;">备注：</label>
+												<input style="width: 86%;" oninput="if(value.length>30)value=value.slice(0,30)" v-model="visitor_inData.note"  type="text" placeholder="请输入备注">
 											</div>
 										</div>
 									</div>
@@ -443,7 +443,7 @@
 										<button type="button" @tap="out_getQRCode" class="mui-btn mui-btn-success" style="font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 7px;">扫码</button>
 										<button type="button" @tap="out_select_reset" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 28px;">重置</button>
 										<button type="button" @tap="out_select" class="mui-btn mui-btn-outlined" style="font-size: 15px;color: #3893D9;width: 80px;margin-right: 7px;">查询</button>
-										<button type="button" @tap="TTTTTTTest2" class="mui-btn" style="background-color: #3893D9;border: 1px solid #3893D9;font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 7px;">假证</button>
+										<button type="button" @tap="TTTTTTTest2" class="mui-btn" style="position: fixed;right: 0;background-color: #3893D9;border: 1px solid #3893D9;font-size: 15px;color: #FAFAFA;width: 80px;margin-right: 7px;">假证</button>
 									</div>
 							</div>
 							<div class="mui-row" style="margin-right: 15px;margin-bottom: 0px;">
@@ -458,13 +458,13 @@
 			<div id='layPrint' class="mui-row" style="display: none;">
 				 <div class="mui-row" style="padding-top: 15px;">
 					<div class="mui-col-sm-12" style="text-align: center;font-weight: 600;font-size: 22px;">访客单</div>
-					<div class="mui-col-sm-12" style="text-align: left;padding-left: 50px;line-height: 2;">
+					<div class="mui-col-sm-12" style="margin-top: 15px;text-align: left;padding-left: 20px;line-height: 2;">
 						<p style="color: #000000;font-size: 16px;font-weight: 600;">姓名：{{printRecord.visitor_name}}</p>
 						<p style="color: #000000;font-size: 16px;font-weight: 600;">性别：{{printRecord.visitor_sex==1?'男':'女'}}</p>
-						<p style="color: #000000;font-size: 16px;font-weight: 600;">来访单位：{{printRecord.unit_name?printRecord.unit_name:'无'}}</p>
-						<p style="color: #000000;font-size: 16px;font-weight: 600;">访问事由：{{printRecord.visitor_for}}</p>
+						<p style="color: #000000;font-size: 16px;font-weight: 600;word-wrap: break-word;word-break: break-all;">来访单位：{{printRecord.unit_name?printRecord.unit_name:'无'}}</p>
+						<p style="color: #000000;font-size: 16px;font-weight: 600;word-wrap: break-word;word-break: break-all;">访问事由：{{printRecord.visitor_for}}</p>
 						<template v-if="printRecord.interviewee_type==0">
-							<p style="color: #000000;font-size: 16px;font-weight: 600;">被访人：{{printRecord.teacher_name}}</p>
+							<p style="color: #000000;font-size: 16px;font-weight: 600;word-wrap: break-word;word-break: break-all;">被访人：{{printRecord.teacher_name}}</p>
 							<p style="color: #000000;font-size: 16px;font-weight: 600;">部门：{{printRecord.dpt_name}}</p>
 						</template>
 						<template v-else>
@@ -479,7 +479,7 @@
 						<p style="color: #000000;font-size: 15px;;">{{printRecord.record_code}}</p>
 						<p style="color: #000000;font-size: 15px;">注：离开请交回值班室</p>
 					</div>
-					<div class="mui-col-sm-12" style="margin-top: 2rem;text-align: center;">
+					<div class="mui-col-sm-12" style="margin-top: 2.5rem;text-align: center;">
 						<button type="button" @tap="printYes()" class="mui-btn mui-btn-outlined-print-lg">
 							确认打印
 						</button>
@@ -805,6 +805,7 @@
 						layer.close(this.pIndex);
 					},
 					visitor_select:function(){//访客查询 
+						this.visitor_queryData.page_number=1
 						getQueryData();
 					},
 					visitor_select_reset:function(){//访客查询 重置
@@ -856,6 +857,7 @@
 						},function(args){events.closeWaiting()})
 					},
 					out_select:function(){//访客签离 查询按钮
+						this.visitor_outData.page_number=1
 						getOutData();
 					},
 					out_select_reset:function(){//访客签离 重置按钮
@@ -1041,7 +1043,7 @@
 						type: 1
 						,title: false //不显示标题栏
 						,closeBtn: false
-						,area: ['350px','570px']
+						,area: ['340px','620px']
 						,shade: 0.7
 						,id: 'LAY_layuipro' //设定一个id，防止重复弹出
 						,btn: []
@@ -1405,7 +1407,7 @@
 			}
 			
 			//获取表格数据——访客查询
-			function getQueryData(){
+			function getQueryData(type){
 				events.showWaiting();
 				var times=contentData.visitor_queryData.times
 				var beginTime='';
@@ -1431,8 +1433,8 @@
 				postDataEncry(window.storageKeyName.INTERFACE_VISITOR + 'visitor/page', {}, params, 2, function(da) {
 					console.log("da: " + JSON.stringify(da));
 					if (da.code == 0) {
-						if(contentData.visitor_queryData.total_count!=da.data.total_row){
-							contentData.visitor_queryData.total_count=da.data.total_row
+						contentData.visitor_queryData.total_count=da.data.total_row
+						if(!type){
 							initQueryPage(da.data.total_row);
 						}
 						layui.use('table', function(){
@@ -1476,7 +1478,7 @@
 						if(!first){
 							events.showWaiting()
 							contentData.visitor_queryData.page_number=obj.curr
-							getQueryData();
+							getQueryData("pageClick");
 						}
 					  }
 				  });
@@ -1499,14 +1501,14 @@
 					  ,{align: 'center', title: '被访学生', colspan:3}
 					  ,{align: 'center',field: 'in_time',width:200, title: '进入时间', rowspan: 2 }
 					  ,{align: 'center',field: 'leave_time',width:200, title: '签离时间', rowspan: 2}
-					  ,{fixed: 'right',align: 'center',field: 'leave_flag_name', title: '是否离开',  rowspan: 2}
+					  ,{fixed: 'right',align: 'center',width:85,field: 'leave_flag_name', title: '是否离开',  style:'border-left:1px solid #009688;', rowspan: 2}
 					  ,{fixed: 'right',align: 'center',width:140, title: '操作',  rowspan: 2,toolbar: '#queryBar'}
 					  ]
 					  ,[
 					   {align: 'center',field: 'dpt_name', title: '部门',}
 					   ,{align: 'center',field: 'teacher_name', title: '姓名',}
 					   ,{align: 'center',field: 'grdcls', title: '年级班级',}
-					   ,{align: 'center',field: 'stu_name', title: '学生',}
+					   ,{align: 'center',field: 'stu_name', title: '姓名',}
 					   ,{align: 'center',field: 'head_teacher_name', title: '班主任',}
 					   ]]
 					   ,done:don
@@ -1531,7 +1533,7 @@
 			}
 			
 			//获取表格数据——访客签离
-			function getOutData(){
+			function getOutData(type){
 				events.showWaiting();
 				var times=contentData.visitor_outData.times
 				var beginTime='';
@@ -1558,10 +1560,10 @@
 				postDataEncry(window.storageKeyName.INTERFACE_VISITOR + 'visitor/page', {}, params, 2, function(da) {
 					console.log("da: " + JSON.stringify(da));
 					if (da.code == 0) {
-						if(contentData.visitor_queryData.total_count!=da.data.total_row){
-							contentData.visitor_queryData.total_count=da.data.total_row
+						if(!type){
 							initOutPage(da.data.total_row);
 						}
+						contentData.visitor_queryData.total_count=da.data.total_row
 						layui.use('table', function(){
 							var table = layui.table;
 							var list=da.data.list
@@ -1603,7 +1605,7 @@
 						if(!first){
 							events.showWaiting()
 							contentData.visitor_outData.page_number=obj.curr
-							getOutData();
+							getOutData("pageClick");
 						}
 					  }
 				  });
@@ -1626,14 +1628,14 @@
 					  ,{align: 'center', title: '被访学生', colspan:3}
 					  ,{align: 'center',field: 'in_time',width:200, title: '进入时间', rowspan: 2 }
 					  ,{align: 'center',field: 'leave_time',width:200, title: '签离时间', rowspan: 2}
-					  ,{fixed: 'right',align: 'center',field: 'leave_flag_name', title: '是否离开',  rowspan: 2}
+					  ,{fixed: 'right',align: 'center',width:85,field: 'leave_flag_name', title: '是否离开', style:'border-left:1px solid #009688;', rowspan: 2}
 					  ,{fixed: 'right',align: 'center',width:140, title: '操作',  rowspan: 2,toolbar: '#outBar'}
 					  ]
 					  ,[
 					   {align: 'center',field: 'dpt_name', title: '部门',}
 					   ,{align: 'center',field: 'teacher_name', title: '姓名',}
 					   ,{align: 'center',field: 'grdcls', title: '年级班级',}
-					   ,{align: 'center',field: 'stu_name', title: '学生',}
+					   ,{align: 'center',field: 'stu_name', title: '姓名',}
 					   ,{align: 'center',field: 'head_teacher_name', title: '班主任',}
 					   ]]
 					   ,done:don
