@@ -656,9 +656,11 @@
 							if(tab==='in'){
 								this.visitor_in.tabActive=true
 							}else if(tab==='select'){
+								this.visitor_queryData.page_number=1
 								this.visitor_query.tabActive=true
 								getQueryData();
 							}else if(tab==='out'){
+								this.visitor_outData.page_number=1
 								this.visitor_out.tabActive=true
 								getOutData();
 							}
@@ -1671,6 +1673,7 @@
 						type: 1
 						,title: false //不显示标题栏
 						,closeBtn: false
+						,offset:  ['100px','200px']
 						,area: ['900px','500px']
 						,shade: 0.7
 						,id: 'LAY_layuipro' //设定一个id，防止重复弹出
@@ -1735,6 +1738,7 @@
 							 contentData.visitor_outData.formData={}
 							 data.sex_name=data.visitor_sex?'男':'女'
 							 contentData.visitor_outData.formData=data
+							 contentData.visitor_outData.leave_time=moment().format("YYYY-MM-DD HH:mm:ss")
 							 if(data.img_url!='' && data.img_url !=null){
 							 	getIDCardImg(data.img_url,function(urlStr){
 							 		contentData.visitor_outData.IDCardImg=urlStr;
