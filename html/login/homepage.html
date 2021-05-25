@@ -237,7 +237,7 @@
 												<div class="mui-col-sm-3">
 													<div class="mui-input-row mui-input-row-bottom-lar">
 														<label><span style="color: #D26A60;">*</span>班主任：</label>
-														<input :value="visitor_inData.masterObj?visitor_inData.masterObj.user_name:''" type="text" placeholder="选择学生后展示" readonly="true">
+														<input v-model="visitor_inData.masterObj.user_name" type="text" placeholder="请填写班主任">
 													</div>
 												</div>
 											</div>
@@ -576,6 +576,7 @@
 					index:'',//layer index 弹出层id
 					pIndex:'',//layer 打印 弹出层id
 					printRecord:'',//要打印的对象
+					canPrint:true,//是否允许打印
 					//以上变量为页面控制使用，一般不用改
 					//访客登记
 					visitor_inData:{
@@ -597,7 +598,7 @@
 						grdSelectObj:'',//选择的年级对象
 						clsSelectObj:'',//选择的班级对象
 						stuSelectObj:'',//选择的学生对象
-						masterObj:'',//选择的班级对应的班主任对象
+						masterObj:{user_name:'',user_code:''},//选择的班级对应的班主任对象
 						visitor_name:'',//	访客姓名
 						visitor_for:'',//	访问事由
 						visitor_sex:0,//	访客性别
@@ -703,7 +704,7 @@
 								this.visitor_inData.grdSelectObj=grdList[i]
 							}
 						}
-						this.visitor_inData.masterObj=''
+						this.visitor_inData.masterObj={user_name:'',user_code:''}
 						getClsList(grdId);
 					},
 					clsSelectChanged:function(event){//访客登记 班级选择变动监听
@@ -714,7 +715,7 @@
 								this.visitor_inData.clsSelectObj=clsList[i]
 							}
 						}
-						this.visitor_inData.masterObj=''
+						this.visitor_inData.masterObj={user_name:'',user_code:''}
 						getStuList(this.visitor_inData.grdSelectObj.id,clsId);
 						getClsMaster(this.visitor_inData.grdSelectObj.id,clsId);
 					},
@@ -728,7 +729,8 @@
 						}
 					},
 					saveData:function(type){//访客登记  保存按钮
-					console.log(contentData.visitor_inData.visitor_counter)
+					console.log("啊啊啊啊啊啊啊啊啊啊: " + JSON.stringify(''));
+					console.log((contentData.visitor_inData.masterObj.user_name+'').trim());
 						if((contentData.visitor_inData.visitor_name+'').trim()==''){
 							mui.toast('请填写姓名')
 						}else if((contentData.visitor_inData.visitor_for+'').trim()==''){
@@ -739,6 +741,8 @@
 							mui.toast('请选择部门人员姓名')
 						}else if(contentData.visitor_inData.interviewee_type==1 && contentData.visitor_inData.stuSelectObj==''){
 							mui.toast('请选择学生')
+						}else if(contentData.visitor_inData.interviewee_type==1 && (contentData.visitor_inData.masterObj.user_name+'').trim()==''){
+							mui.toast('请填写班主任')
 						}else{
 							if(this.visitor_inData.submit){
 								this.visitor_inData.submit=false;
@@ -797,12 +801,19 @@
 					},
 					printYes:function(){//确认打印
 						mui.toast("正在打印凭条");
-						plus.usbPrinter.printPage(function(args){
-							console.log(args);
-						},function(args){
-							console.log(args);
-						},this.printRecord)
-						layer.close(this.pIndex);
+						if(this.canPrint){
+							this.canPrint=false;
+							var that=this;
+							setTimeout(function(){
+								that.canPrint=true;
+							},2500)
+							plus.usbPrinter.printPage(function(args){
+								console.log(args);
+							},function(args){
+								console.log(args);
+							},this.printRecord)
+							layer.close(this.pIndex);
+						}
 					},
 					printNo:function(){//取消打印
 						layer.close(this.pIndex);
@@ -1013,7 +1024,7 @@
 					params.grd_name=contentData.visitor_inData.grdSelectObj.title//	年级名称
 					params.cls_code=contentData.visitor_inData.clsSelectObj.id//	班级代码
 					params.cls_name=contentData.visitor_inData.clsSelectObj.title//	班级名称
-					params.head_teacher_code=contentData.visitor_inData.masterObj.user_code//	班主任代码
+					params.head_teacher_code=contentData.visitor_inData.masterObj.user_code?contentData.visitor_inData.masterObj.user_code:''//	班主任代码
 					params.head_teacher_name=contentData.visitor_inData.masterObj.user_name//	班主任名称
 				}
 				postDataEncry(window.storageKeyName.INTERFACE_VISITOR + 'visitor/addRecord', {}, params, 2, function(data) {
@@ -1078,7 +1089,7 @@
 				contentData.visitor_inData.grdSelectObj=''//选择的年级对象
 				contentData.visitor_inData.clsSelectObj=''//选择的班级对象
 				contentData.visitor_inData.stuSelectObj=''//选择的学生对象
-				contentData.visitor_inData.masterObj=''//选择的班级对应的班主任对象
+				contentData.visitor_inData.masterObj={user_name:'',user_code:''}//选择的班级对应的班主任对象
 				contentData.visitor_inData.visitor_name=''//	访客姓名
 				contentData.visitor_inData.visitor_for=''//	访问事由
 				contentData.visitor_inData.visitor_sex=0//	访客性别
@@ -1316,7 +1327,11 @@
 								master=tList[i]
 							}
 						 }
-						contentData.visitor_inData.masterObj=master
+						 contentData.visitor_inData.masterObj={user_name:'',user_code:''}
+						 if(master){
+							 contentData.visitor_inData.masterObj=master
+						 }
+						
 					} else {
 						mui.toast(data.msg);
 					}

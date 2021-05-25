@@ -454,6 +454,7 @@
 					IDCardImg:'',//身份证照片
 					layer:'',//layer 弹出层对象
 					pIndex:'',//layer 打印 弹出层id
+					canPrint:true,//是否运行打印
 				},
 				methods:{
 					back:function(){
@@ -481,12 +482,19 @@
 					},
 					printYes:function(){//确认打印
 						mui.toast("正在打印凭条");
-						plus.usbPrinter.printPage(function(args){
-							console.log(args);
-						},function(args){
-							console.log(args);
-						},this.formData)
-						layer.close(this.pIndex);
+						if(this.canPrint){
+							this.canPrint=false;
+							var that=this;
+							setTimeout(function(){
+								that.canPrint=true;
+							},2500)
+							plus.usbPrinter.printPage(function(args){
+								console.log(args);
+							},function(args){
+								console.log(args);
+							},this.formData)
+							layer.close(this.pIndex);
+						}
 					},
 					printNo:function(){//取消打印
 						layer.close(this.pIndex);
