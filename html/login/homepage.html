@@ -716,6 +716,8 @@
 							}
 						}
 						this.visitor_inData.masterObj={user_name:'',user_code:''}
+						this.visitor_inData.stuList=[{title:'请选择学生',id:''}]
+						this.visitor_inData.stuSelectId=''
 						getStuList(this.visitor_inData.grdSelectObj.id,clsId);
 						getClsMaster(this.visitor_inData.grdSelectObj.id,clsId);
 					},
@@ -729,8 +731,6 @@
 						}
 					},
 					saveData:function(type){//访客登记  保存按钮
-					console.log("啊啊啊啊啊啊啊啊啊啊: " + JSON.stringify(''));
-					console.log((contentData.visitor_inData.masterObj.user_name+'').trim());
 						if((contentData.visitor_inData.visitor_name+'').trim()==''){
 							mui.toast('请填写姓名')
 						}else if((contentData.visitor_inData.visitor_for+'').trim()==''){

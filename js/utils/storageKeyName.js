@@ -1,7 +1,7 @@
 //此js用于保存本地存储时，用到的key值
 
 var storageKeyName = (function(mod) {
-	mod.key =4; //1:山东开发 2:广西开发 3:联测 4:云测 5:正式 6性能测试
+	mod.key =5; //1:山东开发 2:广西开发 3:联测 4:云测 5:正式 6性能测试
 	switch(mod.key) {
 		case 1: //山东开发
 			mod.PLATFORMCODE = 'PT0002'; //平台代码
@@ -68,7 +68,7 @@ var storageKeyName = (function(mod) {
 			mod.INTERFACE_SSO_SUB = 'http://sso.108800.com:8080/ssotosub/api/sub/'; // 单点对子系统接口
 			mod.INTERFACE_HR_SUB = 'http://apps.108800.com/hrtosub/api/sub/'; //人事接口,供子系统用 				     人事对子系统接口
 			mod.INTERFACE_HR_SKIN = 'http://apps.108800.com/hrtosup/api/skin/'; //人事接口,供APP或PC注册及外皮用        人事对单点及登录皮肤接口
-			mod.INTERFACE_VISITOR = '？？？';//访客系统(孔)
+			mod.INTERFACE_VISITOR = 'http://apps.108800.com/visitorsubapi/sub/api/';//访客系统(孔)
 			//七牛上传
 			mod.QN_APPID = 17;//七牛appid
 			mod.QN_APPKEY = "oafor1010";//七牛appkey
