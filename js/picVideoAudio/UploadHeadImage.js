@@ -315,7 +315,7 @@ var UploadHeadImage = (function($, mod) {
 				// console.log("上传的Domain:"+QNUptoken.Data.Domain);
 				// console.log("上传的base64Str:"+base64Str);
 				var pic = base64Str;
-				var url ='http://upload.qiniu.com/putb64/-1/key/'+encode(fileName); 
+				var url ='http://upload.qiniu.com/putb64/-1/key/'+encode(QNUptoken.Data.Key); 
 				var xhr = new XMLHttpRequest();
 				xhr.onreadystatechange=function(){
 					if (xhr.readyState==4){
