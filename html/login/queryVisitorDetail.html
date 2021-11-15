@@ -413,7 +413,7 @@
 		</div>
 		<script src="../../js/utils/mui.min.js"></script>
 		<script src="../../js/utils/storageKeyName.js"></script>
-		<!-- <script src="../../js/utils/vconsole.min.js"></script> -->
+		<script src="../../js/utils/vconsole.min.js"></script>
 		<script src="../../js/utils/vue.js"></script>
 		<script src="../../js/utils/publicProtocol.js"></script>
 		<script src="../../js/utils/usbPrinter.js"></script>
@@ -506,6 +506,7 @@
 				curPage = utils.getDataFromUrl(window.location.href);
 				console.log(JSON.stringify(curPage));
 				tempVue.titleName = '访客信息详情';
+				events.showWaiting();
 				getVisitorDetail(curPage.id)
 				if(curPage.img_url!='' && curPage.img_url!=null){
 					getIDCardImg(curPage.img_url)
@@ -520,6 +521,7 @@
 				}
 				postDataEncry(window.storageKeyName.INTERFACE_VISITOR + 'visitor/getById', {}, params, 2, function(da) {
 					console.log("da: " + JSON.stringify(da));
+					events.closeWaiting();
 					if (da.code == 0) {
 							var datr=da.data
 							datr.visitor_counter=datr.visitor_counter+' 人'

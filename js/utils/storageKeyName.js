@@ -1,7 +1,7 @@
 //此js用于保存本地存储时，用到的key值
 
 var storageKeyName = (function(mod) {
-	mod.key =3; //1:山东开发 2:广西开发 3:联测 4:云测 5:正式 6性能测试
+	mod.key =5; //1:山东开发 2:广西开发 3:联测 4:云测 5:正式 6性能测试
 	switch(mod.key) {
 		case 1: //山东开发
 			mod.PLATFORMCODE = 'PT0002'; //平台代码
@@ -34,13 +34,13 @@ var storageKeyName = (function(mod) {
 		case 3: //联测
 			mod.PLATFORMCODE = 'PT0001'; //平台代码
 			mod.APPCODE = 'schapp#'; //应用系统代码
-			mod.INTERFACE_SSO_SKIN = 'http://nwifapp.jiaobaowang.net/ssotoskin/api/skin/'; //单点登录,供PC外皮及APP用户登录,管理
-			mod.INTERFACE_SSO_HR = 'http://nwifapp.jiaobaowang.net/ssotohr/api/hr/'; //单点登录,供人事系统使用
-			mod.INTERFACE_SUP_HR = 'http://nwifapp.jiaobaowang.net/suptohr/api/hr/'; //单点登录,供人事系统使用                  单点对人事及登录皮肤接口
-			mod.INTERFACE_SSO_SUB = 'http://nwifapp.jiaobaowang.net/ssotosub/api/sub/'; //单点登录,供各子系统用
-			mod.INTERFACE_HR_SUB = 'http://nwifapp.jiaobaowang.net/testhrtosub/api/sub/'; //人事接口,供子系统用
-			mod.INTERFACE_HR_SKIN = 'http://nwifapp.jiaobaowang.net/testhrtosup/api/skin/'; //人事接口,供APP或PC注册及外皮用
-			mod.INTERFACE_VISITOR = 'http://develop309.jiaobaowang.net/visitorsubapi/sub/api/';//访客系统(孔)
+			mod.INTERFACE_SSO_SKIN = 'https://test.108800.com/ssotoskin/api/skin/'; //单点登录,供PC外皮及APP用户登录,管理
+			mod.INTERFACE_SSO_HR = 'https://test.108800.com/ssotohr/api/hr/'; //单点登录,供人事系统使用
+			mod.INTERFACE_SUP_HR = 'https://test.108800.com/suptohr/api/hr/'; //单点登录,供人事系统使用                  单点对人事及登录皮肤接口
+			mod.INTERFACE_SSO_SUB = 'https://test.108800.com/ssotosub/api/sub/'; //单点登录,供各子系统用
+			mod.INTERFACE_HR_SUB = 'https://test.108800.com/testhrtosub/api/sub/'; //人事接口,供子系统用
+			mod.INTERFACE_HR_SKIN = 'https://test.108800.com/testhrtosup/api/skin/'; //人事接口,供APP或PC注册及外皮用
+			mod.INTERFACE_VISITOR = 'https://develop309.108800.com/visitorsubapi/sub/api/';//访客系统(孔)
 			//七牛上传
 			mod.QN_APPID = 16;//七牛appid
 			mod.QN_APPKEY = "oatest1010";//七牛appkey
@@ -48,13 +48,13 @@ var storageKeyName = (function(mod) {
 		case 4: //云测
 			mod.PLATFORMCODE = 'PT0002'; //平台代码
 			mod.APPCODE = 'schapp#'; //应用系统代码
-			mod.INTERFACE_SSO_SKIN = 'http://nwifapp.jiaobaowang.net/ssotoskin/api/skin/'; //单点登录,供PC外皮及APP用户登录,管理  单点对人事及登录皮肤接口
-			mod.INTERFACE_SSO_HR = 'http://nwifapp.jiaobaowang.net/ssotohr/api/hr/'; //单点登录,供人事系统使用                  单点对人事及登录皮肤接口
-			mod.INTERFACE_SUP_HR = 'http://nwifapp.jiaobaowang.net/suptohr/api/hr/'; //单点登录,供人事系统使用                  单点对人事及登录皮肤接口
-			mod.INTERFACE_SSO_SUB = 'http://nwifapp.jiaobaowang.net/ssotosub/api/sub/'; //单点登录,供各子系统用 			     单点对子系统接口
-			mod.INTERFACE_HR_SUB = 'http://nwifapp.jiaobaowang.net/hrtosub/api/sub/'; //人事接口,供子系统用 				     人事对子系统接口
-			mod.INTERFACE_HR_SKIN = 'http://nwifapp.jiaobaowang.net/hrtosup/api/skin/'; //人事接口,供APP或PC注册及外皮用        人事对单点及登录皮肤接口
-			mod.INTERFACE_VISITOR = 'http://nwifapp.jiaobaowang.net/visitorsubapi/sub/api/';//访客系统(孔)
+			mod.INTERFACE_SSO_SKIN = 'https://test.108800.com/ssotoskin/api/skin/'; //单点登录,供PC外皮及APP用户登录,管理  单点对人事及登录皮肤接口
+			mod.INTERFACE_SSO_HR = 'https://test.108800.com/ssotohr/api/hr/'; //单点登录,供人事系统使用                  单点对人事及登录皮肤接口
+			mod.INTERFACE_SUP_HR = 'https://test.108800.com/suptohr/api/hr/'; //单点登录,供人事系统使用                  单点对人事及登录皮肤接口
+			mod.INTERFACE_SSO_SUB = 'https://test.108800.com/ssotosub/api/sub/'; //单点登录,供各子系统用 			     单点对子系统接口
+			mod.INTERFACE_HR_SUB = 'https://test.108800.com/hrtosub/api/sub/'; //人事接口,供子系统用 				     人事对子系统接口
+			mod.INTERFACE_HR_SKIN = 'https://test.108800.com/hrtosup/api/skin/'; //人事接口,供APP或PC注册及外皮用        人事对单点及登录皮肤接口
+			mod.INTERFACE_VISITOR = 'https://test.108800.com/visitorsubapi/sub/api/';//访客系统(孔)
 			//七牛上传
 			mod.QN_APPID = 16;//七牛appid
 			mod.QN_APPKEY = "oatest1010";//七牛appkey
@@ -62,13 +62,13 @@ var storageKeyName = (function(mod) {
 		case 5://正式
 			mod.PLATFORMCODE = 'PT0001'; //平台代码
 			mod.APPCODE = 'schapp#'; //应用系统代码
-			mod.INTERFACE_SSO_SKIN = 'http://sso.108800.com:8080/ssotoskin/api/skin/'; // 单点对登录框接口
-			mod.INTERFACE_SSO_HR = 'http://sso.108800.com:8080/ssotohr/api/hr/'; // 单点对人事接口 (gu )
-			mod.INTERFACE_SUP_HR = 'http://sso.108800.com/suptohr/api/hr/'; //单点对人事及登录皮肤接口  (zeng)
-			mod.INTERFACE_SSO_SUB = 'http://sso.108800.com:8080/ssotosub/api/sub/'; // 单点对子系统接口
-			mod.INTERFACE_HR_SUB = 'http://apps.108800.com/hrtosub/api/sub/'; //人事接口,供子系统用 				     人事对子系统接口
-			mod.INTERFACE_HR_SKIN = 'http://apps.108800.com/hrtosup/api/skin/'; //人事接口,供APP或PC注册及外皮用        人事对单点及登录皮肤接口
-			mod.INTERFACE_VISITOR = 'http://apps.108800.com/visitorsubapi/sub/api/';//访客系统(孔)
+			mod.INTERFACE_SSO_SKIN = 'https://sso.108800.com:8443/ssotoskin/api/skin/'; // 单点对登录框接口
+			mod.INTERFACE_SSO_HR = 'https://sso.108800.com:8443/ssotohr/api/hr/'; // 单点对人事接口 (gu )
+			mod.INTERFACE_SUP_HR = 'https://sso.108800.com/suptohr/api/hr/'; //单点对人事及登录皮肤接口  (zeng)
+			mod.INTERFACE_SSO_SUB = 'https://sso.108800.com:8443/ssotosub/api/sub/'; // 单点对子系统接口
+			mod.INTERFACE_HR_SUB = 'https://apps.108800.com/hrtosub/api/sub/'; //人事接口,供子系统用 				     人事对子系统接口
+			mod.INTERFACE_HR_SKIN = 'https://apps.108800.com/hrtosup/api/skin/'; //人事接口,供APP或PC注册及外皮用        人事对单点及登录皮肤接口
+			mod.INTERFACE_VISITOR = 'https://apps.108800.com/visitorsubapi/sub/api/';//访客系统(孔)
 			//七牛上传
 			mod.QN_APPID = 17;//七牛appid
 			mod.QN_APPKEY = "oafor1010";//七牛appkey
