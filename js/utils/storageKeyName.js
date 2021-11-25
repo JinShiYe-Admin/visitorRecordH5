@@ -84,7 +84,7 @@ var storageKeyName = (function(mod) {
 	mod.ANDROIDUPDATEURL='http://www.jiaobao.net/dl/fangkeji/versionCode.xml';//安卓升级地址
 	
 	mod.IOSUPDATEURL='http://itunes.apple.com/lookup?id=1503612695';//IOS升级地址
-	mod.PRIVACE='http://www.jiaobao.net/dl/jiaobaoxiaoyuan/jbxyPrivacy.htm';//用户隐私政策地址
+	mod.PRIVACE='https://jbsch-pb.zhuxue101.net/formal/privacy/jbxyPrivacy.html';//用户隐私政策地址
 	
 	//正式包 屏蔽控制台打印
 	// ['log','warn','info','error'].map(function(item){
